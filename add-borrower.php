@@ -64,7 +64,8 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 
         button {
             display: block;
-            width: 100%;
+            width: 200px; /* or any specific width */
+            margin: 0 auto; /* This centers the button horizontally */
             padding: 10px;
             background-color: #007bff;
             color: white;
@@ -108,7 +109,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 <body>
 
     <h1>Borrower Registration Form - <?= htmlspecialchars($borrowerType); ?></h1>
-    
+
     <?php if ($status === 'success'): ?>
         <!-- Success Notification -->
         <div style="background-color: #4CAF50; color: white; padding: 10px; margin-bottom: 20px; text-align: center;">
@@ -116,7 +117,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
         </div>
     <?php endif; ?>
 
-    <form method="POST" action="process-borrower.php">
+    <form method="POST" action="adding-borrower.php">
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
 
         <div class="form-group">

@@ -25,12 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insert data into the database
     $query = "INSERT INTO tblborrowers (
-        libraryId, facultyId, surName, firstName, middleName, course, year, position, gender, birthDate, homeAddress, remarks
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        borrowerType, libraryId, facultyId, surName, firstName, middleName, course, year, position, gender, birthDate, homeAddress, remarks
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($query);
     $stmt->bind_param(
-        'sssssssssssi',
+        'ssssssssssssi',
+        $borrowerType,
         $libraryId,
         $facultyId,
         $surName,
