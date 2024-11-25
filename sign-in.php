@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Include the database connection
-require 'db-connect.php';
+require 'db-connect.php'; // This should be the file where the $conn mysqli connection is defined
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
@@ -21,12 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $input['password'];
 
     try {
-        // Query the database
-        $stmt = $pdo->prepare('SELECT * FROM tbluser WHERE username = :username');
-        $stmt->bindParam(':username', $username);
+        // Query the database using mysqli
+        $stmt = $conn->prepare('SELECT * FROM tbluser WHERE username = ?');
+        $stmt->bind_param('s', $username); // 's' means the parameter is a string
         $stmt->execute();
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
 
         if ($user) {
             // Verify the password using SHA1
@@ -38,7 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo json_encode(['success' => false, 'message' => 'Invalid username or password']);
         }
-    } catch (PDOException $e) {
+
+        // Close the statement
+        $stmt->close();
+    } catch (mysqli_sql_exception $e) {
         echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
     }
 } else {

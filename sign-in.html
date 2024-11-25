@@ -86,7 +86,7 @@
           const result = await response.json();
           if (result.success) {
             // Redirect to dashboard or another page
-            window.location.href = 'dashboard.html';  // Adjust to your actual dashboard page
+            window.location.href = 'dashboard.php';  // Adjust to your actual dashboard page
           } else {
             // Show error message
             notification.textContent = result.message || 'Invalid username or password.';

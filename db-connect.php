@@ -1,14 +1,15 @@
 <?php
-// Database credentials
-$host = 'localhost';
-$dbname = 'balibsysdb';
-$username = 'root';
-$password = ''; 
+// db.php: Establish the database connection
+$servername = "localhost";  // Your database server (localhost if running on your machine)
+$username = "root";         // Your database username (default is "root" for XAMPP)
+$password = "";             // Your database password (default is empty for XAMPP)
+$dbname = "balibsysdb";  // Your database name
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 ?>
