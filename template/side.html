@@ -1,0 +1,241 @@
+<aside class="left-sidebar sidebar-dark" id="left-sidebar">
+    <div id="sidebar" class="sidebar sidebar-with-footer">
+      <!-- Aplication Brand -->
+      <div class="app-brand">
+        <a href="/index.html">
+          <img src="images/logo.png" alt="Mono">
+          <span class="brand-name">USTP</span>
+        </a>
+      </div>
+      <!-- begin sidebar scrollbar -->
+      <div class="sidebar-left" data-simplebar style="height: 100%;">
+        <!-- sidebar menu -->
+        <ul class="nav sidebar-inner" id="sidebar-menu">
+       
+            <li class="active">
+              <a class="sidenav-item-link" href="index.html">
+                <i class="mdi mdi-briefcase-account-outline"></i>
+                <span class="nav-text">Library Dashboard</span>
+              </a>
+            </li>
+     
+            <li>
+              <a class="sidenav-item-link" href="generate-dashboard.html">
+                <i class="mdi mdi-chart-line"></i>
+                <span class="nav-text">Generate Dashboard</span>
+              </a>
+            </li>
+        
+            <li class="section-title">
+              DPM 001
+            </li>
+
+            <li class="nav-item">
+              <a class="sidenav-item-link" href="master_list.html">
+                <i class="mdi mdi-format-list-bulleted"></i> <!-- Changed icon -->
+                <span class="nav-text">Master List</span>
+                <span class="caret"></span> <!-- Optional caret for dropdown indicator -->
+              </a>
+            
+              <ul class="nav sub-menu" style="display: none;"> <!-- Initially hidden -->
+                <li>
+                  <a class="sidenav-item-link" href="students.html">
+                    <i class="mdi mdi-school"></i> <!-- Icon for students -->
+                    <span class="nav-text">Students</span>
+                  </a>
+                </li>
+                
+                <li>
+                  <a class="sidenav-item-link" href="faculty.html">
+                    <i class="mdi mdi-teach"></i> <!-- Icon for faculty -->
+                    <span class="nav-text">Faculty</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="sidenav-item-link" href="staff.html">
+                    <i class="mdi mdi-account-tie"></i> <!-- Icon for staff -->
+                    <span class="nav-text">Staff</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            
+            <script>
+              const masterListMenu = document.querySelector('.sidenav-item-link[href="master_list.html"]');
+              const subMenu = masterListMenu.nextElementSibling; // This is the <ul class="nav sub-menu">
+            
+              masterListMenu.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default action (following the link)
+                
+                if (subMenu.style.display === 'none' || subMenu.style.display === '') {
+                  subMenu.style.display = 'block'; // Show the menu
+                } else {
+                  subMenu.style.display = 'none'; // Hide the menu
+                }
+              });
+            </script>
+            
+            <li class="nav-item">
+              <a class="sidenav-item-link" href="contacts.html">
+                <i class="mdi mdi-card"></i> <!-- Icon for Library Cards -->
+                <span class="nav-text">Library Cards</span>
+                <span class="caret"></span> <!-- Dropdown indicator -->
+              </a>
+            
+              <ul class="nav sub-menu" style="display: none;"> <!-- Initially hidden -->
+                <li>
+                  <a class="sidenav-item-link" href="receipt-log.html">
+                    <i class="mdi mdi-file-document"></i> <!-- Icon for Library Receipt Log -->
+                    <span class="nav-text">Receipt Log</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="sidenav-item-link" href="non-receipt-log.html">
+                    <i class="mdi mdi-file-document-box"></i> <!-- Icon for Library Non-Receipt Log -->
+                    <span class="nav-text">Non-Receipt Log</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            
+            <script>
+              const libraryCardsMenu = document.querySelector('.sidenav-item-link[href="contacts.html"]');
+              const librarySubMenu = libraryCardsMenu.nextElementSibling; // This is the <ul class="nav sub-menu">
+            
+              libraryCardsMenu.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default action (following the link)
+                
+                if (librarySubMenu.style.display === 'none' || librarySubMenu.style.display === '') {
+                  librarySubMenu.style.display = 'block'; // Show the menu
+                } else {
+                  librarySubMenu.style.display = 'none'; // Hide the menu
+                }
+              });
+            </script>
+  
+            <li class="section-title">
+              DPM 002
+            </li>
+    
+            <li>
+              <a class="sidenav-item-link" href="reference_assistance_slip.html">
+                <i class="mdi mdi-folder-outline"></i>
+                <span class="nav-text">Reference Assistance Slip</span>
+              </a>
+            </li>
+          
+            <li class="section-title">
+              DPM 003
+            </li>
+  
+            <li class="nav-item has-sub">
+              <a class="sidenav-item-link" href="javascript:void(0)" data-toggle="collapse" data-target="#borrowing"
+                aria-expanded="false" aria-controls="borrowing">
+                <i class="mdi mdi-book-open-page-variant"></i> <!-- Updated icon for Borrowing -->
+                <span class="nav-text">Borrowing</span>
+                <b class="caret"></b> <!-- Dropdown indicator -->
+              </a>
+              <ul class="collapse" id="borrowing" data-parent="#sidebar-menu">
+                <div class="sub-menu">
+            
+                  <li>
+                    <a class="sidenav-item-link" href="date-due-slip.html">
+                      <i class="mdi mdi-calendar-clock" style="margin-right: 10px;"></i> <!-- Icon for Date Due Slip -->
+                      <span class="nav-text">Date Due Slip</span>
+                    </a>
+                  </li>
+            
+                  <li>
+                    <a class="sidenav-item-link" href="book-card.html">
+                      <i class="mdi mdi-card-text" style="margin-right: 10px;"></i> <!-- Icon for Book Card -->
+                      <span class="nav-text">Book Card</span>
+                    </a>
+                  </li>
+            
+                </div>
+              </ul>
+            </li>
+     
+            <li>
+              <a class="sidenav-item-link" href="returning.html">
+                <i class="mdi mdi-account"></i>
+                <span class="nav-text">Returning</span>
+              </a>
+            </li>
+          
+            <li  class="has-sub" >
+              
+              <ul  class="collapse"  id="other-page"
+                data-parent="#sidebar-menu">
+                <div class="sub-menu">                
+                </div>
+              </ul>
+            </li>
+          
+            <li class="section-title">
+              DPM 009
+            </li>
+          
+            <li class="nav-item">
+              <a class="sidenav-item-link" href="getting-started.html">
+                <i class="mdi mdi-library-books"></i> <!-- Corrected Icon for Book Inventory -->
+                <span class="nav-text">Book Inventory</span>
+                <span class="caret"></span> <!-- Dropdown indicator -->
+              </a>
+            
+              <ul class="nav sub-menu" style="display: none;"> <!-- Initially hidden -->
+                <li>
+                  <a class="sidenav-item-link" href="books.html">
+                    <i class="mdi mdi-book-multiple"></i> <!-- Icon for Books -->
+                    <span class="nav-text">Books</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="sidenav-item-link" href="category.html">
+                    <i class="mdi mdi-format-list-bulleted-type"></i> <!-- Icon for Category -->
+                    <span class="nav-text">Category</span>
+                  </a>
+                </li>
+                <li>
+                  <a class="sidenav-item-link" href="authors.html">
+                    <i class="mdi mdi-account-multiple-outline"></i> <!-- Icon for Authors -->
+                    <span class="nav-text">Authors</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            
+            <script>
+              const bookInventoryMenu = document.querySelector('.sidenav-item-link[href="getting-started.html"]');
+              const bookSubMenu = bookInventoryMenu.nextElementSibling; // This is the <ul class="nav sub-menu">
+            
+              bookInventoryMenu.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default action (following the link)
+                
+                if (bookSubMenu.style.display === 'none' || bookSubMenu.style.display === '') {
+                  bookSubMenu.style.display = 'block'; // Show the menu
+                } else {
+                  bookSubMenu.style.display = 'none'; // Hide the menu
+                }
+              });
+            </script>  
+                </div>
+              </ul>
+            </li>      
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-content">
+          <ul class="d-flex">
+            <li>
+              <a href="user-account-settings.html" data-toggle="tooltip" title="Profile settings"><i class="mdi mdi-settings"></i></a></li>
+            <li>
+              <a href="#" data-toggle="tooltip" title="No chat messages"><i class="mdi mdi-chat-processing"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+
