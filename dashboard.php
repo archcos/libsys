@@ -31,7 +31,7 @@ ob_start();
     <div class="content container-fluid">
         <div class="row justify-content-sm-center text-center py-10">
             <div class="col-sm-7 col-md-5">
-                <img class="img-fluid mb-5" src="assets/svg/illustrations/graphs.svg" alt="Image Description" style="max-width: 21rem;">
+                <img class="img-fluid mb-5" alt="Image Description" style="max-width: 21rem;">
 
                 <h1>Sales Overview</h1>
                 <p>Track the sales performance by month.</p>

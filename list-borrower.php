@@ -17,9 +17,7 @@ ob_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borrower List</title>
     
-    <!-- SB Admin 2 CSS -->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
     
     <!-- Custom styles for this page -->
     <style>
@@ -104,63 +102,59 @@ ob_start();
     </div>
     <!-- End of Page Content -->
 
-    <!-- SB Admin 2 JS -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="js/sb-admin-2.min.js"></script>
     
     <!-- Optional: DataTables JS for sorting and pagination -->
     <script>
-        $(document).ready(function() {
-            $('#dataTable').DataTable();
+    $(document).ready(function() {
+        // Initialize the DataTable
+        $('#dataTable').DataTable();
 
-            // Handle remarks update
-            $('.remarks-dropdown').on('change', function() {
-                var borrowerId = $(this).data('borrower-id');
-                var remarksValue = $(this).val();
-                
-                $.ajax({
-                    url: 'editing-borrower.php',
-                    type: 'POST',
-                    data: {
-                        borrowerId: borrowerId,
-                        remarks: remarksValue
-                    },
-                    success: function(response) {
-                        alert('Remarks updated successfully!');
-                    },
-                    error: function() {
-                        alert('Error updating remarks.');
-                    }
-                });
-            });
-
-            // Handle delete action with confirmation
-            $('.delete-btn').on('click', function() {
-                var borrowerId = $(this).data('borrower-id');
-                
-                // Show confirmation popup
-                if (confirm('Are you sure you want to delete this borrower?')) {
-                    $.ajax({
-                        url: 'delete-borrower.php',
-                        type: 'POST',
-                        data: { borrowerId: borrowerId },
-                        success: function(response) {
-                            alert('Borrower deleted successfully!');
-                            location.reload(); // Refresh the page to reflect changes
-                        },
-                        error: function() {
-                            alert('Error deleting borrower.');
-                        }
-                    });
-                } else {
-                    // If the user cancels the action, log this for debugging
-                    console.log('Delete action canceled.');
+        // Handle remarks update
+        $('.remarks-dropdown').on('change', function() {
+            var idNumber = $(this).data('borrower-id');
+            var remarksValue = $(this).val();
+            
+            $.ajax({
+                url: 'editing-borrower.php',
+                type: 'POST',
+                data: {
+                    idNumber: idNumber,
+                    remarks: remarksValue
+                },
+                success: function(response) {
+                    alert('Remarks updated successfully!');
+                },
+                error: function() {
+                    alert('Error updating remarks.');
                 }
             });
         });
-    </script>
+
+        // Handle delete action with confirmation
+        $('.delete-btn').on('click', function() {
+            var idNumber = $(this).data('borrower-id');
+            
+            // Show confirmation popup
+            if (confirm('Are you sure you want to delete this borrower?')) {
+                $.ajax({
+                    url: 'delete-borrower.php',
+                    type: 'POST',
+                    data: { idNumber: idNumber },
+                    success: function(response) {
+                        alert('Borrower deleted successfully!');
+                        location.reload(); // Refresh the page to reflect changes
+                    },
+                    error: function() {
+                        alert('Error deleting borrower.');
+                    }
+                });
+            } else {
+                // If the user cancels the action
+                console.log('Delete action canceled.');
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

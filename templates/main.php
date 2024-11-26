@@ -58,7 +58,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ruel Cabaluna</span>
-                                <img class="img-profile rounded-circle" src="/assets/img/sir.jpg">
+                                <img class="img-profile rounded-circle" src="assets/img/sir.jpg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -67,7 +67,7 @@
                                     Change Password
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/sign-out">
+                                <a class="dropdown-item" href="sign-in.html">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -109,14 +109,13 @@
     </a>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="/assets/vendor/jquery/jquery.min.js"></script>
-    <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/jquery/jquery.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="/assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="/assets/js/sb-admin-2.min.js"></script>
+    <script src="assets/js/sb-admin-2.min.js"></script>
 
 </body>
 
