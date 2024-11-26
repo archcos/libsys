@@ -1,4 +1,12 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    
+
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
+                <div class="sidebar-brand-icon">
+                    <img src="assets/img/logo.png" alt="Logo" width="38" height="38">
+                </div>
+                <div class="sidebar-brand-text mx-3">USTP Balubal</div>
+            </a>
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
         <a class="nav-link" href="dashboard.php">
@@ -15,78 +23,78 @@
         Interface
     </div>
 
-    <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                <i class="fas fa-fw fa-cog"></i>
-                <span>Registry</span>
-            </a>
-            <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="#" data-toggle="modal" data-target="#addBorrowerModal">Add New Borrower</a>
-                    <a class="collapse-item" href="#" data-toggle="modal" data-target="#borrowerModal">Edit Borrower Data</a>
-                    <a class="collapse-item" href="registry/location.php">Print Document</a>
-                </div>
+    <!-- Nav Item - Borrower Data Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Borrower Data</span>
+        </a>
+        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="#" data-toggle="modal" data-target="#addBorrowerModal">Add New Borrower</a>
+                <a class="collapse-item" href="#" data-toggle="modal" data-target="#borrowerModal">Edit Borrower Data</a>
+                <a class="collapse-item" href="list-borrower.php">Borrowers List</a>
             </div>
-        </li>
+        </div>
+    </li>
 
-        <div class="modal fade" id="addBorrowerModal" tabindex="-1" role="dialog" aria-labelledby="addBorrowerModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addBorrowerModalLabel">Select Borrower Type</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+    <!-- Modal - Add Borrower -->
+    <div class="modal fade" id="addBorrowerModal" tabindex="-1" role="dialog" aria-labelledby="addBorrowerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBorrowerModalLabel">Select Borrower Type</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Please select the type of borrower:</p>
+                    <div class="btn-group btn-group-toggle d-flex justify-content-center" data-toggle="buttons">
+                        <label class="btn btn-outline-primary mx-2">
+                            <input type="radio" name="borrowerType" value="Student" id="studentOption"> Student
+                        </label>
+                        <label class="btn btn-outline-primary mx-2">
+                            <input type="radio" name="borrowerType" value="Faculty" id="facultyOption"> Faculty
+                        </label>
+                        <label class="btn btn-outline-primary mx-2">
+                            <input type="radio" name="borrowerType" value="Staff" id="staffOption"> Staff
+                        </label>
                     </div>
-                    <div class="modal-body">
-                        <p>Please select the type of borrower:</p>
-                        <div class="btn-group btn-group-toggle d-flex justify-content-center" data-toggle="buttons">
-                            <label class="btn btn-outline-primary mx-2">
-                                <input type="radio" name="borrowerType" value="Student" id="studentOption"> Student
-                            </label>
-                            <label class="btn btn-outline-primary mx-2">
-                                <input type="radio" name="borrowerType" value="Faculty" id="facultyOption"> Faculty
-                            </label>
-                            <label class="btn btn-outline-primary mx-2">
-                                <input type="radio" name="borrowerType" value="Staff" id="staffOption"> Staff
-                            </label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="proceedButton">Proceed</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="proceedButton">Proceed</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="borrowerModal" tabindex="-1" role="dialog" aria-labelledby="borrowerModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="borrowerModalLabel">Enter Borrower ID</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+    <!-- Modal - Edit Borrower -->
+    <div class="modal fade" id="borrowerModal" tabindex="-1" role="dialog" aria-labelledby="borrowerModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="borrowerModalLabel">Enter Borrower ID</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="idNumber">Borrower ID</label>
+                        <input type="text" class="form-control" id="idNumber" placeholder="Enter Borrower ID">
                     </div>
-                    <div class="modal-body">
-                        <!-- Borrower ID Input -->
-                        <div class="form-group">
-                            <label for="borrowerId">Borrower ID</label>
-                            <input type="text" class="form-control" id="borrowerId" placeholder="Enter Borrower ID">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="checkBorrowerId">Check Borrower ID</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="checkidNumber">Check Borrower ID</button>
                 </div>
             </div>
         </div>
-    
+    </div>
 
-    
+    <!-- Nav Item - Modules Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
@@ -100,7 +108,7 @@
         </div>
     </li>
 
-    <!-- Sidebar Toggler (Sidebar) -->
+    <!-- Sidebar Toggler -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
@@ -110,57 +118,45 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
+<!-- JavaScript -->
 <script>
-    document.getElementById('proceedButton').addEventListener('click', function() {
-        // Get the selected borrower type
+    document.getElementById('proceedButton').addEventListener('click', function () {
         const borrowerType = document.querySelector('input[name="borrowerType"]:checked');
         if (borrowerType) {
             const selectedType = borrowerType.value;
-
-            // Redirect or pass the selected value to another file
             window.location.href = `add-borrower.php?borrowerType=${selectedType}`;
         } else {
             alert('Please select a borrower type before proceeding.');
         }
     });
-    $(document).ready(function() {
-        // When the 'Check Borrower ID' button is clicked
-        $('#checkBorrowerId').on('click', function() {
-            var borrowerId = $('#borrowerId').val().trim(); // Get the Borrower ID
 
-            if (borrowerId !== '') {
-                // AJAX request to check if Borrower ID exists
+    $(document).ready(function () {
+        $('#checkidNumber').on('click', function () {
+            const idNumber = $('#idNumber').val().trim();
+            if (idNumber) {
                 $.ajax({
-                    url: 'edit-check.php', // The PHP file that checks the database
+                    url: 'edit-check.php',
                     type: 'POST',
-                    data: { borrowerId: borrowerId }, // Send the Borrower ID to the PHP file
-                    success: function(response) {
-                        var data = JSON.parse(response); // Parse the JSON response
-
+                    data: { idNumber: idNumber },
+                    success: function (response) {
+                        const data = JSON.parse(response);
                         if (data.exists) {
-                            // If Borrower ID exists, redirect to the edit page for that borrower
-                            window.location.href = 'edit-borrower.php?borrowerId=' + borrowerId;
+                            window.location.href = `edit-borrower.php?idNumber=${idNumber}`;
                         } else {
-                            // If Borrower ID does not exist, reload the page and show a notification
                             alert('Borrower ID does not exist. Please try again.');
-                            // location.reload(); // Reload the page
                         }
                     },
-                    error: function() {
+                    error: function () {
                         alert('An error occurred while checking the Borrower ID.');
                     }
                 });
             } else {
-                // If no Borrower ID entered, show an alert
                 alert('Please enter a Borrower ID.');
             }
         });
 
-        // Ensure the modal resets when it's closed
-        $('#borrowerModal').on('hidden.bs.modal', function() {
-            // Reset form fields
-            $('#borrowerId').val('');  // Clear the input field
+        $('#borrowerModal').on('hidden.bs.modal', function () {
+            $('#idNumber').val('');
         });
     });
-
 </script>

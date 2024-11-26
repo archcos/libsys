@@ -1,63 +1,44 @@
 <?php
-// Include your database connection file
-include('db-connect.php'); // Adjust the path to your actual connection file
+include('db-connect.php');
 
+// Check if the form was submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get the form data
-    $borrowerType = $_POST['borrowerType'] ?? '';
-    $libraryId = $_POST['libraryId'] ?? '';
-    $facultyId = $_POST['facultyId'] ?? null; // Optional, might not be present for Students
-    $surName = $_POST['surName'] ?? '';
-    $firstName = $_POST['firstName'] ?? '';
-    $middleName = $_POST['middleName'] ?? ''; // Optional
-    $course = $_POST['course'] ?? null; // Optional, might not be present for Faculty/Staff
-    $year = $_POST['year'] ?? null; // Optional, might not be present for Faculty/Staff
-    $position = $_POST['position'] ?? null; // Optional, might not be present for Students
-    $gender = $_POST['gender'] ?? '';
-    $birthDate = $_POST['birthDate'] ?? null; // Optional
-    $homeAddress = $_POST['homeAddress'] ?? ''; // Optional
-    $remarks = 1; // Default value for remarks
+    $idNumber = $conn->real_escape_string($_POST['idNumber']);
+    $borrowerType = $conn->real_escape_string($_POST['borrowerType']);
+    $libraryId = $conn->real_escape_string($_POST['libraryId']);
+    $surName = $conn->real_escape_string($_POST['surName']);
+    $firstName = $conn->real_escape_string($_POST['firstName']);
+    $middleName = $conn->real_escape_string($_POST['middleName']);
+    $position = isset($_POST['position']) ? $conn->real_escape_string($_POST['position']) : null;
+    $course = isset($_POST['course']) ? $conn->real_escape_string($_POST['course']) : null;
+    $year = isset($_POST['year']) ? $conn->real_escape_string($_POST['year']) : null;
+    $gender = $conn->real_escape_string($_POST['gender']);
+    $birthDate = $conn->real_escape_string($_POST['birthDate']);
+    $homeAddress = $conn->real_escape_string($_POST['homeAddress']);
 
-    // Validate mandatory fields
-    if (empty($libraryId) || empty($surName) || empty($firstName) || empty($gender)) {
-        die('Error: Please fill in all required fields.');
+    // Check if the ID number already exists
+    $query = "SELECT 1 FROM tblborrowers WHERE idNumber = '$idNumber' LIMIT 1";
+    $result = $conn->query($query);
+
+    if ($result && $result->num_rows > 0) {
+        // ID already exists, redirect back with an error
+        header("Location: add-borrower.php?borrowerType=$borrowerType&status=exists");
+        exit;
     }
 
-    // Insert data into the database
-    $query = "INSERT INTO tblborrowers (
-        borrowerType, libraryId, facultyId, surName, firstName, middleName, course, year, position, gender, birthDate, homeAddress, remarks
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // Insert new borrower into the database
+    $query = "INSERT INTO tblborrowers (idNumber, libraryId, surName, firstName, middleName, position, course, year, gender, birthDate, homeAddress, borrowerType) 
+              VALUES ('$idNumber', '$libraryId', '$surName', '$firstName', '$middleName', '$position', '$course', '$year', '$gender', '$birthDate', '$homeAddress', '$borrowerType')";
 
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param(
-        'ssssssssssssi',
-        $borrowerType,
-        $libraryId,
-        $facultyId,
-        $surName,
-        $firstName,
-        $middleName,
-        $course,
-        $year,
-        $position,
-        $gender,
-        $birthDate,
-        $homeAddress,
-        $remarks
-    );
-
-    if ($stmt->execute()) {
-        // Redirect to the form page with a success status
+    if ($conn->query($query)) {
+        // Success, redirect back with a success message
         header("Location: add-borrower.php?borrowerType=$borrowerType&status=success");
-        exit(); // Make sure to call exit to stop further code execution
     } else {
-        echo "Error: " . $stmt->error;
+        // Error inserting borrower
+        header("Location: add-borrower.php?borrowerType=$borrowerType&status=error");
     }
 
-    // Close the statement and connection
-    $stmt->close();
     $conn->close();
-} else {
-    echo "Invalid request method.";
+    exit;
 }
 ?>

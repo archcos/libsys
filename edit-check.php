@@ -3,13 +3,13 @@
 include('db-connect.php');
 
 // Check if Borrower ID is passed
-if (isset($_POST['borrowerId'])) {
-    $borrowerId = $_POST['borrowerId'];
+if (isset($_POST['idNumber'])) {
+    $idNumber = $_POST['idNumber'];
 
     // Query to check if the Borrower ID exists in the database
-    $sql = "SELECT * FROM tblborrowers WHERE borrowerId = ?";
+    $sql = "SELECT * FROM tblborrowers WHERE idNumber = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $borrowerId); // Bind the Borrower ID to the query
+    $stmt->bind_param("s", $idNumber); // Bind the Borrower ID to the query
     $stmt->execute();
     $result = $stmt->get_result();
 
