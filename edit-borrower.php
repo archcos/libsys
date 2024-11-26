@@ -4,28 +4,40 @@ include('db-connect.php');
 
 ob_start();
 
-if (isset($_GET['borrowerId'])) {
-    $borrowerId = $_GET['borrowerId'];
+if (isset($_GET['idNumber'])) {
+    $idNumber = $_GET['idNumber'];
 
-    $sql = "SELECT borrowerId, borrowerType, libraryId, facultyId, surName, firstName, middleName, course, year, position, gender, birthDate, homeAddress, remarks FROM tblborrowers WHERE borrowerId = ?";
+    $sql = "SELECT idNumber, borrowerType, libraryId, surName, firstName, middleName, course, year, position, gender, birthDate, homeAddress, remarks FROM tblborrowers WHERE idNumber = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('s', $borrowerId);
+    $stmt->bind_param('s', $idNumber);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $borrower = $result->fetch_assoc();
     } else {
-        echo "Borrower ID not found.";
+        echo "idNumber not found.";
         exit();
     }
 
     $stmt->close();
     $conn->close();
 } else {
-    echo "Borrower ID is required.";
+    echo "idNumber is required.";
     exit();
 }
+
+if (isset($_GET['status'])) {
+    $status = $_GET['status'];
+    if ($status == 'success') {
+        $message = 'Borrower information updated successfully!';
+        $alertClass = 'alert-success';
+    } elseif ($status == 'error') {
+        $message = 'There was an error updating the borrower information. Please try again.';
+        $alertClass = 'alert-danger';
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -59,8 +71,16 @@ if (isset($_GET['borrowerId'])) {
 <div class="container mt-5">
     <h1>Edit Borrower Information</h1>
 
+     <!-- Display success or error message -->
+     <?php if (isset($message)): ?>
+        <div class="alert <?php echo $alertClass; ?>" role="alert">
+            <?php echo $message; ?>
+        </div>
+    <?php endif; ?>
+
+
     <form action="editing-borrower.php" method="POST">
-        <input type="hidden" name="borrowerId" value="<?php echo $borrower['borrowerId']; ?>">
+        <input type="hidden" name="idNumber" value="<?php echo $borrower['idNumber']; ?>">
 
         <div class="form-group">
             <label for="surName">Surname</label>
@@ -89,11 +109,6 @@ if (isset($_GET['borrowerId'])) {
         <div class="form-group">
             <label for="libraryId">Library ID</label>
             <input type="number" class="form-control" id="libraryId" name="libraryId" value="<?php echo $borrower['libraryId']; ?>" required>
-        </div>
-
-        <div class="form-group" id="facultyIdField">
-            <label for="facultyId">Faculty ID</label>
-            <input type="text" class="form-control" id="facultyId" name="facultyId" value="<?php echo $borrower['facultyId']; ?>" required>
         </div>
 
         <div class="form-group" id="courseField">
@@ -153,12 +168,10 @@ if (isset($_GET['borrowerId'])) {
         var borrowerType = document.getElementById('borrowerType').value;
         
         if (borrowerType === 'Student') {
-            document.getElementById('facultyIdField').classList.add('hidden');
             document.getElementById('positionField').classList.add('hidden');
             document.getElementById('courseField').classList.remove('hidden');
             document.getElementById('yearField').classList.remove('hidden');
         } else if (borrowerType === 'Faculty' || borrowerType === 'Staff') {
-            document.getElementById('facultyIdField').classList.remove('hidden');
             document.getElementById('positionField').classList.remove('hidden');
             document.getElementById('courseField').classList.add('hidden');
             document.getElementById('yearField').classList.add('hidden');

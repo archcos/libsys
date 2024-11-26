@@ -5,10 +5,9 @@ include('db-connect.php');
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get the form values
-    $borrowerId = $_POST['borrowerId'];
+    $idNumber = $_POST['idNumber'];
     $borrowerType = $_POST['borrowerType'];
     $libraryId = $_POST['libraryId'];
-    $facultyId = $_POST['facultyId'];
     $surName = $_POST['surName'];
     $firstName = $_POST['firstName'];
     $middleName = $_POST['middleName'];
@@ -21,20 +20,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $remarks = $_POST['remarks'];
 
     // Prepare the update query
-    $sql = "UPDATE tblborrowers SET borrowerType = ?, libraryId = ?, facultyId = ?, surName = ?, firstName = ?, middleName = ?, course = ?, year = ?, position = ?, gender = ?, birthDate = ?, homeAddress = ?, remarks = ? WHERE borrowerId = ?";
+    $sql = "UPDATE tblborrowers SET borrowerType = ?, libraryId = ?, surName = ?, firstName = ?, middleName = ?, course = ?, year = ?, position = ?, gender = ?, birthDate = ?, homeAddress = ?, remarks = ? WHERE idNumber = ?";
     
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
-        'ssssssssssssss', 
-        $borrowerType, $libraryId, $facultyId, $surName, $firstName, $middleName, 
-        $course, $year, $position, $gender, $birthDate, $homeAddress, $remarks, $borrowerId
+        'sssssssssssss', 
+        $borrowerType, $libraryId, $surName, $firstName, $middleName, 
+        $course, $year, $position, $gender, $birthDate, $homeAddress, $remarks, $idNumber
     );
     
     // Execute the query and check if it was successful
     if ($stmt->execute()) {
-        echo "Borrower data updated successfully!";
+        // Success: Redirect back to the edit-borrower page with a success message
+        header("Location: edit-borrower.php?idNumber=$idNumber&status=success");
+        exit();
     } else {
-        echo "Error updating borrower data.";
+        // Error: Redirect back to the edit-borrower page with an error message
+        header("Location: edit-borrower.php?idNumber=$idNumber&status=error");
+        exit();
     }
 
     // Close the database connection
