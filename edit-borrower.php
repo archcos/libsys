@@ -1,6 +1,6 @@
 <?php
 
-include('db-connect.php'); 
+include('process/db-connect.php'); 
 
 ob_start();
 
@@ -79,7 +79,7 @@ if (isset($_GET['status'])) {
     <?php endif; ?>
 
 
-    <form action="editing-borrower.php" method="POST">
+    <form action="process/editing-borrower.php" method="POST">
         <input type="hidden" name="idNumber" value="<?php echo $borrower['idNumber']; ?>">
 
         <div class="form-group">

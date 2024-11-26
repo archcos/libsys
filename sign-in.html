@@ -76,7 +76,7 @@
         const password = document.getElementById('password').value;
 
         try {
-          const response = await fetch('sign-in.php', {
+          const response = await fetch('process/sign-in.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),

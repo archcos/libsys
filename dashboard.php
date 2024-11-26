@@ -1,6 +1,6 @@
 <?php
 // Include your existing database connection file
-include('db-connect.php'); // Make sure to adjust the path to your actual connection file
+include('process/db-connect.php'); // Make sure to adjust the path to your actual connection file
 
 // Fetch sales data from the database
 $sql = "SELECT month, sales FROM sales_data";

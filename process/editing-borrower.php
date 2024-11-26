@@ -32,11 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Execute the query and check if it was successful
     if ($stmt->execute()) {
         // Success: Redirect back to the edit-borrower page with a success message
-        header("Location: edit-borrower.php?idNumber=$idNumber&status=success");
+        header("Location: ../edit-borrower.php?idNumber=$idNumber&status=success");
         exit();
     } else {
         // Error: Redirect back to the edit-borrower page with an error message
-        header("Location: edit-borrower.php?idNumber=$idNumber&status=error");
+        header("Location: ../edit-borrower.php?idNumber=$idNumber&status=error");
         exit();
     }
 

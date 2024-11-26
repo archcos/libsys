@@ -135,7 +135,7 @@
             const idNumber = $('#idNumber').val().trim();
             if (idNumber) {
                 $.ajax({
-                    url: 'edit-check.php',
+                    url: 'process/edit-check.php',
                     type: 'POST',
                     data: { idNumber: idNumber },
                     success: function (response) {

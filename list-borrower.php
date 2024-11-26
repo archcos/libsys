@@ -1,6 +1,6 @@
 <?php
 // Include your database connection file
-include('db-connect.php'); // Adjust the path to your actual connection file
+include('process/db-connect.php'); // Adjust the path to your actual connection file
 
 // Fetch data from tblborrowers
 $query = "SELECT * FROM tblborrowers";

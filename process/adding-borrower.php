@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result && $result->num_rows > 0) {
         // ID already exists, redirect back with an error
-        header("Location: add-borrower.php?borrowerType=$borrowerType&status=exists");
+        header("Location: ../add-borrower.php?borrowerType=$borrowerType&status=exists");
         exit;
     }
 
@@ -32,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($conn->query($query)) {
         // Success, redirect back with a success message
-        header("Location: add-borrower.php?borrowerType=$borrowerType&status=success");
+        header("Location: ../add-borrower.php?borrowerType=$borrowerType&status=success");
     } else {
         // Error inserting borrower
-        header("Location: add-borrower.php?borrowerType=$borrowerType&status=error");
+        header("Location: ../add-borrower.php?borrowerType=$borrowerType&status=error");
     }
 
     $conn->close();

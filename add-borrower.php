@@ -1,6 +1,6 @@
 <?php
 // Include your database connection file
-include('db-connect.php');
+include('process/db-connect.php');
 
 // Close database connection here, as this file does not use it further
 $conn->close();
@@ -94,7 +94,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
         </div>
     <?php endif; ?>
 
-    <form method="POST" action="adding-borrower.php">
+    <form method="POST" action="process/adding-borrower.php">
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
         <div class="form-group">
             <label for="libraryId">Library ID:</label>
