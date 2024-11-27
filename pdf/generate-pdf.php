@@ -3,7 +3,7 @@ include('../process/db-connect.php'); // Adjust path if needed
 
 // Fetch borrower details from the database
 $idNumber = isset($_GET['idNumber']) ? intval($_GET['idNumber']) : 214;
-$query = "SELECT firstName, surName, middleName, course, year, homeAddress FROM tblborrowers WHERE idNumber = ?";
+$query = "SELECT firstName, surName, middleName, course, year, homeAddress, borrowerType, position FROM tblborrowers WHERE idNumber = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $idNumber);
 $stmt->execute();
@@ -12,7 +12,14 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $name = $row['surName'] . ', ' . $row['firstName'] .' ' .  $row['middleName']; // Combine first and last name
-    $courseYear = $row['course'] . ', ' . $row['year']; // Combine course and year
+    $borrowerType = $row['borrowerType']; // Borrower type: Student, Staff, Faculty
+    if ($borrowerType == 'Student') {
+        // For Student, display course and year
+        $courseYear = $row['course'] . ', ' . $row['year'];
+    } else {
+        // For Staff and Faculty, display position
+        $courseYear = $row['position'];
+    }
     $address = $row['homeAddress']; // Borrower's address
 } else {
     die("Borrower not found.");
@@ -164,7 +171,7 @@ $photo = 'image.png';
                         <div class="content">
                             <div class="details">
                                 <p><b>Name:</b> <?php echo $name ?></p>
-                                <p><b>Course/Year:</b> <?php echo $courseYear ?></p>
+                                <p><b>Course&Year/Position:</b> <?php echo $courseYear ?></p>
                                 <p><b>Address:</b> <?php echo $address ?></p>
                                 <p><b>Signature:</b> ___________________________</p>
                             </div>
