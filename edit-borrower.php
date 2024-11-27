@@ -113,12 +113,12 @@ if (isset($_GET['status'])) {
 
         <div class="form-group" id="courseField">
             <label for="course">Course</label>
-            <input type="text" class="form-control" id="course" name="course" value="<?php echo $borrower['course']; ?>" required>
+            <input type="text" class="form-control" id="course" name="course" value="<?php echo $borrower['course']; ?>">
         </div>
 
         <div class="form-group" id="yearField">
             <label for="year">Year</label>
-            <input type="number" class="form-control" id="year" name="year" value="<?php echo $borrower['year']; ?>" required>
+            <input type="number" class="form-control" id="year" name="year" value="<?php echo $borrower['year']; ?>">
         </div>
 
         <div class="form-group" id="positionField">
@@ -159,7 +159,7 @@ if (isset($_GET['status'])) {
 </div>
 
 <!-- Add Bootstrap JS and jQuery if needed -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
 
 <script>
     // Function to show/hide fields based on the borrowerType

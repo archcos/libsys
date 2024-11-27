@@ -82,7 +82,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 
     <?php if ($status === 'success'): 
         // Fetch the latest ID
-        $query = "SELECT idNumber FROM tblborrowers ORDER BY idNumber DESC LIMIT 1";
+        $query = "SELECT idNumber FROM tblborrowers ORDER BY dateRegistered DESC LIMIT 1";
         $result = $conn->query($query);
         $latestId = $result->num_rows > 0 ? $result->fetch_assoc()['idNumber'] : null;
 

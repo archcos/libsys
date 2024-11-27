@@ -3,7 +3,7 @@ include('../process/db-connect.php'); // Adjust path if needed
 
 // Fetch borrower details from the database
 $idNumber = isset($_GET['idNumber']) ? intval($_GET['idNumber']) : 214;
-$query = "SELECT firstName, surName, course, year, homeAddress FROM tblborrowers WHERE idNumber = ?";
+$query = "SELECT firstName, surName, middleName, course, year, homeAddress FROM tblborrowers WHERE idNumber = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $idNumber);
 $stmt->execute();
@@ -11,7 +11,7 @@ $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
-    $name = $row['surName'] . ', ' . $row['firstName']; // Combine first and last name
+    $name = $row['surName'] . ', ' . $row['firstName'] .' ' .  $row['middleName']; // Combine first and last name
     $courseYear = $row['course'] . ', ' . $row['year']; // Combine course and year
     $address = $row['homeAddress']; // Borrower's address
 } else {
