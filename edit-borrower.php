@@ -147,8 +147,8 @@ if (isset($_GET['status'])) {
         <div class="form-group">
             <label for="remarks">Remarks</label>
             <select class="form-control" id="remarks" name="remarks" required>
-                <option value="1" <?php echo ($borrower['remarks'] == '1') ? 'selected' : ''; ?>>Activated</option>
-                <option value="0" <?php echo ($borrower['remarks'] == '0') ? 'selected' : ''; ?>>Deactivated</option>
+                <option value="1" <?php echo ($borrower['remarks'] == 1) ? 'selected' : ''; ?>>Activated</option>
+                <option value="0" <?php echo ($borrower['remarks'] == 0) ? 'selected' : ''; ?>>Deactivated</option>
             </select>
         </div>
 

@@ -1,24 +1,22 @@
 <?php
-// Include your database connection
-include('db-connect.php');
+include('../process/db-connect.php'); // Adjust the path to your database connection file
 
-// Check if the necessary POST data is received
-if (isset($_POST['idNumber'])) {
-    $idNumber = $_POST['idNumber'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idNumber = $_POST['idNumber']; // Get Library ID from POST request
 
-    // Delete the borrower
+    // Prepare and execute delete query
     $query = "DELETE FROM tblborrowers WHERE idNumber = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $idNumber);
+    $stmt->bind_param('i', $idNumber); // Bind as integer
 
     if ($stmt->execute()) {
         echo "Borrower deleted successfully!";
     } else {
-        echo "Error deleting borrower!";
+        http_response_code(500);
+        echo "Error: Unable to delete borrower.";
     }
 
     $stmt->close();
-} else {
-    echo "Invalid request!";
+    $conn->close();
 }
 ?>
