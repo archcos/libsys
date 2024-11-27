@@ -18,6 +18,14 @@ ob_start();
     <title>Borrower List</title>
     
     <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     
     <!-- Custom styles for this page -->
     <style>
@@ -56,6 +64,7 @@ ob_start();
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
+                                <th>Print</th> <!-- Print button column -->
                                 <th>Library ID</th>
                                 <th>ID Number</th>
                                 <th>Last Name</th>
@@ -74,6 +83,11 @@ ob_start();
                                     $remarksStatus = ($row['remarks'] == 1) ? 'Activated' : 'Deactivated';
 
                                     echo "<tr>";
+                                    echo "<td>
+                                    <a href='pdf/generate-pdf.php?idNumber=" . $row['idNumber']. "'>
+                                      <button class='print-btn'>Print</button>
+                                    </a>
+                                    </td>";
                                     echo "<td>" . $row['libraryId'] . "</td>";
                                     echo "<td>" . $row['idNumber'] . "</td>";
                                     echo "<td>" . $row['surName'] . "</td>";
@@ -132,25 +146,25 @@ ob_start();
 
         // Handle delete action with confirmation
         $('.delete-btn').on('click', function() {
-            var idNumber = $(this).data('borrower-id');
+            var idNumber = $(this).data('borrower-id'); // Get Library ID
             
             // Show confirmation popup
-            if (confirm('Are you sure you want to delete this borrower?')) {
+            if (confirm('Are you sure you want to delete this borrower? This action cannot be undone.')) {
+                // Send an AJAX request to delete the borrower
                 $.ajax({
-                    url: 'delete-borrower.php',
+                    url: 'process/delete-borrower.php', // Your backend delete script
                     type: 'POST',
-                    data: { idNumber: idNumber },
+                    data: { idNumber: idNumber }, // Send Library ID to delete
                     success: function(response) {
                         alert('Borrower deleted successfully!');
-                        location.reload(); // Refresh the page to reflect changes
+                        location.reload(); // Reload page to reflect changes
                     },
                     error: function() {
-                        alert('Error deleting borrower.');
+                        alert('Error deleting borrower. Please try again.');
                     }
                 });
             } else {
-                // If the user cancels the action
-                console.log('Delete action canceled.');
+                console.log('Delete action canceled.'); // User canceled the delete
             }
         });
     });

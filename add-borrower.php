@@ -3,7 +3,7 @@
 include('process/db-connect.php');
 
 // Close database connection here, as this file does not use it further
-$conn->close();
+
 
 // Start output buffering to inject this content into the main template
 ob_start();
@@ -80,9 +80,19 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 <body>
     <h1>Borrower Registration Form - <?= htmlspecialchars($borrowerType); ?></h1>
 
-    <?php if ($status === 'success'): ?>
+    <?php if ($status === 'success'): 
+        // Fetch the latest ID
+        $query = "SELECT idNumber FROM tblborrowers ORDER BY idNumber DESC LIMIT 1";
+        $result = $conn->query($query);
+        $latestId = $result->num_rows > 0 ? $result->fetch_assoc()['idNumber'] : null;
+
+        $conn->close();
+    ?>
         <div class="message success">
-            <strong>Success!</strong> Borrower has been added successfully.
+            <strong>Success!</strong> Borrower has been added successfully. 
+            <?php if ($latestId): ?>
+                <a href="pdf/generate-pdf.php?idNumber=<?= $latestId; ?>" style="color: white; text-decoration: underline;">Generate Borrower's Card</a>
+            <?php endif; ?>
         </div>
     <?php elseif ($status === 'exists'): ?>
         <div class="message error">

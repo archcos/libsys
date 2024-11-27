@@ -3,13 +3,13 @@
 include('db-connect.php');
 
 // Check if the necessary POST data is received
-if (isset($_POST['borrowerId'])) {
-    $borrowerId = $_POST['borrowerId'];
+if (isset($_POST['idNumber'])) {
+    $idNumber = $_POST['idNumber'];
 
     // Delete the borrower
-    $query = "DELETE FROM tblborrowers WHERE borrowerId = ?";
+    $query = "DELETE FROM tblborrowers WHERE idNumber = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $borrowerId);
+    $stmt->bind_param("i", $idNumber);
 
     if ($stmt->execute()) {
         echo "Borrower deleted successfully!";
