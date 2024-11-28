@@ -19,9 +19,6 @@ $result = $conn->query($query);
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <!-- Custom styles -->
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
         .delete-btn {
             background-color: red;
             color: white;

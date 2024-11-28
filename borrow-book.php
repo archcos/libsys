@@ -18,24 +18,17 @@ $result = $conn->query($query);
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
         .btn-action {
             padding: 5px 10px;
-            background-color: #28a745; /* Green for active */
+            background-color: blue; /* Green for active */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-align: center;
         }
-        .btn-action:disabled {
-            background-color: gray; /* Gray for disabled */
-            cursor: not-allowed;
-        }
-        .btn-action.locked {
-            background-color: gray;
+        .return-btn {
+            background-color: #28a745;
         }
         .delete-btn {
             background-color: red;
@@ -84,7 +77,7 @@ $result = $conn->query($query);
                         if ($isAvailable == 'Yes') {
                             echo "<button class='btn-action' onclick='handleAction(" . $row['bookId'] . ")'>Borrow</button>";
                         } else {
-                            echo "<button class='btn-action locked' disabled>Borrowed</button>";
+                            echo "<button class='btn-action return-btn' data-book-id='" . $row['bookId'] . "'>Return</button>";
                         }
                         echo "</td>";
                         echo "<td>" . $row['bookId'] . "</td>";
@@ -161,6 +154,28 @@ $result = $conn->query($query);
                 }
             });
         });
+
+        $(document).on('click', '.return-btn', function() {
+            const bookId = $(this).data('book-id'); // Get Book ID
+
+            // Confirm return action
+            if (confirm('Mark this book as returned?')) {
+                // Send AJAX request to update database
+                $.ajax({
+                    url: 'transactions/return-book.php', // Backend script to handle the return process
+                    type: 'POST',
+                    data: { bookId: bookId },
+                    success: function(response) {
+                        alert(response); // Show server response
+                        location.reload(); // Refresh the page
+                    },
+                    error: function() {
+                        alert('An error occurred while processing the return. Please try again.');
+                    }
+                });
+            }
+        });
+
 
         $(document).ready(function() {
             // Initialize DataTables
