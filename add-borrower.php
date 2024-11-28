@@ -126,6 +126,10 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             <label for="middleName">Middle Name:</label>
             <input type="text" id="middleName" name="middleName">
         </div>
+        <div class="form-group">
+            <label for="emailAddress">Email Address:</label>
+            <input type="text" id="emailAddress" name="emailAddress" required>
+        </div>
         <div id="positionField" class="form-group hidden">
             <label for="position">Position:</label>
             <input type="text" id="position" name="position">

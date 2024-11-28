@@ -7,7 +7,7 @@ ob_start();
 if (isset($_GET['idNumber'])) {
     $idNumber = $_GET['idNumber'];
 
-    $sql = "SELECT idNumber, borrowerType, libraryId, surName, firstName, middleName, course, year, position, gender, birthDate, homeAddress, remarks FROM tblborrowers WHERE idNumber = ?";
+    $sql = "SELECT idNumber, borrowerType, libraryId, surName, firstName, middleName, emailAddress, course, year, position, gender, birthDate, homeAddress, remarks FROM tblborrowers WHERE idNumber = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('s', $idNumber);
     $stmt->execute();
@@ -95,6 +95,11 @@ if (isset($_GET['status'])) {
         <div class="form-group">
             <label for="middleName">Middle Name</label>
             <input type="text" class="form-control" id="middleName" name="middleName" value="<?php echo $borrower['middleName']; ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="emailAddress">Email Address</label>
+            <input type="email" class="form-control" id="emailAddress" name="emailAddress" value="<?php echo $borrower['emailAddress']; ?>" required>
         </div>
 
         <div class="form-group">

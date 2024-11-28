@@ -48,7 +48,7 @@ $result = $conn->query($query);
                     <th>Last Name</th>
                     <th>First Name</th>
                     <th>Gender</th>
-                    <th>Home Address</th>
+                    <th>Email Address</th>
                     <th>Remarks</th>
                     <th>Actions</th>
                 </tr>
@@ -69,7 +69,7 @@ $result = $conn->query($query);
                         echo "<td>" . $row['surName'] . "</td>";
                         echo "<td>" . $row['firstName'] . "</td>";
                         echo "<td>" . $row['gender'] . "</td>";
-                        echo "<td>" . $row['homeAddress'] . "</td>";
+                        echo "<td>" . $row['emailAddress'] . "</td>";
                         echo "<td>
                                 <select class='remarks-dropdown' data-borrower-id='" . $row['idNumber'] . "'>
                                     <option value='1' " . ($row['remarks'] == 1 ? 'selected' : '') . ">Activated</option>
