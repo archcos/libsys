@@ -45,6 +45,14 @@ $result = $conn->query($query);
             border-radius: 5px;
             cursor: pointer;
         }
+        .cancel-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
         .delete-btn:hover {
             background-color: darkred;
         }
@@ -96,12 +104,64 @@ $result = $conn->query($query);
         </table>
     </div>
 
+    <div id="borrowModal" style="display: none; position: fixed; z-index: 1000; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 20px; border-radius: 10px; width: 300px;">
+            <h3>Borrow Book</h3>
+            <form id="borrowForm">
+                <input type="hidden" id="modalBookId">
+                <label for="borrowerId">ID Number:</label><br>
+                <input type="number" id="borrowerId" required><br><br>
+                <label for="returnDate">Return Date:</label><br>
+                <input type="date" id="returnDate" required><br><br>
+                <button type="submit" class="btn-action">Approve</button>
+                <button type="button" onclick="closeModal()" class="cancel-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
+        function handleAction(bookId) {
+        document.getElementById('modalBookId').value = bookId; // Store bookId in the modal
+        document.getElementById('borrowModal').style.display = 'flex';
+        }
+
+        // Close the modal
+        function closeModal() {
+            document.getElementById('borrowModal').style.display = 'none';
+        }
+
+        // Handle borrow form submission
+        document.getElementById('borrowForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent default form submission
+
+            const bookId = document.getElementById('modalBookId').value;
+            const borrowerId = document.getElementById('borrowerId').value;
+            const returnDate = document.getElementById('returnDate').value;
+
+            // Send AJAX request to process borrowing
+            $.ajax({
+                url: 'transactions/borrow-book.php', // Backend script
+                type: 'POST',
+                data: {
+                    bookId: bookId,
+                    idNumber: borrowerId,
+                    returnDate: returnDate
+                },
+                success: function(response) {
+                    alert(response); // Show server response
+                    closeModal();
+                    location.reload(); // Reload the page
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+
         $(document).ready(function() {
             // Initialize DataTables
             $('#dataTable').DataTable();
@@ -128,12 +188,18 @@ $result = $conn->query($query);
                 }
             });
         });
+        document.addEventListener('DOMContentLoaded', function() {
+            var today = new Date();
+            var day = String(today.getDate()).padStart(2, '0');  // Add leading zero if needed
+            var month = String(today.getMonth() + 1).padStart(2, '0');  // Month is 0-based
+            var year = today.getFullYear();
 
-        // Action handler for the "Select" button
-        function handleAction(bookId) {
-            alert("Action performed on Book ID: " + bookId);
-            // Add custom logic here (e.g., redirect or perform a task)
-        }
+            // Format the date as YYYY-MM-DD
+            var formattedDate = year + '-' + month + '-' + day;
+
+            // Set the min attribute of the return date input
+            document.getElementById('returnDate').setAttribute('min', formattedDate);
+        });
     </script>
 </body>
 </html>

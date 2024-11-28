@@ -104,6 +104,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="add-book.php">Add Book</a>
                 <a class="collapse-item" href="borrow-book.php">Borrow Book</a>
+                <a class="collapse-item" href="due-date.php">Book Due Dates</a>
             </div>
         </div>
     </li>

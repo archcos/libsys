@@ -1,23 +1,28 @@
 <?php
 // Include your existing database connection file
-include('process/db-connect.php'); // Make sure to adjust the path to your actual connection file
+include('process/db-connect.php'); // Adjust the path to your actual connection file
 
-// Fetch sales data from the database
-$sql = "SELECT month, sales FROM sales_data";
+// Fetch available column data from tblbooks
+$sql = "SELECT available, COUNT(*) AS count FROM tblbooks GROUP BY available";
 $result = $conn->query($sql);
 
-// Arrays to hold data for the chart
-$months = [];
-$sales = [];
+// Variables to hold the count of "Yes" and "No"
+$availableYes = 0;
+$availableNo = 0;
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $months[] = $row['month'];
-        $sales[] = $row['sales'];
-}
+        if ($row['available'] == 'Yes') { // Assuming "1" represents "Yes"
+            $availableYes = $row['count'];
+        } elseif ($row['available'] == 'No') { // Assuming "0" represents "No"
+            $availableNo = $row['count'];
+        }
+    }
 } else {
     echo "No data found";
 }
+
+$total = $availableYes + $availableNo;
 
 // Close the database connection (optional if the connection is persistent)
 $conn->close();
@@ -31,13 +36,9 @@ ob_start();
     <div class="content container-fluid">
         <div class="row justify-content-sm-center text-center py-10">
             <div class="col-sm-7 col-md-5">
-                <img class="img-fluid mb-5" alt="Image Description" style="max-width: 21rem;">
-
-                <h1>Sales Overview</h1>
-                <p>Track the sales performance by month.</p>
-                <canvas id="salesChart"></canvas> <!-- The bar chart will be rendered here -->
-
-                <a class="btn btn-primary" href="index.html">Create my first campaign</a>
+                <h1>Books Availability Overview</h1>
+                <p>Total Available Books : <?php echo $total   ?></p>
+                <canvas id="availabilityChart"></canvas> <!-- The bar chart will be rendered here -->
             </div>
         </div>
         <!-- End Row -->
@@ -47,16 +48,22 @@ ob_start();
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    var ctx = document.getElementById('salesChart').getContext('2d');
-    var salesChart = new Chart(ctx, {
+    var ctx = document.getElementById('availabilityChart').getContext('2d');
+    var availabilityChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: <?php echo json_encode($months); ?>, // Labels from database
+            labels: ['Available : <?php echo $availableYes ?>', 'Borrowed : <?php echo $availableNo ?>'], // Labels for the chart
             datasets: [{
-                label: 'Sales',
-                data: <?php echo json_encode($sales); ?>, // Sales data from database
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                label: 'Book Count',
+                data: [<?php echo $availableYes; ?>, <?php echo $availableNo; ?>], // Data from the database
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)', // Color for "Available"
+                    'rgba(255, 99, 132, 0.2)'  // Color for "Not Available"
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)', // Border for "Available"
+                    'rgba(255, 99, 132, 1)'  // Border for "Not Available"
+                ],
                 borderWidth: 1
             }]
         },
