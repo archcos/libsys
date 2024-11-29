@@ -109,10 +109,25 @@
         </div>
     </li>
 
+    <hr class="sidebar-divider">
+
     <!-- Sidebar Toggler -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
+
+        <!-- Divider -->
+
+        <!-- Logout Button -->
+        <li class="nav-item mt-auto">
+            <form action="process/logout.php" method="POST" class="p-0 text-center">
+                <button type="submit" class="btn btn-block text-white">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-white"></i>
+                    Logout
+                </button>
+            </form>
+        </li>
+
 
 </ul>
 

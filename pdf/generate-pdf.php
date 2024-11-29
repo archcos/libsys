@@ -1,4 +1,13 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // If the user is not logged in, redirect to the login page
+    header('Location: ../sign-in.php');  // Change 'login.php' to your login page
+    exit;  // Make sure the script stops executing after the redirect
+}
+
+
 include('../process/db-connect.php'); // Adjust path if needed
 
 // Fetch borrower details from the database

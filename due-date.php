@@ -1,7 +1,18 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // If the user is not logged in, redirect to the login page
+    header('Location: sign-in.php');  // Change 'login.php' to your login page
+    exit;  // Make sure the script stops executing after the redirect
+}
+
+// Start session to retrieve the message
+
 // Include your database connection file
 include('process/db-connect.php'); // Adjust the path to your actual connection file
 ob_start();
+$status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from the URL parameter
 
 // Query to fetch data from tblreturnborrow and join with tblborrowers and tblbooks
 $query = "
@@ -36,12 +47,34 @@ $result = $conn->query($query);
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body>
     <div class="container">
+
+        <?php if ($status === 'success'): 
+        ?>
+            <div class="message success" style="color: green; background: #dff0d8; padding: 10px; border: 1px solid #d0e9c6; margin-bottom: 20px;">
+                <strong>Success!</strong> Email Sent Successfully!. 
+            </div>
+        <?php elseif ($status === 'exists'): ?>
+            <div class="message error" style="color: white; background: #f2dede; padding: 10px; border: 1px solid #ebccd1; margin-bottom: 20px;">
+                <strong>Error!</strong> Email didn't sent.
+            </div>
+        <?php elseif ($status === 'error'): ?>
+            <div class="message error" style="color: white; background: #f2dede; padding: 10px; border: 1px solid #ebccd1; margin-bottom: 20px;">
+                <strong>Error!</strong> There was an issue with sending the email. Please try again.
+            </div>
+        <?php endif; ?>
+
         <h1>Borrowed/Returned Books</h1>
         <p>Below is the list of all returned books in the library.</p>
+        <p>
+        <form method="POST" action="process/send-email.php">
+            <button type="submit" name="send_notifications" class="btn btn-primary">Send Return Reminders</button>
+        </form>
+        </p>
+
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -69,8 +102,7 @@ $result = $conn->query($query);
                         echo "</tr>";
                     }
                 } else {
-                    // Fix colspan to match the number of columns in <thead>
-                    // echo "<tr><td colspan='8' class='text-center'>No returned books found</td></tr>";
+                    echo "<tr><td colspan='7' class='text-center'>No records found.</td></tr>";
                 }
                 ?>
             </tbody>
@@ -79,6 +111,8 @@ $result = $conn->query($query);
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Toastr.js for success/failure notifications -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
@@ -88,6 +122,7 @@ $result = $conn->query($query);
     </script>
 </body>
 </html>
+
 <?php
 // Capture the content and include it in the main template
 $content = ob_get_clean();

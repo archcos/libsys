@@ -1,3 +1,7 @@
+
+<?php
+session_start();  // Start the session to manage session variables
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,7 +80,7 @@
         const password = document.getElementById('password').value;
 
         try {
-          const response = await fetch('process/sign-in.php', {
+          const response = await fetch('process/login.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
@@ -92,7 +96,7 @@
             notification.classList.remove('d-none');
           }
         } catch (error) {
-          console.error('Error:', error); 
+          console.log(error);
           notification.textContent = 'An error occurred. Please try again later.';
           notification.classList.remove('d-none');
         }

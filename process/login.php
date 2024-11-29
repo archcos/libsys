@@ -1,17 +1,19 @@
 <?php
+session_start(); // Start the session
 header('Content-Type: application/json');
 
-// Enable error reporting for debugging
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+// Enable error logging
+ini_set('display_errors', 0); // Disable error display
+ini_set('log_errors', 1);    // Enable error logging
+ini_set('error_log', __DIR__ . '/php-error.log'); // Log errors to a file
 
 // Include the database connection
-require 'db-connect.php'; // This should be the file where the $conn mysqli connection is defined
+require 'db-connect.php'; // Adjust the path if needed
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
 
-    // Check if input data is provided
+    // Validate input
     if (empty($input['username']) || empty($input['password'])) {
         echo json_encode(['success' => false, 'message' => 'Username and password are required.']);
         exit();
@@ -32,6 +34,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user) {
             // Verify the password using SHA1
             if (sha1($password) === $user['password']) {
+                $updateStmt = $conn->prepare('UPDATE tbluser SET lastLogin = NOW() WHERE userId = ?');
+                $updateStmt->bind_param('i', $user['userId']);
+                $updateStmt->execute();
+
+                $_SESSION['user_id'] = $user['userId'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['firstName'] = $user['firstName'];
+                $_SESSION['lastName'] = $user['lastName'];
+
                 echo json_encode(['success' => true, 'message' => 'Login successful']);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Invalid username or password']);
@@ -40,12 +51,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['success' => false, 'message' => 'Invalid username or password']);
         }
 
-        // Close the statement
+
         $stmt->close();
-    } catch (mysqli_sql_exception $e) {
-        echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+    } catch (Exception $e) {
+        // Log the error and send a generic response
+        error_log('Error in sign-in.php: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'An internal error occurred.']);
     }
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 ?>
+
+

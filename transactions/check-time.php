@@ -1,4 +1,5 @@
 <?php
+session_start();
 // Database connection (update with your credentials)
 include('../process/db-connect.php'); // Adjust the path to your actual connection file
 

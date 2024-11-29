@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $surName = $_POST['surName'];
     $firstName = $_POST['firstName'];
     $middleName = $_POST['middleName'];
+    $emailAddress = $_POST['emailAddress'];
     $course = $_POST['course'];
     $year = $_POST['year'];
     $position = $_POST['position'];
@@ -20,12 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $remarks = $_POST['remarks'];
 
     // Prepare the update query
-    $sql = "UPDATE tblborrowers SET borrowerType = ?, libraryId = ?, surName = ?, firstName = ?, middleName = ?, course = ?, year = ?, position = ?, gender = ?, birthDate = ?, homeAddress = ?, remarks = ? WHERE idNumber = ?";
+    $sql = "UPDATE tblborrowers SET borrowerType = ?, libraryId = ?, surName = ?, firstName = ?, middleName = ?, emailAddress = ?, course = ?, year = ?, position = ?, gender = ?, birthDate = ?, homeAddress = ?, remarks = ? WHERE idNumber = ?";
     
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
-        'sssssssssssss', 
-        $borrowerType, $libraryId, $surName, $firstName, $middleName, 
+        'ssssssssssssss', 
+        $borrowerType, $libraryId, $surName, $firstName, $middleName, $emailAddress,
         $course, $year, $position, $gender, $birthDate, $homeAddress, $remarks, $idNumber
     );
     

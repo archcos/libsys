@@ -1,4 +1,5 @@
 <?php
+
 include('db-connect.php');
 
 // Check if the form was submitted

@@ -1,4 +1,5 @@
 <?php
+
 include('../process/db-connect.php'); // Adjust the path to your database connection file
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
