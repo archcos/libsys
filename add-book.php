@@ -7,15 +7,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
     $author = trim($_POST['author']);
     $available = 'Yes';
+    $quantity = trim($_POST['quantity']);
 
     // Validate inputs
     if (empty($title) || empty($author)) {
         $error = "All fields are required!";
     } else {
         // Insert the data into the database
-        $query = "INSERT INTO tblbooks (title, author, dateAdded, available) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO tblbooks (title, author, dateAdded, available, quantity) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssss", $title, $author, $dateAdded, $available);
+        $stmt->bind_param("sssss", $title, $author, $dateAdded, $available, $quantity);
 
         if ($stmt->execute()) {
             $success = "Book added successfully!";
@@ -57,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 5px;
         }
         input[type="text"],
+        input[type="number"],
         input[type="date"] {
             width: 100%;
             padding: 10px;
@@ -116,6 +118,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="author">Author:</label>
                 <input type="text" id="author" name="author" placeholder="Enter author name" required>
+            </div class = "btn-container">
+            <div class="form-group">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
             </div class = "btn-container">
             <button type="submit" class="addbtn">Add Book</button>
         </form>

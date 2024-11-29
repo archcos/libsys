@@ -3,26 +3,27 @@
 include('process/db-connect.php'); // Adjust the path to your actual connection file
 
 // Fetch available column data from tblbooks
-$sql = "SELECT available, COUNT(*) AS count FROM tblbooks GROUP BY available";
-$result = $conn->query($sql);
+// Initialize variables
+$totalQuantity = 0;
+$totalNotReturned = 0;
 
-// Variables to hold the count of "Yes" and "No"
-$availableYes = 0;
-$availableNo = 0;
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        if ($row['available'] == 'Yes') { // Assuming "1" represents "Yes"
-            $availableYes = $row['count'];
-        } elseif ($row['available'] == 'No') { // Assuming "0" represents "No"
-            $availableNo = $row['count'];
-        }
-    }
-} else {
-    echo "No data found";
+// Fetch total quantity from tblbooks
+$sqlQuantity = "SELECT SUM(quantity) AS total_quantity FROM tblbooks";
+$resultQuantity = $conn->query($sqlQuantity);
+if ($resultQuantity && $resultQuantity->num_rows > 0) {
+    $row = $resultQuantity->fetch_assoc();
+    $totalQuantity = $row['total_quantity'];
 }
 
-$total = $availableYes + $availableNo;
+// Fetch total records with returned = 'No' from tblreturnborrow
+$sqlNotReturned = "SELECT COUNT(*) AS total_not_returned FROM tblreturnborrow WHERE returned = 'No'";
+$resultNotReturned = $conn->query($sqlNotReturned);
+if ($resultNotReturned && $resultNotReturned->num_rows > 0) {
+    $row = $resultNotReturned->fetch_assoc();
+    $totalNotReturned = $row['total_not_returned'];
+}
+
+$total = $totalNotReturned + $totalQuantity;
 
 // Close the database connection (optional if the connection is persistent)
 $conn->close();
@@ -52,10 +53,10 @@ ob_start();
     var availabilityChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Available : <?php echo $availableYes ?>', 'Borrowed : <?php echo $availableNo ?>'], // Labels for the chart
+            labels: ['Available : <?php echo $totalQuantity ?>', 'Borrowed : <?php echo $totalNotReturned ?>'], // Labels for the chart
             datasets: [{
                 label: 'Book Count',
-                data: [<?php echo $availableYes; ?>, <?php echo $availableNo; ?>], // Data from the database
+                data: [<?php echo $totalQuantity; ?>, <?php echo $totalNotReturned; ?>], // Data from the database
                 backgroundColor: [
                     'rgba(75, 192, 192, 0.2)', // Color for "Available"
                     'rgba(255, 99, 132, 0.2)'  // Color for "Not Available"

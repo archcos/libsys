@@ -27,6 +27,15 @@ $result = $conn->query($query);
             cursor: pointer;
             text-align: center;
         }
+        .btn-nostock {
+            padding: 5px 10px;
+            background-color: grey; /* Green for active */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
         .return-btn {
             background-color: #28a745;
         }
@@ -58,11 +67,12 @@ $result = $conn->query($query);
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>Action</th>
+                    <th>Available</th>
+                    <th>Return</th>
                     <th>Book ID</th>
                     <th>Title</th>
                     <th>Author</th>
-                    <th>Available</th>
+                    <th>Stocks</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -70,23 +80,27 @@ $result = $conn->query($query);
                 <?php
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        $isAvailable = $row['available']; // Check availability
+                        $quantity = $row['quantity'];
+
                         echo "<tr>";
-                        // Action button (clickable if available)
                         echo "<td>";
-                        if ($isAvailable == 'Yes') {
-                            echo "<button class='btn-action' onclick='handleAction(" . $row['bookId'] . ")'>Borrow</button>";
+                        if ($row['quantity'] > 0) {
+                            echo "<button class='btn-action' onclick='handleBorrow(" . $row['bookId'] . ")'>Borrow</button>";
                         } else {
-                            echo "<button class='btn-action return-btn' data-book-id='" . $row['bookId'] . "'>Return</button>";
+                            echo "<button class='btn-nostock' disabled>Unavailable</button>";
                         }
                         echo "</td>";
+                        
+                        echo "<td>";
+                        echo "<button class='btn-action return-btn' onclick='handleReturn(" . $row['bookId'] . ")'>Return</button>";
+                        echo "</td>";                        
                         echo "<td>" . $row['bookId'] . "</td>";
                         echo "<td>" . $row['title'] . "</td>";
                         echo "<td>" . $row['author'] . "</td>";
-                        echo "<td>" . $row['available'] . "</td>";
+                        echo "<td>" . $quantity . "</td>";
                         echo "<td>
                                 <button class='delete-btn' data-book-id='" . $row['bookId'] . "'>Delete</button>
-                              </td>";
+                            </td>";
                         echo "</tr>";
                     }
                 } else {
@@ -101,13 +115,27 @@ $result = $conn->query($query);
         <div style="background: white; padding: 20px; border-radius: 10px; width: 300px;">
             <h3>Borrow Book</h3>
             <form id="borrowForm">
-                <input type="hidden" id="modalBookId">
+                <input type="hidden" id="borrowModalBookId">
                 <label for="borrowerId">ID Number:</label><br>
                 <input type="number" id="borrowerId" required><br><br>
                 <label for="returnDate">Return Date:</label><br>
                 <input type="date" id="returnDate" required><br><br>
                 <button type="submit" class="btn-action">Approve</button>
-                <button type="button" onclick="closeModal()" class="cancel-btn">Cancel</button>
+                <button type="button" onclick="closeModal('borrowModal')" class="cancel-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+<!-- Return Modal -->
+    <div id="returnModal" style="display: none; position: fixed; z-index: 1000; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 20px; border-radius: 10px; width: 300px;">
+            <h3>Return Book</h3>
+            <form id="returnForm">
+                <input type="hidden" id="returnModalBookId">
+                <label for="returnerId">ID Number:</label><br>
+                <input type="number" id="returnerId" required><br><br>
+                <button type="submit" class="btn-action">Confirm Return</button>
+                <button type="button" onclick="closeModal('returnModal')" class="cancel-btn">Cancel</button>
             </form>
         </div>
     </div>
@@ -117,63 +145,71 @@ $result = $conn->query($query);
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
-        function handleAction(bookId) {
-        document.getElementById('modalBookId').value = bookId; // Store bookId in the modal
-        document.getElementById('borrowModal').style.display = 'flex';
+                // Handle Borrow
+                // Open Borrow Modal
+        function handleBorrow(bookId) {
+            document.getElementById('borrowModalBookId').value = bookId; // Store bookId in the modal
+            document.getElementById('borrowModal').style.display = 'flex';
         }
 
-        // Close the modal
-        function closeModal() {
-            document.getElementById('borrowModal').style.display = 'none';
+        // Open Return Modal
+        function handleReturn(bookId) {
+            document.getElementById('returnModalBookId').value = bookId; // Store bookId in the modal
+            document.getElementById('returnModal').style.display = 'flex';
         }
 
-        // Handle borrow form submission
-        document.getElementById('borrowForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Prevent default form submission
+        // Close Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
 
-            const bookId = document.getElementById('modalBookId').value;
+        // Handle Borrow Form Submission
+        document.getElementById('borrowForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const bookId = document.getElementById('borrowModalBookId').value;
             const borrowerId = document.getElementById('borrowerId').value;
             const returnDate = document.getElementById('returnDate').value;
 
-            // Send AJAX request to process borrowing
+            // Send AJAX request for borrowing
             $.ajax({
-                url: 'transactions/borrow-book.php', // Backend script
+                url: 'transactions/borrow-book.php',
                 type: 'POST',
-                data: {
-                    bookId: bookId,
-                    idNumber: borrowerId,
-                    returnDate: returnDate
+                data: { bookId, idNumber: borrowerId, returnDate },
+                success: function (response) {
+                    alert(response);
+                    closeModal('borrowModal');
+                    location.reload();
                 },
-                success: function(response) {
-                    alert(response); // Show server response
-                    closeModal();
-                    location.reload(); // Reload the page
+                error: function () {
+                    alert('Error borrowing the book. Please try again.');
                 },
-                error: function() {
-                    alert('An error occurred. Please try again.');
-                }
             });
         });
 
-        $(document).on('click', '.return-btn', function() {
-            const bookId = $(this).data('book-id'); // Get Book ID
+        // Handle Return Form Submission
+        document.getElementById('returnForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-            // Confirm return action
-            if (confirm('Mark this book as returned?')) {
-                // Send AJAX request to update database
-                $.ajax({
-                    url: 'transactions/return-book.php', // Backend script to handle the return process
-                    type: 'POST',
-                    data: { bookId: bookId },
-                    success: function(response) {
-                        alert(response); // Show server response
-                        location.reload(); // Refresh the page
-                    },
-                    error: function() {
-                        alert('An error occurred while processing the return. Please try again.');
-                    }
-                });
-            }
+            const bookId = document.getElementById('returnModalBookId').value;
+            console.log(bookId);
+            const returnerId = document.getElementById('returnerId').value;
+            console.log(returnerId);
+
+            // Send AJAX request for returning
+            $.ajax({
+                url: 'transactions/return-book.php',
+                type: 'POST',
+                data: { bookId, idNumber: returnerId },
+                success: function (response) {
+                    alert(response);
+                    closeModal('returnModal');
+                    location.reload();
+                },
+                error: function () {
+                    alert('Error returning the book. Please try again.');
+                },
+            });
         });
 
 

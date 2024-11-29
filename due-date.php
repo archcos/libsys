@@ -45,7 +45,7 @@ $result = $conn->query($query);
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>Borrow ID</th>
+                    <th>Borrower ID</th>
                     <th>Borrowed Date</th>
                     <th>Return Date</th>
                     <th>Borrower Name</th>
@@ -59,17 +59,18 @@ $result = $conn->query($query);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . $row['borrowId'] . "</td>";
-                        echo "<td>" . $row['borrowedDate'] . "</td>";
-                        echo "<td>" . $row['returnDate'] . "</td>";
-                        echo "<td>" . $row['firstName'] . " " . $row['surName'] . "</td>";
-                        echo "<td>" . $row['bookTitle'] . "</td>";
-                        echo "<td>" . $row['bookAuthor'] . "</td>";
-                        echo "<td>" . $row['returned'] . "</td>";
+                        echo "<td>" . $row['borrowerId'] . "</td>"; // Borrow ID
+                        echo "<td>" . $row['borrowedDate'] . "</td>"; // Borrowed Date
+                        echo "<td>" . $row['returnDate'] . "</td>"; // Return Date
+                        echo "<td>" . $row['firstName'] . " " . $row['surName'] . "</td>"; // Borrower Name
+                        echo "<td>" . $row['bookTitle'] . "</td>"; // Book Title
+                        echo "<td>" . $row['bookAuthor'] . "</td>"; // Author
+                        echo "<td>" . $row['returned'] . "</td>"; // Returned
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6' class='text-center'>No returned books found</td></tr>";
+                    // Fix colspan to match the number of columns in <thead>
+                    // echo "<tr><td colspan='8' class='text-center'>No returned books found</td></tr>";
                 }
                 ?>
             </tbody>
@@ -81,9 +82,8 @@ $result = $conn->query($query);
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
-        $(document).ready(function() {
-            // Initialize DataTables
-            $('#dataTable').DataTable();
+       $(document).ready(function() {
+            $('#dataTable').DataTable(); // Matches <table id="dataTable">
         });
     </script>
 </body>

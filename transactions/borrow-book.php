@@ -7,7 +7,7 @@ $bookId = $_POST['bookId'];
 $idNumber = $_POST['idNumber'];
 $returnDate = $_POST['returnDate'];
 
-// Check if idNumber exists in tblborrowers
+// Check if borrower exists in tblborrowers
 $checkBorrower = "SELECT * FROM tblborrowers WHERE idNumber = ?";
 $stmt = $conn->prepare($checkBorrower);
 $stmt->bind_param("s", $idNumber);
@@ -19,15 +19,18 @@ if ($result->num_rows === 0) {
     exit;
 }
 
-// Add the record to tblreturnborrow
-$insertQuery = "INSERT INTO tblreturnborrow (bookId, borrowerId, returnDate) VALUES (?, ?, ?)";
+// Insert a new record into tblreturnborrow
+$insertQuery = "INSERT INTO tblreturnborrow (bookId, borrowerId, borrowedDate, returnDate, returned) 
+                VALUES (?, ?, NOW(), ?, 'No')";
 $stmt = $conn->prepare($insertQuery);
 $stmt->bind_param("iis", $bookId, $idNumber, $returnDate);
 $insertResult = $stmt->execute();
 
 if ($insertResult) {
-    // Update availability in tblbooks
-    $updateQuery = "UPDATE tblbooks SET available = 'No' WHERE bookId = ?";
+    // Decrease quantity and update availability in tblbooks
+    $updateQuery = "UPDATE tblbooks 
+                    SET quantity = quantity - 1
+                    WHERE bookId = ?";
     $stmt = $conn->prepare($updateQuery);
     $stmt->bind_param("i", $bookId);
     $stmt->execute();
@@ -37,6 +40,7 @@ if ($insertResult) {
     echo "Error: Could not borrow the book. Please try again.";
 }
 
+// Close connection and statement
 $stmt->close();
 $conn->close();
 ?>

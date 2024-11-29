@@ -2,14 +2,6 @@
 // Database connection (update with your credentials)
 include('../process/db-connect.php'); // Adjust the path to your actual connection file
 
-// Connect to the database
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
-}
-
 // Get the current date (use 'Y-m-d' for date comparison without the time part)
 $currentDateTime = date('Y-m-d');
 
