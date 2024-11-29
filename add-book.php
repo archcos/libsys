@@ -14,7 +14,6 @@ ob_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
     $author = trim($_POST['author']);
-    $available = 'Yes';
     $quantity = trim($_POST['quantity']);
 
     // Validate inputs
@@ -22,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "All fields are required!";
     } else {
         // Insert the data into the database
-        $query = "INSERT INTO tblbooks (title, author, dateAdded, available, quantity) VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO tblbooks (title, author, dateAdded, quantity) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("sssss", $title, $author, $dateAdded, $available, $quantity);
+        $stmt->bind_param("ssss", $title, $author, $dateAdded, $quantity);
 
         if ($stmt->execute()) {
             $success = "Book added successfully!";
