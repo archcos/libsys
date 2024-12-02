@@ -3,18 +3,16 @@ session_start();
 
 if (!isset($_SESSION['user_id'])) {
     // If the user is not logged in, redirect to the login page
-    header('Location: sign-in.php');  // Change 'login.php' to your login page
-    exit;  // Make sure the script stops executing after the redirect
+    header('Location: sign-in.php');
+    exit;
 }
 
-// Start session to retrieve the message
-
 // Include your database connection file
-include('process/db-connect.php'); // Adjust the path to your actual connection file
+include('process/db-connect.php'); 
 ob_start();
 $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from the URL parameter
 
-// Query to fetch data from tblreturnborrow and join with tblborrowers and tblbooks
+// Query to fetch data from tblreturnborrow and join with tblborrowers, tblbooks, tblauthor, and tblcategory
 $query = "
     SELECT 
         rb.borrowId, 
@@ -24,7 +22,8 @@ $query = "
         rb.bookId,
         rb.returned,
         b.title AS bookTitle,
-        b.author AS bookAuthor,
+        CONCAT(a.firstName, ' ', a.lastName) AS bookAuthor,  -- Concatenate first and last names
+        c.categoryName AS bookCategory,
         br.firstName,
         br.surName
     FROM 
@@ -33,6 +32,10 @@ $query = "
         tblborrowers br ON rb.borrowerId = br.idNumber
     JOIN 
         tblbooks b ON rb.bookId = b.bookId
+    JOIN 
+        tblauthor a ON b.authorId = a.authorId
+    JOIN 
+        tblcategory c ON b.categoryId = c.categoryId
 ";
 
 $result = $conn->query($query);
@@ -52,14 +55,13 @@ $result = $conn->query($query);
 <body>
     <div class="container">
 
-        <?php if ($status === 'success'): 
-        ?>
+        <?php if ($status === 'success'): ?>
             <div class="message success" style="color: green; background: #dff0d8; padding: 10px; border: 1px solid #d0e9c6; margin-bottom: 20px;">
-                <strong>Success!</strong> Email Sent Successfully!. 
+                <strong>Success!</strong> Email Sent Successfully!.
             </div>
         <?php elseif ($status === 'exists'): ?>
             <div class="message error" style="color: white; background: #f2dede; padding: 10px; border: 1px solid #ebccd1; margin-bottom: 20px;">
-                <strong>Error!</strong> Email didn't sent.
+                <strong>Error!</strong> Email didn't send.
             </div>
         <?php elseif ($status === 'error'): ?>
             <div class="message error" style="color: white; background: #f2dede; padding: 10px; border: 1px solid #ebccd1; margin-bottom: 20px;">
@@ -84,6 +86,7 @@ $result = $conn->query($query);
                     <th>Borrower Name</th>
                     <th>Book Title</th>
                     <th>Author</th>
+                    <th>Category</th>
                     <th>Returned</th>
                 </tr>
             </thead>
@@ -92,17 +95,16 @@ $result = $conn->query($query);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
-                        echo "<td>" . $row['borrowerId'] . "</td>"; // Borrow ID
+                        echo "<td>" . $row['borrowerId'] . "</td>"; // Borrower ID
                         echo "<td>" . $row['borrowedDate'] . "</td>"; // Borrowed Date
                         echo "<td>" . $row['returnDate'] . "</td>"; // Return Date
                         echo "<td>" . $row['firstName'] . " " . $row['surName'] . "</td>"; // Borrower Name
                         echo "<td>" . $row['bookTitle'] . "</td>"; // Book Title
                         echo "<td>" . $row['bookAuthor'] . "</td>"; // Author
-                        echo "<td>" . $row['returned'] . "</td>"; // Returned
+                        echo "<td>" . $row['bookCategory'] . "</td>"; // Category
+                        echo "<td>" . ($row['returned'] == "Yes" ? 'Yes' : 'No') . "</td>"; // Returned
                         echo "</tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='7' class='text-center'>No records found.</td></tr>";
                 }
                 ?>
             </tbody>

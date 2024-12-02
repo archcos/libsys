@@ -3,16 +3,21 @@ session_start();
 
 if (!isset($_SESSION['user_id'])) {
     // If the user is not logged in, redirect to the login page
-    header('Location: sign-in.php');  // Change 'login.php' to your login page
-    exit;  // Make sure the script stops executing after the redirect
+    header('Location: sign-in.php'); // Change 'login.php' to your login page
+    exit; // Stop script execution after the redirect
 }
 
 // Include your database connection file
 include('process/db-connect.php'); // Adjust the path to your actual connection file
 ob_start();
 
-// Fetch data from tblbooks
-$query = "SELECT * FROM tblbooks";
+// Fetch data from tblbooks with author and category names
+$query = "SELECT b.bookId, b.title, b.quantity, 
+                 CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
+                 c.categoryName 
+          FROM tblbooks b
+          JOIN tblauthor a ON b.authorId = a.authorId
+          JOIN tblcategory c ON b.categoryId = c.categoryId";
 $result = $conn->query($query);
 ?>
 
@@ -80,6 +85,7 @@ $result = $conn->query($query);
                     <th>Book ID</th>
                     <th>Title</th>
                     <th>Author</th>
+                    <th>Category</th>
                     <th>Stocks</th>
                     <th>Actions</th>
                 </tr>
@@ -88,9 +94,8 @@ $result = $conn->query($query);
                 <?php
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        $quantity = $row['quantity'];
-
                         echo "<tr>";
+                        // Borrow button or unavailable
                         echo "<td>";
                         if ($row['quantity'] > 0) {
                             echo "<button class='btn-action' onclick='handleBorrow(" . $row['bookId'] . ")'>Borrow</button>";
@@ -98,27 +103,34 @@ $result = $conn->query($query);
                             echo "<button class='btn-nostock' disabled>Unavailable</button>";
                         }
                         echo "</td>";
-                        
+
+                        // Return button
                         echo "<td>";
                         echo "<button class='btn-action return-btn' onclick='handleReturn(" . $row['bookId'] . ")'>Return</button>";
-                        echo "</td>";                        
+                        echo "</td>";
+
+                        // Book details
                         echo "<td>" . $row['bookId'] . "</td>";
-                        echo "<td>" . $row['title'] . "</td>";
-                        echo "<td>" . $row['author'] . "</td>";
-                        echo "<td>" . $quantity . "</td>";
+                        echo "<td>" . htmlspecialchars($row['title']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
+                        echo "<td>" . $row['quantity'] . "</td>";
+
+                        // Action buttons
                         echo "<td>
                                 <button class='delete-btn' data-book-id='" . $row['bookId'] . "'>Delete</button>
-                            </td>";
+                              </td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6' class='text-center'>No books found</td></tr>";
+                    echo "<tr><td colspan='8' class='text-center'>No books found</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
     </div>
 
+    <!-- Borrow Modal -->
     <div id="borrowModal" style="display: none; position: fixed; z-index: 1000; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
         <div style="background: white; padding: 20px; border-radius: 10px; width: 300px;">
             <h3>Borrow Book</h3>
@@ -134,7 +146,7 @@ $result = $conn->query($query);
         </div>
     </div>
 
-<!-- Return Modal -->
+    <!-- Return Modal -->
     <div id="returnModal" style="display: none; position: fixed; z-index: 1000; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
         <div style="background: white; padding: 20px; border-radius: 10px; width: 300px;">
             <h3>Return Book</h3>
@@ -147,6 +159,7 @@ $result = $conn->query($query);
             </form>
         </div>
     </div>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
@@ -263,7 +276,6 @@ $result = $conn->query($query);
 </body>
 </html>
 <?php
-// Capture the content and include it in the main template
 $content = ob_get_clean();
 include('templates/main.php');
 ?>

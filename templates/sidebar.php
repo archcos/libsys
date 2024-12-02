@@ -20,91 +20,93 @@
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Interface
+        DPM 001
     </div>
 
     <!-- Nav Item - Borrower Data Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Borrower Data</span>
+            <span>Master List</span>
         </a>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="#" data-toggle="modal" data-target="#addBorrowerModal">Add New Borrower</a>
-                <a class="collapse-item" href="#" data-toggle="modal" data-target="#borrowerModal">Edit Borrower Data</a>
-                <a class="collapse-item" href="list-borrower.php">Borrowers List</a>
+                <a class="collapse-item" href="list-borrower.php?borrowerType=Student">Students</a>
+                <a class="collapse-item" href="list-borrower.php?borrowerType=Faculty">Faculty</a>
+                <a class="collapse-item" href="list-borrower.php?borrowerType=Staff">Staff</a>
+            </div>
+        </div>
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseOne">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Library Cards</span>
+        </a>
+        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="list-borrower.php?borrowerType=Student">Receipt Log</a>
+                <a class="collapse-item" href="list-borrower.php?borrowerType=Faculty">Non-Receipt Log</a>
+               
             </div>
         </div>
     </li>
 
-    <!-- Modal - Add Borrower -->
-    <div class="modal fade" id="addBorrowerModal" tabindex="-1" role="dialog" aria-labelledby="addBorrowerModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addBorrowerModalLabel">Select Borrower Type</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Please select the type of borrower:</p>
-                    <div class="btn-group btn-group-toggle d-flex justify-content-center" data-toggle="buttons">
-                        <label class="btn btn-outline-primary mx-2">
-                            <input type="radio" name="borrowerType" value="Student" id="studentOption"> Student
-                        </label>
-                        <label class="btn btn-outline-primary mx-2">
-                            <input type="radio" name="borrowerType" value="Faculty" id="facultyOption"> Faculty
-                        </label>
-                        <label class="btn btn-outline-primary mx-2">
-                            <input type="radio" name="borrowerType" value="Staff" id="staffOption"> Staff
-                        </label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="proceedButton">Proceed</button>
-                </div>
-            </div>
-        </div>
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        DPM 002
     </div>
 
-    <!-- Modal - Edit Borrower -->
-    <div class="modal fade" id="borrowerModal" tabindex="-1" role="dialog" aria-labelledby="borrowerModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="borrowerModalLabel">Enter Borrower ID</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="idNumber">Borrower ID</label>
-                        <input type="text" class="form-control" id="idNumber" placeholder="Enter Borrower ID">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="checkidNumber">Check Borrower ID</button>
-                </div>
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseOne">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Reference Assistance Slip</span>
+        </a>
+        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="list-borrower.php?borrowerType=Faculty">Reference Assistance List</a>
             </div>
         </div>
+    </li>
+
+
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        DPM 003
+    </div>
+
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Borrowing / Returning</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="borrow-book.php">Borrow/Return Book</a>
+                <a class="collapse-item" href="due-date.php">Book Due Dates</a>
+            </div>
+        </div>
+    </li>
+
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        DPM 009
     </div>
 
     <!-- Nav Item - Modules Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Transactions</span>
+            <span>Book Inventory</span>
         </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="add-book.php">Add Book</a>
-                <a class="collapse-item" href="borrow-book.php">Borrow Book</a>
-                <a class="collapse-item" href="due-date.php">Book Due Dates</a>
+                <a class="collapse-item" href="list-books.php">Books</a>
+                <a class="collapse-item" href="list-author.php">Author</a>
+                <a class="collapse-item" href="list-category.php">Category</a>
             </div>
         </div>
     </li>

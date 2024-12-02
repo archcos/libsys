@@ -10,20 +10,29 @@ if (!isset($_SESSION['user_id'])) {
 // Include your database connection file
 include('process/db-connect.php'); // Adjust the path as needed
 ob_start();
+
+// Fetch categories and authors from the database
+$authorsQuery = "SELECT * FROM tblauthor";
+$authorsResult = $conn->query($authorsQuery);
+
+$categoriesQuery = "SELECT * FROM tblcategory";
+$categoriesResult = $conn->query($categoriesQuery);
+
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
-    $author = trim($_POST['author']);
+    $authorId = trim($_POST['author']);
+    $categoryId = trim($_POST['category']);
     $quantity = trim($_POST['quantity']);
 
     // Validate inputs
-    if (empty($title) || empty($author)) {
+    if (empty($title) || empty($authorId) || empty($categoryId)) {
         $error = "All fields are required!";
     } else {
         // Insert the data into the database
-        $query = "INSERT INTO tblbooks (title, author, dateAdded, quantity) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO tblbooks (title, authorId, categoryId, dateAdded, quantity) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssss", $title, $author, $dateAdded, $quantity);
+        $stmt->bind_param("ssssi", $title, $authorId, $categoryId, $dateAdded, $quantity);
 
         if ($stmt->execute()) {
             $success = "Book added successfully!";
@@ -66,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         input[type="text"],
         input[type="number"],
-        input[type="date"] {
+        input[type="date"],
+        select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -122,14 +132,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="title">Title:</label>
                 <input type="text" id="title" name="title" placeholder="Enter book title" required>
             </div>
+            
+            <!-- Author Select Dropdown -->
             <div class="form-group">
                 <label for="author">Author:</label>
-                <input type="text" id="author" name="author" placeholder="Enter author name" required>
-            </div class = "btn-container">
+                <select id="author" name="author" required>
+                    <option value="">Select Author</option>
+                    <?php while ($author = $authorsResult->fetch_assoc()): ?>
+                        <option value="<?php echo $author['authorId']; ?>"><?php echo $author['firstName'] . ' ' . $author['lastName']; ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <!-- Category Select Dropdown -->
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="category" required>
+                    <option value="">Select Category</option>
+                    <?php while ($category = $categoriesResult->fetch_assoc()): ?>
+                        <option value="<?php echo $category['categoryId']; ?>"><?php echo $category['categoryName']; ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <!-- Quantity Field -->
             <div class="form-group">
                 <label for="quantity">Quantity:</label>
                 <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
-            </div class = "btn-container">
+            </div>
+
             <button type="submit" class="addbtn">Add Book</button>
         </form>
     </div>
