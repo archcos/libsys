@@ -36,6 +36,8 @@ $query = "
         tblauthor a ON b.authorId = a.authorId
     JOIN 
         tblcategory c ON b.categoryId = c.categoryId
+    ORDER BY 
+        rb.borrowedDate DESC  -- Order by borrowedDate in descending order (most recent first)
 ";
 
 $result = $conn->query($query);

@@ -111,7 +111,7 @@ $result = $conn->query($query);
                 <label for="categoryName">Category Name:</label><br>
                 <input type="text" id="categoryName" name="categoryName" required><br><br>
                 <button type="submit" class="btn add-btn">Add</button>
-                <button type="button" onclick="closeModal('addCategoryModal')" class="btn delete-btn">Cancel</button>
+                <button type="button" onclick="closeModal('addCategoryModal')" class="btn cancel-btn">Cancel</button>
             </form>
         </div>
     </div>

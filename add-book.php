@@ -24,15 +24,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $authorId = trim($_POST['author']);
     $categoryId = trim($_POST['category']);
     $quantity = trim($_POST['quantity']);
+    $callNum = trim($_POST['callNum']);
+    $accessionNum = trim($_POST['accessionNum']);
+    $barcodeNum = trim($_POST['barcodeNum']);
 
     // Validate inputs
     if (empty($title) || empty($authorId) || empty($categoryId)) {
         $error = "All fields are required!";
     } else {
         // Insert the data into the database
-        $query = "INSERT INTO tblbooks (title, authorId, categoryId, dateAdded, quantity) VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO tblbooks (title, authorId, categoryId, dateAdded, quantity, callNum, accessionNum, barcodeNum) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssssi", $title, $authorId, $categoryId, $dateAdded, $quantity);
+        $stmt->bind_param("ssssisss", $title, $authorId, $categoryId, $dateAdded, $quantity, $callNum, $accessionNum, $barcodeNum);
 
         if ($stmt->execute()) {
             $success = "Book added successfully!";
@@ -154,12 +157,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endwhile; ?>
                 </select>
             </div>
+            <div class="form-group">
+                <label for="callNum">Call Number:</label>
+                <input type="text" id="callNum" name="callNum" placeholder="Enter Call Number" required>
+            </div>
+            <div class="form-group">
+                <label for="accessionNum">Accession Number:</label>
+                <input type="text" id="accessionNum" name="accessionNum" placeholder="Enter Accession Number" required>
+            </div>
+            <div class="form-group">
+                <label for="barcodeNum">Barcode Number:</label>
+                <input type="text" id="barcodeNum" name="barcodeNum" placeholder="Enter Barcode Number" required>
+            </div>
 
             <!-- Quantity Field -->
             <div class="form-group">
                 <label for="quantity">Quantity:</label>
                 <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
             </div>
+
 
             <button type="submit" class="addbtn">Add Book</button>
         </form>

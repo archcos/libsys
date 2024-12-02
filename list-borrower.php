@@ -16,7 +16,7 @@ $borrowerType = isset($_GET['borrowerType']) ? $_GET['borrowerType'] : null;
 
 // Modify the query to filter by borrowerType if it is set
 if ($borrowerType) {
-    $query = "SELECT * FROM tblborrowers WHERE borrowerType = ?";
+    $query = "SELECT * FROM tblborrowers WHERE borrowerType = ?  ORDER BY dateRegistered DESC";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $borrowerType);
     $stmt->execute();

@@ -63,7 +63,7 @@
         </a>
         <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="list-borrower.php?borrowerType=Faculty">Reference Assistance List</a>
+                <a class="collapse-item" href="list-reference.php">Reference Assistance List</a>
             </div>
         </div>
     </li>
@@ -84,7 +84,8 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="borrow-book.php">Borrow/Return Book</a>
-                <a class="collapse-item" href="due-date.php">Book Due Dates</a>
+                <a class="collapse-item" href="due-date.php">Due Date Slip</a>
+                <a class="collapse-item" href="due-date.php">Book Card</a>
             </div>
         </div>
     </li>
