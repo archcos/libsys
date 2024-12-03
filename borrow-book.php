@@ -138,6 +138,8 @@ $result = $conn->query($query);
                 <input type="hidden" id="borrowModalBookId">
                 <label for="borrowerId">ID Number:</label><br>
                 <input type="number" id="borrowerId" required><br><br>
+                <label for="librarianName">Librarian Full Name:</label><br>
+                <input type="text" id="librarianName" required><br><br>
                 <label for="returnDate">Return Date:</label><br>
                 <input type="date" id="returnDate" required><br><br>
                 <button type="submit" class="btn-action">Approve</button>
@@ -191,12 +193,14 @@ $result = $conn->query($query);
             const bookId = document.getElementById('borrowModalBookId').value;
             const borrowerId = document.getElementById('borrowerId').value;
             const returnDate = document.getElementById('returnDate').value;
+            const librarianName = document.getElementById('librarianName').value;
+
 
             // Send AJAX request for borrowing
             $.ajax({
                 url: 'transactions/borrow-book.php',
                 type: 'POST',
-                data: { bookId, idNumber: borrowerId, returnDate },
+                data: { bookId, idNumber: borrowerId, librarianName, returnDate },
                 success: function (response) {
                     alert(response);
                     closeModal('borrowModal');

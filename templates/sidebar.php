@@ -23,6 +23,20 @@
         DPM 001
     </div>
 
+    <li class="nav-item">
+    <?php if ($_SESSION['accountType'] == 'Admin') { ?>
+            <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseOne">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Administration</span>
+            </a>
+            <div id="collapseZero" class="collapse" aria-labelledby="headingZero" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="list-user.php">Manage Librarian Accounts</a>
+                </div>
+            </div>
+        <?php } ?>
+    </li>
+
     <!-- Nav Item - Borrower Data Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
@@ -84,7 +98,6 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="borrow-book.php">Borrow/Return Book</a>
-                <a class="collapse-item" href="due-date.php">Due Date Slip</a>
                 <a class="collapse-item" href="due-date.php">Book Card</a>
             </div>
         </div>

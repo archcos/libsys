@@ -16,7 +16,7 @@ $authorId = isset($_GET['authorId']) ? intval($_GET['authorId']) : null;
 // Prepare base query
 $query = "SELECT b.bookId, b.title, b.quantity, 
                  CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
-                 c.categoryName 
+                 c.categoryName, b.publisher, b.publishedDate 
           FROM tblbooks b
           JOIN tblauthor a ON b.authorId = a.authorId
           JOIN tblcategory c ON b.categoryId = c.categoryId";
@@ -152,6 +152,8 @@ $result = $stmt->get_result();
                     <th>Author</th>
                     <th>Category</th>
                     <th>Stocks</th>
+                    <th>Publisher</th>
+                    <th>Published Date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -165,13 +167,13 @@ $result = $stmt->get_result();
                         echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
                         echo "<td>" . $row['quantity'] . "</td>";
+                        echo "<td>" . htmlspecialchars($row['publisher']) . "</td>"; 
+                        echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>"; 
                         echo "<td>
                                 <button class='delete-btn' data-book-id='" . $row['bookId'] . "'>Delete</button>
-                              </td>";
+                            </td>";
                         echo "</tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='6'>No books found</td></tr>";
                 }
                 ?>
             </tbody>

@@ -27,15 +27,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $callNum = trim($_POST['callNum']);
     $accessionNum = trim($_POST['accessionNum']);
     $barcodeNum = trim($_POST['barcodeNum']);
+    $publisher = trim($_POST['publisher']);
+    $publishedDate = trim($_POST['publishedDate']);
+
 
     // Validate inputs
     if (empty($title) || empty($authorId) || empty($categoryId)) {
         $error = "All fields are required!";
     } else {
         // Insert the data into the database
-        $query = "INSERT INTO tblbooks (title, authorId, categoryId, dateAdded, quantity, callNum, accessionNum, barcodeNum) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO tblbooks (title, authorId, categoryId, dateAdded, quantity, callNum, accessionNum, barcodeNum, publisher, publishedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssssisss", $title, $authorId, $categoryId, $dateAdded, $quantity, $callNum, $accessionNum, $barcodeNum);
+        $stmt->bind_param("ssssisssss", $title, $authorId, $categoryId, $dateAdded, $quantity, $callNum, $accessionNum, $barcodeNum, $publisher, $publishedDate);
 
         if ($stmt->execute()) {
             $success = "Book added successfully!";
@@ -169,7 +172,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="barcodeNum">Barcode Number:</label>
                 <input type="text" id="barcodeNum" name="barcodeNum" placeholder="Enter Barcode Number" required>
             </div>
-
+            <div class="form-group">
+                <label for="publisher">Publisher:</label>
+                <input type="text" id="publisher" name="publisher" placeholder="Enter Publisher" required>
+            </div>
+            <div class="form-group">
+                <label for="publishedDate">Published Date:</label>
+                <input type="date" id="publishedDate" name="publishedDate" placeholder="Enter Published Date" required>
+            </div>
             <!-- Quantity Field -->
             <div class="form-group">
                 <label for="quantity">Quantity:</label>

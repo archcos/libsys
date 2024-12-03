@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['firstName'] = $user['firstName'];
                 $_SESSION['lastName'] = $user['lastName'];
+                $_SESSION['accountType'] = $user['accountType']; // Add the account type
 
                 echo json_encode(['success' => true, 'message' => 'Login successful']);
             } else {

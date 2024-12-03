@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2024 at 11:19 AM
+-- Generation Time: Dec 03, 2024 at 11:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -57,18 +57,21 @@ CREATE TABLE `tblbooks` (
   `categoryId` int(11) DEFAULT NULL,
   `callNum` varchar(11) NOT NULL,
   `accessionNum` varchar(5) NOT NULL,
-  `barcodeNum` varchar(11) NOT NULL
+  `barcodeNum` varchar(11) NOT NULL,
+  `publisher` varchar(30) NOT NULL,
+  `publishedDate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tblbooks`
 --
 
-INSERT INTO `tblbooks` (`bookId`, `title`, `dateAdded`, `quantity`, `authorId`, `categoryId`, `callNum`, `accessionNum`, `barcodeNum`) VALUES
-(21, 'The DeathWonDo', '2024-12-02 03:17:42', 8, 1, 1, '', '', ''),
-(22, '1+1', '2024-12-02 06:49:55', 10, 2, 2, '', '', ''),
-(36, 'The Newest', '2024-12-02 07:54:55', 0, 1, 1, '', '', ''),
-(37, 'The Strongest Sorcerer', '2024-12-02 09:38:57', 11, 3, 2, '12432123', '32131', '213121');
+INSERT INTO `tblbooks` (`bookId`, `title`, `dateAdded`, `quantity`, `authorId`, `categoryId`, `callNum`, `accessionNum`, `barcodeNum`, `publisher`, `publishedDate`) VALUES
+(21, 'The DeathWonDo', '2024-12-02 03:17:42', 2, 1, 1, '3123', '31231', '31231', '', NULL),
+(22, '1+1', '2024-12-02 06:49:55', 10, 2, 2, '42342', '64564', 'dadwa321', '', NULL),
+(36, 'The Newest', '2024-12-02 07:54:55', 0, 1, 1, '3312', '534', '32131d', '', NULL),
+(37, 'The Strongest Sorcerer', '2024-12-02 09:38:57', 11, 3, 2, '12432123', '32131', '213121', '', NULL),
+(38, 'Strongest', '2024-12-03 09:44:40', 21, 1, 1, 'WADA12', 'DWA42', '2342DAWDAW', 'ARJAY PUB', '2024-11-25');
 
 -- --------------------------------------------------------
 
@@ -101,7 +104,7 @@ CREATE TABLE `tblborrowers` (
 INSERT INTO `tblborrowers` (`idNumber`, `borrowerType`, `dateRegistered`, `libraryId`, `surName`, `firstName`, `middleName`, `emailAddress`, `course`, `year`, `position`, `gender`, `birthDate`, `homeAddress`, `remarks`) VALUES
 (44, 'Student', '2024-11-29 03:41:01', 1, 'Whaaat', 'Theee', 'Joj', 'jayarcharcos@gmail.com', 'IS', 2, '', 'Male', '2024-11-21', 'Secret', '0'),
 (111, 'Staff', '2024-11-29 09:17:56', 1, 'Charcos', 'Arjay', 'Audiencia', 'joedavid1345@gmail.com', '', 0, 'IT', 'Male', '2024-11-14', 'daw', '1'),
-(214, 'Student', '2024-11-29 05:47:21', 1, 'Charcos', 'Arjays', 'daw', 'yahoo@gmail.com', 'IT', 2, '', 'Male', '2024-11-14', 'Opol', '0'),
+(214, 'Student', '2024-12-03 07:19:36', 1, 'Charcos', 'Arjays', 'daw', 'yahoo@gmail.com', 'IT', 2, '', 'Male', '2024-11-14', 'Opol', '1'),
 (231, 'Faculty', '2024-11-26 06:33:46', 1, 'dwada', 'dwada', 'dwada', '', '', 0, 'dwada', 'Male', '2024-11-14', 'dwad', '1'),
 (322, 'Faculty', '2024-11-27 10:15:18', 1, 'Charcos', 'Arjay', 'Audiencia', '', '', 0, 'IT Supervisor', 'Male', '2024-10-29', 'Igpit, Opol, Mis. Or.', ''),
 (1211, 'Faculty', '2024-11-27 09:19:40', 1, 'Charccc', 'What', 'Wa', '', '', 0, '|WADA', 'Male', '2024-11-11', 'dawd', '0'),
@@ -148,7 +151,7 @@ CREATE TABLE `tblreference` (
   `author` varchar(30) NOT NULL,
   `title` varchar(30) NOT NULL,
   `category` varchar(30) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -163,6 +166,7 @@ CREATE TABLE `tblreturnborrow` (
   `returnDate` date DEFAULT NULL,
   `borrowerId` int(11) NOT NULL,
   `bookId` int(11) NOT NULL,
+  `librarianName` varchar(50) NOT NULL,
   `returned` enum('No','Yes','','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -170,12 +174,18 @@ CREATE TABLE `tblreturnborrow` (
 -- Dumping data for table `tblreturnborrow`
 --
 
-INSERT INTO `tblreturnborrow` (`borrowId`, `borrowedDate`, `returnDate`, `borrowerId`, `bookId`, `returned`) VALUES
-(22, '2024-12-02 07:43:59', '2024-12-17', 111, 21, 'Yes'),
-(23, '2024-12-02 07:50:20', '2024-12-03', 111, 21, 'Yes'),
-(24, '2024-12-02 07:52:17', '2024-12-02', 111, 21, 'Yes'),
-(25, '2024-12-02 07:58:17', '2024-12-10', 111, 21, 'No'),
-(26, '2024-12-02 07:58:25', '2024-12-09', 111, 36, 'No');
+INSERT INTO `tblreturnborrow` (`borrowId`, `borrowedDate`, `returnDate`, `borrowerId`, `bookId`, `librarianName`, `returned`) VALUES
+(22, '2024-12-02 07:43:59', '2024-12-17', 111, 21, 'Arjay Charcos', 'Yes'),
+(23, '2024-12-02 07:50:20', '2024-12-03', 111, 21, 'Arjay Charcos', 'Yes'),
+(24, '2024-12-02 07:52:17', '2024-12-02', 111, 21, 'Arjay Charcos', 'Yes'),
+(25, '2024-12-02 07:58:17', '2024-12-10', 111, 21, 'Arjay Charcos', 'No'),
+(26, '2024-12-02 07:58:25', '2024-12-09', 111, 36, 'Arjay Charcos', 'No'),
+(27, '2024-12-03 03:34:03', '2024-12-18', 2124, 21, 'The Godd', 'No'),
+(28, '2024-12-03 03:34:04', '2024-12-18', 2124, 21, 'The Godd', 'No'),
+(29, '2024-12-03 03:34:04', '2024-12-18', 2124, 21, 'The Godd', 'No'),
+(30, '2024-12-03 03:34:05', '2024-12-18', 2124, 21, 'The Godd', 'No'),
+(31, '2024-12-03 03:37:48', '2024-12-23', 2124, 21, 'The Godd', 'No'),
+(32, '2024-12-03 03:41:36', '2024-12-23', 2124, 21, 'Gos Htot', 'No');
 
 -- --------------------------------------------------------
 
@@ -185,7 +195,7 @@ INSERT INTO `tblreturnborrow` (`borrowId`, `borrowedDate`, `returnDate`, `borrow
 
 CREATE TABLE `tbluser` (
   `userId` int(11) NOT NULL,
-  `accountType` enum('Admin','SuperAdmin','','') NOT NULL,
+  `accountType` enum('Librarian','Admin','','') NOT NULL,
   `username` varchar(20) NOT NULL,
   `password` varchar(40) NOT NULL,
   `firstName` varchar(20) NOT NULL,
@@ -199,7 +209,10 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userId`, `accountType`, `username`, `password`, `firstName`, `lastName`, `lastLogin`, `dateCreated`) VALUES
-(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2024-12-02 10:18:02', '2024-11-25 02:40:02');
+(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2024-12-03 09:49:15', '2024-11-25 02:40:02'),
+(2, 'Librarian', 'test', 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4', 'Testing', 'Ko', '2024-12-03 09:01:14', '2024-12-03 09:01:14'),
+(3, 'Librarian', 'test', '8cb2237d0679ca88db6464eac60da96345513964', 'arjay', 'charcos', '2024-12-03 09:06:24', '2024-12-03 09:06:24'),
+(4, 'Librarian', 'rain214', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'password', 'password', '2024-12-03 09:49:40', '2024-12-03 09:24:16');
 
 --
 -- Indexes for dumped tables
@@ -235,7 +248,8 @@ ALTER TABLE `tblcategory`
 -- Indexes for table `tblreference`
 --
 ALTER TABLE `tblreference`
-  ADD PRIMARY KEY (`referenceId`);
+  ADD PRIMARY KEY (`referenceId`),
+  ADD KEY `fk_borrowerId` (`borrowerId`);
 
 --
 -- Indexes for table `tblreturnborrow`
@@ -265,7 +279,7 @@ ALTER TABLE `tblauthor`
 -- AUTO_INCREMENT for table `tblbooks`
 --
 ALTER TABLE `tblbooks`
-  MODIFY `bookId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `bookId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `tblcategory`
@@ -277,19 +291,19 @@ ALTER TABLE `tblcategory`
 -- AUTO_INCREMENT for table `tblreference`
 --
 ALTER TABLE `tblreference`
-  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tblreturnborrow`
 --
 ALTER TABLE `tblreturnborrow`
-  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -301,6 +315,12 @@ ALTER TABLE `tbluser`
 ALTER TABLE `tblbooks`
   ADD CONSTRAINT `fk_author` FOREIGN KEY (`authorId`) REFERENCES `tblauthor` (`authorId`),
   ADD CONSTRAINT `fk_category` FOREIGN KEY (`categoryId`) REFERENCES `tblcategory` (`categoryId`);
+
+--
+-- Constraints for table `tblreference`
+--
+ALTER TABLE `tblreference`
+  ADD CONSTRAINT `fk_borrowerId` FOREIGN KEY (`borrowerId`) REFERENCES `tblborrowers` (`idNumber`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tblreturnborrow`

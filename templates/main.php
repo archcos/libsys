@@ -71,7 +71,7 @@
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="#" id="changePasswordLink">
                                     <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Change Password
                                 </a>
@@ -124,8 +124,15 @@
     <!-- <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script> -->
 
     <!-- Custom scripts for all pages-->
+     
     <script src="assets/js/sb-admin-2.min.js"></script>
 
 </body>
 
 </html>
+<script>
+    document.getElementById('changePasswordLink').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the link from redirecting
+        alert("Please contact the Administrator to change your password.");
+    });
+</script>

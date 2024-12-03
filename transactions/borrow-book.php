@@ -6,6 +6,7 @@ include('../process/db-connect.php');
 // Get POST data
 $bookId = $_POST['bookId'];
 $idNumber = $_POST['idNumber'];
+$librarianName = $_POST['librarianName'];
 $returnDate = $_POST['returnDate'];
 
 // Check if borrower exists in tblborrowers
@@ -21,10 +22,10 @@ if ($result->num_rows === 0) {
 }
 
 // Insert a new record into tblreturnborrow
-$insertQuery = "INSERT INTO tblreturnborrow (bookId, borrowerId, borrowedDate, returnDate, returned) 
-                VALUES (?, ?, NOW(), ?, 'No')";
+$insertQuery = "INSERT INTO tblreturnborrow (bookId, borrowerId, borrowedDate, librarianName, returnDate, returned) 
+                VALUES (?, ?, NOW(), ?, ?, 'No')";
 $stmt = $conn->prepare($insertQuery);
-$stmt->bind_param("iis", $bookId, $idNumber, $returnDate);
+$stmt->bind_param("iiss", $bookId, $idNumber, $librarianName, $returnDate);
 $insertResult = $stmt->execute();
 
 if ($insertResult) {

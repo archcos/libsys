@@ -82,7 +82,9 @@ $result = $conn->query($query);
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>Borrower ID</th>
+                    <th>Date Slip</th> <!-- Added a new column for actions -->
+                    <th>Book Card</th> <!-- Added a new column for actions -->
+                    <th>ID Number</th>
                     <th>Borrowed Date</th>
                     <th>Return Date</th>
                     <th>Borrower Name</th>
@@ -97,6 +99,8 @@ $result = $conn->query($query);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
+                        echo "<td><a href='pdf/generate-slip.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Slip</a></td>"; // Print Button with borrowId
+                        echo "<td><a href='pdf/generate-card.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Card</a></td>"; // Print Button with borrowId
                         echo "<td>" . $row['borrowerId'] . "</td>"; // Borrower ID
                         echo "<td>" . $row['borrowedDate'] . "</td>"; // Borrowed Date
                         echo "<td>" . $row['returnDate'] . "</td>"; // Return Date
