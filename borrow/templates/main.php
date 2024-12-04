@@ -124,9 +124,3 @@
 </body>
 
 </html>
-<script>
-    document.getElementById('changePasswordLink').addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent the link from redirecting
-        alert("Please contact the Administrator to change your password.");
-    });
-</script>

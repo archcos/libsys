@@ -163,115 +163,71 @@ $result = $conn->query($query);
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
-                // Handle Borrow
-                // Open Borrow Modal
-        function handleBorrow(bookId) {
-            document.getElementById('borrowModalBookId').value = bookId; // Store bookId in the modal
-            document.getElementById('borrowModal').style.display = 'flex';
-        }
-
-        // Open Return Modal
-        function handleReturn(bookId) {
-            document.getElementById('returnModalBookId').value = bookId; // Store bookId in the modal
-            document.getElementById('returnModal').style.display = 'flex';
-        }
-
-        // Close Modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Handle Borrow Form Submission
-        document.getElementById('borrowForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const bookId = document.getElementById('borrowModalBookId').value;
-            const borrowerId = document.getElementById('borrowerId').value;
-            const returnDate = document.getElementById('returnDate').value;
-            const librarianName = document.getElementById('librarianName').value;
-
-
-            // Send AJAX request for borrowing
+    // Handle Borrow
+    function handleBorrow(bookId) {
+        if (confirm('Do you want to borrow this book?')) {
+            const userId = <?= $_SESSION['user_id']; ?>;
+            const username = "<?= $_SESSION['username']; ?>"; // Enclose in quotes for string
             $.ajax({
-                url: 'transactions/borrow-book.php',
+                url: 'process/borrow-book.php',
                 type: 'POST',
-                data: { bookId, idNumber: borrowerId, librarianName, returnDate },
+                data: { 
+                    bookId: bookId, 
+                    userId: userId,
+                    username, username
+                },
                 success: function (response) {
-                    alert(response);
-                    closeModal('borrowModal');
-                    location.reload();
+                    alert(response.message);
+                    if (response.success) {
+                        console.log(response);
+                        location.reload();
+                    }
                 },
                 error: function () {
                     alert('Error borrowing the book. Please try again.');
                 },
             });
-        });
+        }
+    }
 
-        // Handle Return Form Submission
-        document.getElementById('returnForm').addEventListener('submit', function (e) {
-            e.preventDefault();
 
-            const bookId = document.getElementById('returnModalBookId').value;
-            console.log(bookId);
-            const returnerId = document.getElementById('returnerId').value;
-            console.log(returnerId);
+    // Handle Return
+    function handleReturn(bookId) {
+        if (confirm('Do you want to return this book?')) {
+            const userId = <?= $_SESSION['user_id']; ?>; // Pass the user_id from the session
+            const username = "<?= $_SESSION['username']; ?>"; // Enclose in quotes for string
 
-            // Send AJAX request for returning
+            // Send AJAX request to handle returning
             $.ajax({
-                url: 'transactions/return-book.php',
+                url: 'process/return-book.php',
                 type: 'POST',
-                data: { bookId, idNumber: returnerId },
+                data: { 
+                    bookId: bookId, 
+                    userId: userId,
+                    username, username
+                },
                 success: function (response) {
-                    alert(response);
-                    closeModal('returnModal');
-                    location.reload();
+                    alert(response.message);
+                    if (response.success) {
+                        location.reload();
+                    }
                 },
                 error: function () {
                     alert('Error returning the book. Please try again.');
                 },
             });
-        });
+        }
+    }
 
-
-        $(document).ready(function() {
+    
+    $(document).ready(function() {
             // Initialize DataTables
             $('#dataTable').DataTable();
 
-            // Handle delete button click
-            $('.delete-btn').on('click', function() {
-                var bookId = $(this).data('book-id'); // Get Book ID
-
-                // Show confirmation popup
-                if (confirm('Are you sure you want to delete this book? This action cannot be undone.')) {
-                    // Send AJAX request to delete the book
-                    $.ajax({
-                        url: 'process/delete-book.php', // Backend script to handle delete
-                        type: 'POST',
-                        data: { bookId: bookId },
-                        success: function(response) {
-                            alert('Book deleted successfully!');
-                            location.reload(); // Refresh the page
-                        },
-                        error: function() {
-                            alert('Error deleting book. Please try again.');
-                        }
-                    });
-                }
-            });
+            // Handle delete button clic
         });
-        document.addEventListener('DOMContentLoaded', function() {
-            var today = new Date();
-            var day = String(today.getDate()).padStart(2, '0');  // Add leading zero if needed
-            var month = String(today.getMonth() + 1).padStart(2, '0');  // Month is 0-based
-            var year = today.getFullYear();
+</script>
 
-            // Format the date as YYYY-MM-DD
-            var formattedDate = year + '-' + month + '-' + day;
-
-            // Set the min attribute of the return date input
-            document.getElementById('returnDate').setAttribute('min', formattedDate);
-        });
-    </script>
 </body>
 </html>
 <?php

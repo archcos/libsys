@@ -82,6 +82,8 @@
                                         // Display the unread count as a red badge
                                         if ($unreadCount > 0) {
                                             echo "<span class='badge badge-danger' id='unreadCount' style='position: absolute; top: 0; right: 0;'>$unreadCount</span>";
+                                        } else {
+                                            echo "<span class='badge badge-danger' id='unreadCount' style='position: absolute; top: 0; right: 0;'>$unreadCount</span>";
                                         }
                                         $stmt->close();
                                     }
@@ -100,7 +102,7 @@
                                         // Check if there are notifications
                                         if ($result->num_rows > 0) {
                                             while ($row = $result->fetch_assoc()) {
-                                                echo "<a class='dropdown-item' href='#'>" . htmlspecialchars($row['message']) . "</a>";
+                                                echo "<a class='dropdown-item' href='#' onclick='openApprovalModal(" . $row['notificationId'] . ", " . $row['bookId'] . ")'>" . htmlspecialchars($row['message']) . "</a>";
                                             }
                                         } else {
                                             echo "<a class='dropdown-item' href='#'>No notifications available</a>";
@@ -109,7 +111,7 @@
                                     }
                                 ?>
                             </div>
-                        </li>
+
 
                         
                         <!-- Nav Item - User Information -->
@@ -169,6 +171,59 @@
         <!-- End of Content Wrapper -->
 
     </div>
+
+        <!-- Modal for Approving the Notification -->
+    <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="approveModalLabel">Approve Notification</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Do you want to approve this notification?</p>
+            <button class="btn btn-primary" id="approveBtn">Approve</button>
+            <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal for Inputting Data After Approval -->
+    <div class="modal fade" id="inputDataModal" tabindex="-1" aria-labelledby="inputDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="inputDataModalLabel">Enter Book Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="inputDataForm">
+            <input type="hidden" id="notificationId" name="notificationId">
+            <input type="hidden" id="bookId" name="bookId">
+            <div class="form-group">
+                <label for="idNumber">ID Number</label>
+                <input type="text" class="form-control" id="idNumber" name="idNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="librarianName">Librarian Name</label>
+                <input type="text" class="form-control" id="librarianName" name="librarianName" required>
+            </div>
+            <div class="form-group">
+                <label for="returnDate">Return Date</label>
+                <input type="date" class="form-control" id="returnDate" name="returnDate" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
+
     <!-- End of Page Wrapper -->
 
     <!-- Scroll to Top Button-->
@@ -190,23 +245,106 @@
 
 </html>
 <script>
-    function markNotificationsAsRead() {
-        // Make an AJAX request to mark notifications as read
-        fetch('process/mark-notifications.php')
-            .then(response => response.json())
-            .then(data => {
-                // Hide the unread count if no unread notifications exist
-                if (data.success && data.unreadCount === 0) {
-                    document.getElementById('unreadCount').style.display = 'none';
-                } else {
-                    document.getElementById('unreadCount').textContent = data.unreadCount;
-                }
-            })
-            .catch(error => console.error('Error:', error));
+    let currentNotificationId = null;
+    let currentBookId = null;
+
+    function openApprovalModal(notificationId, bookId) {
+        currentNotificationId = notificationId;
+        currentBookId = bookId;
+
+        // Show the approve modal
+        $('#approveModal').modal('show');
     }
 
-    document.getElementById('changePasswordLink').addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent the link from redirecting
-        alert("Please contact the Administrator to change your password.");
+    // When approve button is clicked
+    $(document).ready(function() {
+        $('#approveBtn').on('click', function() {
+        $('#approveModal').modal('hide');  // Hide the approval modal
+        // Show the input modal for additional data
+        $('#inputDataModal').modal('show');
+        
+        // Populate the hidden fields in the input modal
+        $('#notificationId').val(currentNotificationId);
+        $('#bookId').val(currentBookId);
     });
+
+    // Submit the input form to the server
+    $('#inputDataForm').on('submit', function(e) {
+        e.preventDefault();  // Prevent form submission
+        
+        const formData = $(this).serialize();  // Get form data
+        
+        $.ajax({
+        url: 'process/handle-approval.php',  // Backend script to process the approval
+        type: 'POST',
+        data: formData,
+        success: function(response) {
+            alert('Notification processed successfully.');
+            $('#inputDataModal').modal('hide');  // Close the modal
+        },
+        error: function() {
+            alert('Error processing notification.');
+        }
+        });
+    });
+    });
+
+    function markNotificationsAsRead() {
+        $.ajax({
+            url: 'process/mark-notifications.php',
+            type: 'POST',
+            success: function(response) {
+                try {
+                    const data = JSON.parse(response);  // Parse the response if it's JSON
+                    if (data.success) {
+                        // Hide the unread count badge and reset the count to 0
+                        $('#unreadCount').text('0');  // Reset the count to 0 and hide the badge
+                    } else {
+                        alert(data.message || 'Error marking notifications as read.');
+                    }
+                } catch (error) {
+                    console.error('Error parsing response:', error);
+                    alert('Error processing notifications.');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+                alert('Error marking notifications as read.');
+            }
+        });
+    }
+
+
+        document.getElementById('changePasswordLink').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the link from redirecting
+            alert("Please contact the Administrator to change your password.");
+        });
+        
+        function fetchNotifications() {
+            $.ajax({
+                url: 'process/fetch-notifications.php',
+                type: 'GET',
+                success: function(response) {
+                    // Check if the response is an array of notifications
+                    console.log(response);  // Log the notifications
+
+                    // Update the unread count badge
+                    const unreadCount = response.length;
+                    if (unreadCount > 0) {
+                        $('#unreadCount').text(unreadCount).show();  // Show the badge with the unread count
+                    } 
+                },
+                error: function() {
+                    alert('Error fetching notifications.');
+                }
+            });
+
+
+        }
+
+        // Poll for new notifications every 10 seconds
+        setInterval(fetchNotifications, 5000);
+
+        // Fetch notifications when the page loads
+        document.addEventListener('DOMContentLoaded', fetchNotifications);
 </script>

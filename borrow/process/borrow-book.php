@@ -1,0 +1,63 @@
+<?php
+session_start();
+include('../db/db-connect.php');
+
+$response = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $bookId = $_POST['bookId'];
+    $userId = $_POST['userId'];
+    $username = $_POST['username'];
+
+    // Validate bookId and userId
+    if (!empty($bookId) && !empty($userId)) {
+        // Fetch book title for the notification
+        $bookQuery = "SELECT title FROM tblbooks WHERE bookId = ?";
+        if ($stmt = $conn->prepare($bookQuery)) {
+            $stmt->bind_param("i", $bookId);
+            $stmt->execute();
+            $bookResult = $stmt->get_result();
+            if ($bookResult->num_rows > 0) {
+                $book = $bookResult->fetch_assoc();
+                $bookTitle = $book['title'];
+
+                // Create the notification message
+                $message = "$username has requested to borrow the book: $bookTitle";
+
+                // Insert notification into tblnotifications
+                $notifQuery = "INSERT INTO tblnotifications (borrowerId, bookId, message, status) VALUES (?, ?, ?, 'unread')";
+                if ($notifStmt = $conn->prepare($notifQuery)) {
+                    $notifStmt->bind_param("iis", $userId, $bookId, $message); // Remove "status" from bind_param
+                    if ($notifStmt->execute()) {
+                        $response['success'] = true;
+                        $response['message'] = 'Borrow request sent successfully.';
+                    } else {
+                        $response['success'] = false;
+                        $response['message'] = 'Error sending notification.';
+                    }
+                    $notifStmt->close();
+                } else {
+                    $response['success'] = false;
+                    $response['message'] = 'Error preparing notification query.';
+                }
+            } else {
+                $response['success'] = false;
+                $response['message'] = 'Book not found.';
+            }
+            $stmt->close();
+        } else {
+            $response['success'] = false;
+            $response['message'] = 'Error preparing book query.';
+        }
+    } else {
+        $response['success'] = false;
+        $response['message'] = 'Invalid data received.';
+    }
+} else {
+    $response['success'] = false;
+    $response['message'] = 'Invalid request method.';
+}
+
+header('Content-Type: application/json');
+echo json_encode($response);
+?>

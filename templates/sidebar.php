@@ -152,15 +152,6 @@
 
 <!-- JavaScript -->
 <script>
-    document.getElementById('proceedButton').addEventListener('click', function () {
-        const borrowerType = document.querySelector('input[name="borrowerType"]:checked');
-        if (borrowerType) {
-            const selectedType = borrowerType.value;
-            window.location.href = `add-borrower.php?borrowerType=${selectedType}`;
-        } else {
-            alert('Please select a borrower type before proceeding.');
-        }
-    });
 
     $(document).ready(function () {
         $('#checkidNumber').on('click', function () {
