@@ -56,8 +56,8 @@
         </a>
         <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="list-borrower.php?borrowerType=Student">Receipt Log</a>
-                <a class="collapse-item" href="list-borrower.php?borrowerType=Faculty">Non-Receipt Log</a>
+                <a class="collapse-item" href="list-receipt.php?receipt=Yes">Receipt Log</a>
+                <a class="collapse-item" href="list-receipt.php?receipt=No">Non-Receipt Log</a>
                
             </div>
         </div>
