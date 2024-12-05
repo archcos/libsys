@@ -75,8 +75,6 @@ $result = $conn->query($query);
                             </td>";
                         echo "</tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='3' class='text-center'>No authors found</td></tr>";
                 }
             ?>
 

@@ -117,8 +117,6 @@ $result = $conn->query($query);
 
         
                     }
-                } else {
-                    echo "<tr><td colspan='8' class='text-center'>No books found</td></tr>";
                 }
                 ?>
             </tbody>

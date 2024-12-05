@@ -71,7 +71,7 @@ $notificationResult = $notificationStmt->get_result();
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='2'>No notifications found.</td></tr>";
+                    echo "<tr><td colspan='2'>No transaction found.</td></tr>";
                 }
                 ?>
             </tbody>
