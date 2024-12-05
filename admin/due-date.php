@@ -98,12 +98,17 @@ $result = $conn->query($query);
                 <?php
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
+                        $borrowedDate = new DateTime($row['borrowedDate']);
+                        $formattedborrowedDate = $borrowedDate->format('F j, Y, g:i A'); // Format: 12-hour time with AM/PM
+                        $returnDate = new DateTime($row['returnDate']);
+                        $formattedreturnDate = $returnDate->format('F j, Y'); // Format: December 19, 2024
+                        
                         echo "<tr>";
                         echo "<td><a href='pdf/generate-slip.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Slip</a></td>"; // Print Button with borrowId
                         echo "<td><a href='pdf/generate-card.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Card</a></td>"; // Print Button with borrowId
                         echo "<td>" . $row['borrowerId'] . "</td>"; // Borrower ID
-                        echo "<td>" . $row['borrowedDate'] . "</td>"; // Borrowed Date
-                        echo "<td>" . $row['returnDate'] . "</td>"; // Return Date
+                        echo "<td>" . $formattedborrowedDate . "</td>"; // Borrowed Date
+                        echo "<td>" . $formattedreturnDate . "</td>"; // Return Date
                         echo "<td>" . $row['firstName'] . " " . $row['surName'] . "</td>"; // Borrower Name
                         echo "<td>" . $row['bookTitle'] . "</td>"; // Book Title
                         echo "<td>" . $row['bookAuthor'] . "</td>"; // Author

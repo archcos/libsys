@@ -32,9 +32,9 @@
         </a>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="list-borrower.php?borrowerType=Student">Pending</a>
-                <a class="collapse-item" href="list-borrower.php?borrowerType=Faculty">Borrowed Books</a>
-                <a class="collapse-item" href="list-borrower.php?borrowerType=Staff">Returned Books</a>
+                <a class="collapse-item" href="list-transactions.php">Transactions</a>
+                <a class="collapse-item" href="list-books.php?returned=No">Borrowed Books</a>
+                <a class="collapse-item" href="list-books.php?returned=Yes">Returned Books</a>
             </div>
         </div>
     </li>
