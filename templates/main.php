@@ -102,7 +102,7 @@
                                         // Check if there are notifications
                                         if ($result->num_rows > 0) {
                                             while ($row = $result->fetch_assoc()) {
-                                                echo "<a class='dropdown-item' href='#' onclick='openApprovalModal(" . $row['notificationId'] . ", " . $row['bookId'] . ")'>" . htmlspecialchars($row['message']) . "</a>";
+                                                echo "<a class='dropdown-item' href='#' onclick='openApprovalModal(" . $row['notificationId'] . ", " . $row['bookId'] . ", " . $row['idNumber'] . ", \"" . $row['type'] . "\")'>" . htmlspecialchars($row['message']) . "</a>";
                                             }
                                         } else {
                                             echo "<a class='dropdown-item' href='#'>No notifications available</a>";
@@ -206,8 +206,8 @@
             <input type="hidden" id="notificationId" name="notificationId">
             <input type="hidden" id="bookId" name="bookId">
             <div class="form-group">
-                <label for="idNumber">ID Number</label>
-                <input type="text" class="form-control" id="idNumber" name="idNumber" required>
+                <label for="borrowerId">ID Number</label>
+                <input type="text" class="form-control" id="borrowerId" name="borrowerId" required readonly>
             </div>
             <div class="form-group">
                 <label for="librarianName">Librarian Name</label>
@@ -222,6 +222,30 @@
         </div>
         </div>
     </div>
+    </div>
+
+    <div class="modal fade" id="inputReturnModal" tabindex="-1" aria-labelledby="inputReturnModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inputReturnModalLabel">Return Book</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="inputReturnForm">
+                        <input type="hidden" id="notificationId" name="notificationId">
+                        <input type="hidden" id="bookId" name="bookId">
+                        <div class="form-group">
+                            <label for="returnerId">ID Number</label>
+                            <input type="text" class="form-control" id="returnerId" name="returnerId" readonly>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Return Book</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- End of Page Wrapper -->
@@ -247,47 +271,90 @@
 <script>
     let currentNotificationId = null;
     let currentBookId = null;
+    let currentBorrowerId = null;
+    let currentType = null; // Track whether the type is 'borrow' or 'return'
 
-    function openApprovalModal(notificationId, bookId) {
+    function openApprovalModal(notificationId, bookId, borrowerId, type) {
         currentNotificationId = notificationId;
         currentBookId = bookId;
+        currentBorrowerId = borrowerId;
+        currentType = type; // Store the type
+
+        console.log(`Notification Type: ${type}, Borrower ID: ${borrowerId}`);
 
         // Show the approve modal
         $('#approveModal').modal('show');
     }
 
-    // When approve button is clicked
-    $(document).ready(function() {
-        $('#approveBtn').on('click', function() {
-        $('#approveModal').modal('hide');  // Hide the approval modal
-        // Show the input modal for additional data
-        $('#inputDataModal').modal('show');
-        
-        // Populate the hidden fields in the input modal
-        $('#notificationId').val(currentNotificationId);
-        $('#bookId').val(currentBookId);
-    });
+    $(document).ready(function () {
+        // When approve button is clicked
+        $('#approveBtn').on('click', function () {
+            $('#approveModal').modal('hide'); // Hide the approval modal
 
-    // Submit the input form to the server
-    $('#inputDataForm').on('submit', function(e) {
-        e.preventDefault();  // Prevent form submission
-        
-        const formData = $(this).serialize();  // Get form data
-        
-        $.ajax({
-        url: 'process/handle-approval.php',  // Backend script to process the approval
-        type: 'POST',
-        data: formData,
-        success: function(response) {
-            alert('Notification processed successfully.');
-            $('#inputDataModal').modal('hide');  // Close the modal
-        },
-        error: function() {
-            alert('Error processing notification.');
-        }
+            if (currentType === 'borrow') {
+                // Show the input modal for borrowing
+                $('#inputDataModal').modal('show');
+                $('#notificationId').val(currentNotificationId);
+                $('#bookId').val(currentBookId);
+                $('#borrowerId').val(currentBorrowerId);
+            } else if (currentType === 'return') {
+                // Show the input modal for returning
+                $('#inputReturnModal').modal('show');
+                $('#notificationId').val(currentNotificationId);
+                $('#bookId').val(currentBookId);
+                $('#returnerId').val(currentBorrowerId);
+            }
+        });
+
+        // Submit the input form for borrowing
+        $('#inputDataForm').on('submit', function (e) {
+            e.preventDefault(); // Prevent default form submission behavior
+
+            const bookId = $('#bookId').val();
+            const borrowerId = $('#borrowerId').val();
+            const librarianName = $('#librarianName').val();
+            const returnDate = $('#returnDate').val();
+
+            $.ajax({
+                url: 'transactions/borrow-book.php',
+                type: 'POST',
+                data: { bookId, idNumber: borrowerId, librarianName, returnDate },
+                success: function (response) {
+                    alert(response); // Display success message
+                    $('#inputDataModal').modal('hide'); // Close the input modal
+                    location.reload(); // Reload the page to reflect changes
+                },
+                error: function () {
+                    alert('Error borrowing the book. Please try again.');
+                },
+            });
+        });
+
+        // Submit the input form for returning
+        $('#inputReturnForm').on('submit', function (e) {
+            e.preventDefault(); // Prevent default form submission behavior
+
+            const bookId = $('#bookId').val();
+            const returnerId = $('#returnerId').val();
+            console.log(bookId)
+
+            $.ajax({
+                url: 'transactions/return-book.php',
+                type: 'POST',
+                data: { bookId, idNumber: returnerId },
+                success: function (response) {
+                    alert(response); // Display success message
+                    $('#inputReturnModal').modal('hide'); // Close the input modal
+                    location.reload(); // Reload the page to reflect changes
+                },
+                error: function () {
+                    alert('Error returning the book. Please try again.');
+                },
+            });
         });
     });
-    });
+
+
 
     function markNotificationsAsRead() {
         $.ajax({
@@ -321,26 +388,51 @@
         });
         
         function fetchNotifications() {
-            $.ajax({
-                url: 'process/fetch-notifications.php',
-                type: 'GET',
-                success: function(response) {
-                    // Check if the response is an array of notifications
-                    console.log(response);  // Log the notifications
+    $.ajax({
+        url: 'process/fetch-notifications.php',
+        type: 'GET',
+        dataType: 'json', // Expect JSON data
+        success: function(response) {
+            if (response.notifications && Array.isArray(response.notifications)) {
+                const notifications = response.notifications;
 
-                    // Update the unread count badge
-                    const unreadCount = response.length;
-                    if (unreadCount > 0) {
-                        $('#unreadCount').text(unreadCount).show();  // Show the badge with the unread count
-                    } 
-                },
-                error: function() {
-                    alert('Error fetching notifications.');
+                // Update the notification dropdown
+                const dropdownMenu = $('.dropdown-menu[aria-labelledby="notifDropdown"]');
+                dropdownMenu.empty(); // Clear existing notifications
+
+                if (notifications.length > 0) {
+                    notifications.forEach(notification => {
+                        dropdownMenu.append(
+                            `<a class='dropdown-item' href='#' onclick='openApprovalModal(${notification.notificationId}, ${notification.bookId}, ${notification.borrowerId}, \"${notification.type}\")'>
+                                ${notification.message}
+                            </a>`
+                        );
+                    });
+                } else {
+                    dropdownMenu.append(`<a class='dropdown-item' href='#'>No notifications available</a>`);
                 }
-            });
 
+                // Update the unread count
+                const unreadCount = notifications.filter(n => n.status === 'unread').length;
+                const unreadCountBadge = $('#unreadCount');
 
+                if (unreadCount > 0) {
+                    unreadCountBadge.text(unreadCount).show();
+                    $('#notifBell').addClass('unread'); // Add red color to the bell
+                } else {
+                    unreadCountBadge.text(unreadCount).show();
+                    $('#notifBell');
+                }
+            } else {
+                console.error('Unexpected response format:', response);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching notifications:', status, error);
         }
+    });
+}
+
 
         // Poll for new notifications every 10 seconds
         setInterval(fetchNotifications, 5000);

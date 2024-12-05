@@ -1,19 +1,24 @@
 <?php
-// Fetch notifications
 include('db-connect.php');
 
-// Example SQL to get notifications
-// Fetch all unread notifications from the database
-$sql = "SELECT * FROM tblnotifications WHERE status = 'unread' ORDER BY notificationId DESC";
+// Fetch notifications ordered by latest
+$sql = "SELECT notificationId, borrowerId, bookId, message, status, type FROM tblnotifications ORDER BY notificationId DESC";
 $result = $conn->query($sql);
 
 $notifications = [];
-while ($row = $result->fetch_assoc()) {
-    $notifications[] = $row; // Add each unread notification to the array
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $notifications[] = [
+            'notificationId' => $row['notificationId'],
+            'borrowerId' => $row['borrowerId'],
+            'bookId' => $row['bookId'],
+            'message' => htmlspecialchars($row['message']),
+            'status' => $row['status'],
+            'type' => $row['type']
+        ];
+    }
 }
 
-// Send the unread notifications as a JSON response
-header('Content-Type: application/json');
-echo json_encode($notifications);
-
+echo json_encode(['notifications' => $notifications]);
+$conn->close();
 ?>
