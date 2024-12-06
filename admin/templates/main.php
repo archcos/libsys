@@ -400,17 +400,28 @@
                 const dropdownMenu = $('.dropdown-menu[aria-labelledby="notifDropdown"]');
                 dropdownMenu.empty(); // Clear existing notifications
 
-                if (notifications.length > 0) {
-                    notifications.forEach(notification => {
-                        dropdownMenu.append(
-                            `<a class='dropdown-item' href='#' onclick='openApprovalModal(${notification.notificationId}, ${notification.bookId}, ${notification.borrowerId}, \"${notification.type}\")'>
-                                ${notification.message}
-                            </a>`
-                        );
-                    });
-                } else {
-                    dropdownMenu.append(`<a class='dropdown-item' href='#'>No notifications available</a>`);
-                }
+             if (notifications.length > 0) {
+                notifications.forEach(notification => {
+                    dropdownMenu.append(`
+                        <a class='dropdown-item d-flex align-items-center' href='#' 
+                        onclick='openApprovalModal(${notification.notificationId}, ${notification.bookId}, ${notification.borrowerId}, \"${notification.type}\")'>
+                            <div class='notification-icon mr-2'>
+                                <i class='fas ${notification.type === "approval" ? "fa-check-circle text-success" : "fa-info-circle text-primary"}'></i>
+                            </div>
+                            <div class='notification-text'>
+                                <span class='font-weight-bold'>${notification.message}</span>
+                                <small class='d-block text-muted'>Borrower ID: ${notification.borrowerId} | ${notification.timestamp}</small>
+                            </div>
+                        </a>
+                    `);
+                });
+            } else {
+                dropdownMenu.append(`
+                    <a class='dropdown-item text-center text-muted' href='#'>
+                        <i class='fas fa-bell-slash'></i> No notifications available
+                    </a>
+                `);
+            }
 
                 // Update the unread count
                 const unreadCount = notifications.filter(n => n.status === 'unread').length;
