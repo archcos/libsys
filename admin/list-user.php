@@ -19,7 +19,7 @@ $result = $conn->query($query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Users</title>
+    <title>Manage Administrators</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         .btn {
@@ -51,8 +51,8 @@ $result = $conn->query($query);
 </head>
 <body>
     <div class="container">
-        <h1>Manage Users</h1>
-        <button class="btn add-btn" onclick="showAddUserModal()">Add New User</button>
+        <h3>Manage Administrators</h3>
+        <button class="btn add-btn" onclick="showAddUserModal()">Add New Admin</button>
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -146,15 +146,6 @@ $result = $conn->query($query);
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable();
-            $(document).ready(function() {
-            $('#openModalBtn').on('click', function() {
-                $('#approveModal').modal('show');
-            });
-
-            $('#approveBtn').on('click', function() {
-                $('#approveModal').modal('hide');
-            });
-           });
         });
 
         function showAddUserModal() {

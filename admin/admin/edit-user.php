@@ -37,15 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
 
         if ($stmt->affected_rows > 0) {
-            echo json_encode(['success' => true, 'message' => 'User updated successfully.']);
+            echo json_encode('User updated successfully.');
         } else {
-            echo json_encode(['success' => false, 'message' => 'No changes made or user not found.']);
+            echo json_encode('No changes made or user not found.');
         }
         
         $stmt->close();
     } catch (Exception $e) {
         // Handle errors
-        error_log('Error in edit-user.php: ' . $e->getMessage());
+        error_log('Error: ' . $e->getMessage());
         echo json_encode(['success' => false, 'message' => 'An error occurred. Please try again.']);
     }
 }
