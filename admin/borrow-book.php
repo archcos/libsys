@@ -71,6 +71,23 @@ $result = $conn->query($query);
         .delete-btn:hover {
             background-color: darkred;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.5);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .modal-content form {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -128,8 +145,8 @@ $result = $conn->query($query);
             <h3>Borrow Book</h3>
             <form id="borrowForm">
                 <input type="hidden" id="borrowModalBookId">
-                <label for="borrowerId">ID Number:</label><br>
-                <input type="number" id="borrowerId" required><br><br>
+                <label for="borrowerIds">ID Number:</label><br>
+                <input type="number" id="borrowerIds" required><br><br>
                 <label for="librarianName">Librarian Full Name:</label><br>
                 <input type="text" id="librarianName" required><br><br>
                 <label for="returnDate">Return Date:</label><br>
@@ -146,8 +163,8 @@ $result = $conn->query($query);
             <h3>Return Book</h3>
             <form id="returnForm">
                 <input type="hidden" id="returnModalBookId">
-                <label for="returnerId">ID Number:</label><br>
-                <input type="number" id="returnerId" required><br><br>
+                <label for="returnerIds">ID Number:</label><br>
+                <input type="number" id="returnerIds" required><br><br>
                 <button type="submit" class="btn-action">Confirm Return</button>
                 <button type="button" onclick="closeModal('returnModal')" class="cancel-btn">Cancel</button>
             </form>
@@ -155,11 +172,17 @@ $result = $conn->query($query);
     </div>
 
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
+        
+        $(document).ready(function() {
+            // Initialize DataTables
+            $('#dataTable').DataTable();
+
+        });
                 // Handle Borrow
                 // Open Borrow Modal
         function handleBorrow(bookId) {
@@ -183,7 +206,7 @@ $result = $conn->query($query);
             e.preventDefault();
 
             const bookId = document.getElementById('borrowModalBookId').value;
-            const borrowerId = document.getElementById('borrowerId').value;
+            const borrowerId = document.getElementById('borrowerIds').value;
             const returnDate = document.getElementById('returnDate').value;
             const librarianName = document.getElementById('librarianName').value;
 
@@ -209,9 +232,7 @@ $result = $conn->query($query);
             e.preventDefault();
 
             const bookId = document.getElementById('returnModalBookId').value;
-            console.log(bookId);
-            const returnerId = document.getElementById('returnerId').value;
-            console.log(returnerId);
+            const returnerId = document.getElementById('returnerIds').value;
 
             // Send AJAX request for returning
             $.ajax({
@@ -230,11 +251,7 @@ $result = $conn->query($query);
         });
 
 
-        $(document).ready(function() {
-            // Initialize DataTables
-            $('#dataTable').DataTable();
-        });
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             var today = new Date();
             var day = String(today.getDate()).padStart(2, '0');  // Add leading zero if needed

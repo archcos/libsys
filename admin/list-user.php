@@ -141,11 +141,20 @@ $result = $conn->query($query);
     </div>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable();
+            $(document).ready(function() {
+            $('#openModalBtn').on('click', function() {
+                $('#approveModal').modal('show');
+            });
+
+            $('#approveBtn').on('click', function() {
+                $('#approveModal').modal('hide');
+            });
+           });
         });
 
         function showAddUserModal() {

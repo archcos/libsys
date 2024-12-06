@@ -57,8 +57,25 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;
         }
         button:hover { background-color: #0056b3; }
+        .modal {
+            display: none;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.5);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .modal-content form {
+            margin: 0;
+        }
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script>
         // Function to dynamically adjust form fields based on borrower type
         function adjustFormBasedOnType(value) {

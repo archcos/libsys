@@ -74,6 +74,23 @@ if ($borrowerType) {
         .delete-btn:hover {
             background-color: darkred;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.5);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .modal-content form {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -194,7 +211,7 @@ if ($borrowerType) {
 
 
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
@@ -243,7 +260,16 @@ if ($borrowerType) {
         $(document).ready(function() {
             // Initialize DataTables
             $('#dataTable').DataTable();
+            $(document).ready(function() {
+            $('#openModalBtn').on('click', function() {
+                $('#approveModal').modal('show');
+            });
 
+            $('#approveBtn').on('click', function() {
+                $('#approveModal').modal('hide');
+            });
+           });
+            
             // Handle delete button click
                 $('.delete-btn').on('click', function() {
                 var idNumber = $(this).data('borrower-id'); // Get Borrower ID

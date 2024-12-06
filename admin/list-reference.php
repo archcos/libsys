@@ -49,6 +49,23 @@ $result = $conn->query($query);
         .cancel-btn:hover {
             background-color: darkred;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            background: rgba(0, 0, 0, 0.5);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .modal-content form {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -95,8 +112,8 @@ $result = $conn->query($query);
         <div style="background: white; padding: 20px; border-radius: 10px; width: 300px;">
             <h3>Add Reference Slip</h3>
             <form id="addReferenceForm">
-                <label for="borrowerId">Borrower ID:</label><br>
-                <input type="number" id="borrowerId" name="borrowerId" required><br><br>
+                <label for="borrowerIds">Borrower ID:</label><br>
+                <input type="number" id="borrowerIds" name="borrowerIds" required><br><br>
                 <label for="author">Author:</label><br>
                 <input type="text" id="author" name="author" required><br><br>
                 <label for="title">Title:</label><br>
@@ -111,11 +128,20 @@ $result = $conn->query($query);
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable();
+            $(document).ready(function() {
+            $('#openModalBtn').on('click', function() {
+                $('#approveModal').modal('show');
+            });
+
+            $('#approveBtn').on('click', function() {
+                $('#approveModal').modal('hide');
+            });
+           });
 
             $('.delete-btn').on('click', function() {
                 const referenceId = $(this).data('reference-id');
@@ -147,7 +173,7 @@ $result = $conn->query($query);
         document.getElementById('addReferenceForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const borrowerId = document.getElementById('borrowerId').value;
+            const borrowerId = document.getElementById('borrowerIds').value;
             const author = document.getElementById('author').value;
             const title = document.getElementById('title').value;
             const category = document.getElementById('category').value;
