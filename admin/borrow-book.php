@@ -87,7 +87,6 @@ $result = $conn->query($query);
                     <th>Author</th>
                     <th>Category</th>
                     <th>Stocks</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -116,11 +115,6 @@ $result = $conn->query($query);
                         echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
                         echo "<td>" . $row['quantity'] . "</td>";
 
-                        // Action buttons
-                        echo "<td>
-                                <button class='delete-btn' data-book-id='" . $row['bookId'] . "'>Delete</button>
-                              </td>";
-                        echo "</tr>";
                     }
                 }
                 ?>
@@ -239,29 +233,8 @@ $result = $conn->query($query);
         $(document).ready(function() {
             // Initialize DataTables
             $('#dataTable').DataTable();
-
-            // Handle delete button click
-            $('.delete-btn').on('click', function() {
-                var bookId = $(this).data('book-id'); // Get Book ID
-
-                // Show confirmation popup
-                if (confirm('Are you sure you want to delete this book? This action cannot be undone.')) {
-                    // Send AJAX request to delete the book
-                    $.ajax({
-                        url: 'process/delete-book.php', // Backend script to handle delete
-                        type: 'POST',
-                        data: { bookId: bookId },
-                        success: function(response) {
-                            alert('Book deleted successfully!');
-                            location.reload(); // Refresh the page
-                        },
-                        error: function() {
-                            alert('Error deleting book. Please try again.');
-                        }
-                    });
-                }
-            });
         });
+        
         document.addEventListener('DOMContentLoaded', function() {
             var today = new Date();
             var day = String(today.getDate()).padStart(2, '0');  // Add leading zero if needed

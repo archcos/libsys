@@ -16,7 +16,20 @@ $borrowerType = isset($_GET['borrowerType']) ? $_GET['borrowerType'] : null;
 
 // Modify the query to filter by borrowerType if it is set
 if ($borrowerType) {
-    $query = "SELECT * FROM tblborrowers WHERE borrowerType = ?  ORDER BY dateRegistered DESC";
+    $query = "
+    SELECT 
+        b.*,
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 
+                FROM tblreturnborrow rb 
+                WHERE rb.borrowerId = b.idNumber AND rb.returned = 'No'
+            ) THEN 1
+            ELSE 0
+        END AS hasUnreturnedBooks
+    FROM tblborrowers b
+    " . ($borrowerType ? "WHERE borrowerType = ? " : "") . "
+    ORDER BY dateRegistered DESC";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $borrowerType);
     $stmt->execute();
@@ -87,33 +100,38 @@ if ($borrowerType) {
             </thead>
             <tbody>
                 <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $remarksStatus = ($row['remarks'] == 1) ? 'Activated' : 'Deactivated';
-                        echo "<tr>";
-                        echo "<td>
-                                <a href='pdf/generate-pdf.php?idNumber=" . $row['idNumber'] . "'>
-                                    <button class='print-btn'>Print</button>
-                                </a>
-                              </td>";
-                        echo "<td>" . $row['libraryId'] . "</td>";
-                        echo "<td>" . $row['idNumber'] . "</td>";
-                        echo "<td>" . $row['surName'] . "</td>";
-                        echo "<td>" . $row['firstName'] . "</td>";
-                        echo "<td>" . $row['gender'] . "</td>";
-                        echo "<td>" . $row['emailAddress'] . "</td>";
-                        echo "<td>
-                                <select class='remarks-dropdown' data-borrower-id='" . $row['idNumber'] . "'>
-                                    <option value='1' " . ($row['remarks'] == 1 ? 'selected' : '') . ">Activated</option>
-                                    <option value='0' " . ($row['remarks'] == 0 ? 'selected' : '') . ">Deactivated</option>
-                                </select>
-                              </td>";
-                        echo "<td>
-                                <button class='delete-btn' data-borrower-id='" . $row['idNumber'] . "'>Delete</button>
-                              </td>";
-                        echo "</tr>";
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $remarksStatus = ($row['remarks'] == 1) ? 'Activated' : 'Deactivated';
+                            echo "<tr>";
+                            echo "<td>
+                                    <a href='pdf/generate-pdf.php?idNumber=" . $row['idNumber'] . "'>
+                                        <button class='print-btn'>Print</button>
+                                    </a>
+                                  </td>";
+                            echo "<td>" . $row['libraryId'] . "</td>";
+                            echo "<td>" . $row['idNumber'] . "</td>";
+                            echo "<td>" . htmlspecialchars($row['surName']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['firstName']) . "</td>";
+                            echo "<td>" . $row['gender'] . "</td>";
+                            echo "<td>" . htmlspecialchars($row['emailAddress']) . "</td>";
+                            echo "<td>
+                                    <select class='remarks-dropdown' data-borrower-id='" . $row['idNumber'] . "'>
+                                        <option value='1' " . ($row['remarks'] == 1 ? 'selected' : '') . ">Activated</option>
+                                        <option value='0' " . ($row['remarks'] == 0 ? 'selected' : '') . ">Deactivated</option>
+                                    </select>
+                                </td>";
+                            echo "<td>";
+                            if ($row['hasUnreturnedBooks']) {
+                                echo "<span style='color: red;'>Cannot Delete - Has Unreturned Books</span>";
+                            } else {
+                                echo "<button class='delete-btn' data-borrower-id='" . $row['idNumber'] . "'>Delete</button>";
+                            }
+                            echo "</td>";
+                            echo "</tr>";
+                        }
                     }
-                }
+
                 ?>
             </tbody>
         </table>
@@ -227,9 +245,8 @@ if ($borrowerType) {
             $('#dataTable').DataTable();
 
             // Handle delete button click
-            $('.delete-btn').on('click', function() {
-                var idNumber = $(this).data('borrower-id'); // Get Library ID
-                console.log(idNumber)
+                $('.delete-btn').on('click', function() {
+                var idNumber = $(this).data('borrower-id'); // Get Borrower ID
 
                 // Show confirmation popup
                 if (confirm('Are you sure you want to delete this borrower? This action cannot be undone.')) {
@@ -239,9 +256,12 @@ if ($borrowerType) {
                         type: 'POST',
                         data: { idNumber: idNumber },
                         success: function(response) {
-                            alert('Borrower deleted successfully!');
-                            location.reload(); // Refresh the page
-                            console.log(response)
+                            if (response.includes("cannot be deleted")) {
+                                alert(response); // Show error message if borrower has unreturned books
+                            } else {
+                                alert(response); // Show success message
+                                location.reload(); // Refresh the page
+                            }
                         },
                         error: function() {
                             alert('Error deleting borrower. Please try again.');

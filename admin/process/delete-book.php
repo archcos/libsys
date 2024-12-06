@@ -1,40 +1,37 @@
 <?php
 // Include database connection
-include('db-connect.php');
-
-// Check if bookId is provided via POST request
 if (isset($_POST['bookId']) && !empty($_POST['bookId'])) {
-    // Get the bookId from the POST request
     $bookId = $_POST['bookId'];
 
-    // Prepare SQL query to delete the book by its ID
-    $query = "DELETE FROM tblbooks WHERE bookId = ?";
+    // Check if the book is currently borrowed (returned = 'No')
+    $checkQuery = "SELECT 1 FROM tblreturnborrow WHERE bookId = ? AND returned = 'No'";
+    $stmt = $conn->prepare($checkQuery);
+    $stmt->bind_param("i", $bookId);
+    $stmt->execute();
+    $stmt->store_result();
 
-    // Initialize prepared statement
-    if ($stmt = $conn->prepare($query)) {
-        // Bind parameters
-        $stmt->bind_param("i", $bookId); // "i" stands for integer
+    if ($stmt->num_rows > 0) {
+        // If there are records with returned = 'No', deny deletion
+        echo "This book is currently borrowed and cannot be deleted.";
+    } else {
+        // Proceed to delete the book
+        $deleteQuery = "DELETE FROM tblbooks WHERE bookId = ?";
+        $deleteStmt = $conn->prepare($deleteQuery);
+        $deleteStmt->bind_param("i", $bookId);
 
-        // Execute the query
-        if ($stmt->execute()) {
-            // If the query was successful, return a success message
+        if ($deleteStmt->execute()) {
             echo "Book deleted successfully!";
         } else {
-            // If there was an error executing the query
             echo "Error deleting book. Please try again.";
         }
 
-        // Close the prepared statement
-        $stmt->close();
-    } else {
-        // If the prepared statement could not be initialized
-        echo "Error preparing the query.";
+        $deleteStmt->close();
     }
+    $stmt->close();
 } else {
-    // If bookId is not provided
     echo "No book ID provided.";
 }
-
-// Close the database connection
 $conn->close();
+
+
 ?>

@@ -14,12 +14,23 @@ $categoryId = isset($_GET['categoryId']) ? intval($_GET['categoryId']) : null;
 $authorId = isset($_GET['authorId']) ? intval($_GET['authorId']) : null;
 
 // Prepare base query
-$query = "SELECT b.bookId, b.title, b.quantity, 
-                 CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
-                 c.categoryName, b.publisher, b.publishedDate 
-          FROM tblbooks b
-          JOIN tblauthor a ON b.authorId = a.authorId
-          JOIN tblcategory c ON b.categoryId = c.categoryId";
+$query = "
+    SELECT 
+        b.bookId, b.title, b.quantity, 
+        CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
+        c.categoryName, b.publisher, b.publishedDate,
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 
+                FROM tblreturnborrow rb 
+                WHERE rb.bookId = b.bookId AND rb.returned = 'No'
+            ) THEN 1
+            ELSE 0
+        END AS isBorrowed
+    FROM tblbooks b
+    JOIN tblauthor a ON b.authorId = a.authorId
+    JOIN tblcategory c ON b.categoryId = c.categoryId";
+
 
 // Apply filters dynamically
 $conditions = [];
@@ -159,22 +170,27 @@ $result = $stmt->get_result();
             </thead>
             <tbody>
                 <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row['bookId'] . "</td>";
-                        echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
-                        echo "<td>" . $row['quantity'] . "</td>";
-                        echo "<td>" . htmlspecialchars($row['publisher']) . "</td>"; 
-                        echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>"; 
-                        echo "<td>
-                                <button class='delete-btn' data-book-id='" . $row['bookId'] . "'>Delete</button>
-                            </td>";
-                        echo "</tr>";
-                    }
-                }
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['bookId'] . "</td>";
+                            echo "<td>" . htmlspecialchars($row['title']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
+                            echo "<td>" . $row['quantity'] . "</td>";
+                            echo "<td>" . htmlspecialchars($row['publisher']) . "</td>"; 
+                            echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>"; 
+                            echo "<td>";
+                            if ($row['isBorrowed']) {
+                                echo "<span style='color: red;'>Borrowed - Cannot Delete</span>";
+                            } else {
+                                echo "<button class='delete-btn' data-book-id='" . $row['bookId'] . "'>Delete</button>";
+                            }
+                            echo "</td>";
+                            echo "</tr>";
+                        }
+                    }                    
+
                 ?>
             </tbody>
         </table>
@@ -191,23 +207,31 @@ $result = $stmt->get_result();
 
             // Delete book functionality
             $('.delete-btn').on('click', function() {
-                const bookId = $(this).data('book-id');
+            const bookId = $(this).data('book-id');
+            const row = $(this).closest('tr');
+            const isBorrowed = row.find('td:contains("Borrowed - Cannot Delete")').length > 0;
 
-                if (confirm('Are you sure you want to delete this book?')) {
-                    $.ajax({
-                        url: 'process/delete-book.php',
-                        type: 'POST',
-                        data: { bookId: bookId },
-                        success: function(response) {
-                            alert('Book deleted successfully!');
-                            location.reload();
-                        },
-                        error: function() {
-                            alert('Error deleting book. Please try again.');
-                        }
-                    });
-                }
-            });
+            if (isBorrowed) {
+                alert('This book is currently borrowed and cannot be deleted.');
+                return;
+            }
+
+            if (confirm('Are you sure you want to delete this book?')) {
+                $.ajax({
+                    url: 'process/delete-book.php',
+                    type: 'POST',
+                    data: { bookId: bookId },
+                    success: function(response) {
+                      
+                        location.reload();
+                    },
+                    error: function() {
+                        alert('Error deleting book. Please try again.');
+                    }
+                });
+            }
+        });
+
         });
     </script>
 </body>
