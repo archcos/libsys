@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 05, 2024 at 08:19 AM
+-- Generation Time: Dec 10, 2024 at 09:42 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,6 +33,14 @@ CREATE TABLE `tblauthor` (
   `lastName` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tblauthor`
+--
+
+INSERT INTO `tblauthor` (`authorId`, `firstName`, `lastName`) VALUES
+(4, 'Arjay', 'Charcos'),
+(5, 'Jay', 'Z');
+
 -- --------------------------------------------------------
 
 --
@@ -52,6 +60,14 @@ CREATE TABLE `tblbooks` (
   `publisher` varchar(30) NOT NULL,
   `publishedDate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblbooks`
+--
+
+INSERT INTO `tblbooks` (`bookId`, `title`, `dateAdded`, `quantity`, `authorId`, `categoryId`, `callNum`, `accessionNum`, `barcodeNum`, `publisher`, `publishedDate`) VALUES
+(39, 'The Book', '2024-12-05 10:07:00', 1, 4, 3, '123', '123', '123', 'Ako', '2024-12-10'),
+(41, 'The Nesst', '2024-12-06 00:30:10', 9, 5, 4, '1234', '1242', '2143', 'What', '2024-12-10');
 
 -- --------------------------------------------------------
 
@@ -83,7 +99,7 @@ CREATE TABLE `tblborrowers` (
 --
 
 INSERT INTO `tblborrowers` (`idNumber`, `borrowerType`, `dateRegistered`, `libraryId`, `surName`, `firstName`, `middleName`, `emailAddress`, `course`, `year`, `position`, `gender`, `birthDate`, `homeAddress`, `remarks`, `receipt`) VALUES
-(1, 'Student', '2024-12-05 07:16:04', 1, 'Uzumaki', 'Naruto', 'Secret', 'naruto@gmail.com', 'BS Information Techn', 4, '', 'Male', '2002-02-11', 'Konoha', '1', 'No');
+(1, 'Student', '2024-12-06 05:52:24', 1, 'Uzumaki', 'Naruto', 'Secret', 'naruto@gmail.com', 'BS Information Techn', 4, '', 'Male', '2002-02-11', 'Konohas', '1', 'Yes');
 
 -- --------------------------------------------------------
 
@@ -95,6 +111,15 @@ CREATE TABLE `tblcategory` (
   `categoryId` int(11) NOT NULL,
   `categoryName` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblcategory`
+--
+
+INSERT INTO `tblcategory` (`categoryId`, `categoryName`) VALUES
+(3, 'Science'),
+(4, 'Mathematics'),
+(6, 'JJ');
 
 -- --------------------------------------------------------
 
@@ -112,6 +137,33 @@ CREATE TABLE `tblnotifications` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tblnotifications`
+--
+
+INSERT INTO `tblnotifications` (`notificationId`, `borrowerId`, `bookId`, `message`, `status`, `type`, `timestamp`) VALUES
+(67, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-06 00:07:52'),
+(68, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 00:09:22'),
+(69, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-06 00:30:20'),
+(70, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-06 01:11:26'),
+(71, 1, 39, ' has returned the book: The Book', 'read', 'return', '2024-12-06 03:13:39'),
+(72, 1, 39, ' has returned the book: The Book', 'read', 'return', '2024-12-06 03:15:22'),
+(73, 1, 39, ' has returned the book: The Book', 'read', 'return', '2024-12-06 03:15:31'),
+(74, 1, 39, ' has returned the book: The Book', 'read', 'return', '2024-12-06 03:15:34'),
+(75, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-06 03:23:39'),
+(76, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-06 03:24:54'),
+(77, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 03:25:34'),
+(78, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 03:25:57'),
+(79, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-06 05:17:21'),
+(80, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 05:55:53'),
+(81, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 06:16:34'),
+(82, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 06:55:12'),
+(83, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 06:55:51'),
+(84, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-10 07:01:52'),
+(85, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 07:03:29'),
+(87, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 07:04:30'),
+(91, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 07:28:37');
+
 -- --------------------------------------------------------
 
 --
@@ -126,6 +178,13 @@ CREATE TABLE `tblreference` (
   `category` varchar(30) NOT NULL,
   `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblreference`
+--
+
+INSERT INTO `tblreference` (`referenceId`, `borrowerId`, `author`, `title`, `category`, `date`) VALUES
+(7, 1, 'The |Guko', 'What', 'Science', '2024-12-31');
 
 -- --------------------------------------------------------
 
@@ -142,6 +201,21 @@ CREATE TABLE `tblreturnborrow` (
   `librarianName` varchar(50) NOT NULL,
   `returned` enum('No','Yes','','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblreturnborrow`
+--
+
+INSERT INTO `tblreturnborrow` (`borrowId`, `borrowedDate`, `returnDate`, `borrowerId`, `bookId`, `librarianName`, `returned`) VALUES
+(39, '2024-12-06 00:09:36', '2024-12-10', 1, 39, 'Me', 'Yes'),
+(40, '2024-12-06 00:30:47', '2024-12-05', 1, 41, 'Jay z', 'Yes'),
+(41, '2024-12-06 03:26:14', '2024-12-10', 1, 39, 'Arjay', 'Yes'),
+(42, '2024-12-06 05:56:10', '2024-12-10', 1, 39, '', 'Yes'),
+(43, '2024-12-06 06:16:48', '2024-12-10', 1, 39, 'Me', 'Yes'),
+(44, '2024-12-06 07:55:55', '2024-12-10', 1, 39, 'Test', 'Yes'),
+(45, '2024-12-10 06:55:38', '2024-12-25', 1, 41, 'Me', 'Yes'),
+(46, '2024-12-10 07:04:08', '2024-12-27', 1, 41, 'daw', 'No'),
+(47, '2024-12-10 07:28:49', '0000-00-00', 1, 41, '', 'No');
 
 -- --------------------------------------------------------
 
@@ -165,10 +239,10 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userId`, `accountType`, `username`, `password`, `firstName`, `lastName`, `lastLogin`, `dateCreated`) VALUES
-(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2024-12-05 07:13:47', '2024-11-25 02:40:02'),
+(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2024-12-10 06:55:24', '2024-11-25 02:40:02'),
 (2, 'Librarian', 'test', 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4', 'Testing', 'Ko', '2024-12-03 09:01:14', '2024-12-03 09:01:14'),
-(3, 'Librarian', 'test', '8cb2237d0679ca88db6464eac60da96345513964', 'arjay', 'charcos', '2024-12-03 09:06:24', '2024-12-03 09:06:24'),
-(4, 'Librarian', 'rain214', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', 'password', 'password', '2024-12-03 09:49:40', '2024-12-03 09:24:16');
+(4, 'Librarian', 'rain214', '8cb2237d0679ca88db6464eac60da96345513964', 'password', 'password', '2024-12-09 07:13:28', '2024-12-03 09:24:16'),
+(5, 'Admin', 'dwa', 'f98421770a791fdf0338f87df795cd758ad5d87b', 'dwad', 'dwad', '2024-12-09 07:15:07', '2024-12-09 07:15:07');
 
 --
 -- Indexes for dumped tables
@@ -237,43 +311,43 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tblauthor`
 --
 ALTER TABLE `tblauthor`
-  MODIFY `authorId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `authorId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tblbooks`
 --
 ALTER TABLE `tblbooks`
-  MODIFY `bookId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `bookId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `tblcategory`
 --
 ALTER TABLE `tblcategory`
-  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tblnotifications`
 --
 ALTER TABLE `tblnotifications`
-  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT for table `tblreference`
 --
 ALTER TABLE `tblreference`
-  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tblreturnborrow`
 --
 ALTER TABLE `tblreturnborrow`
-  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
