@@ -172,27 +172,26 @@
 
     </div>
 
-        <!-- Modal for Approving the Notification -->
-    <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+<!-- Modal for Approving the Notification -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="approveModalLabel">Approve Notification</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <p>Do you want to approve this notification?</p>
-            <button class="btn btn-primary" id="approveBtn">Approve</button>
-            <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="approveModalLabel">Approve Notification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to approve this notification?</p>
+                <button class="btn btn-primary" id="approveBtn">Approve</button>
+                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
         </div>
     </div>
-    </div>
+</div>
 
-    <!-- Modal for Inputting Data After Approval -->
-    <div class="modal fade" id="inputDataModal" tabindex="-1" aria-labelledby="inputDataModalLabel" aria-hidden="true">
+<div class="modal fade" id="inputDataModal" tabindex="-1" aria-labelledby="inputDataModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
@@ -234,64 +233,73 @@
         </div>
         </div>
     </div>
-    </div>
+</div>
 
-    <div class="modal fade" id="inputReturnModal" tabindex="-1" aria-labelledby="inputReturnModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="inputReturnModalLabel">Return Book</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+<!-- Modal for Damage Report -->
+<div class="modal fade" id="damageReportModal" tabindex="-1" aria-labelledby="damageReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="damageReportModalLabel">Damage Report</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Is there any damage to the book?</p>
+                <select class="form-control" id="damageSeverity" name="damageSeverity">
+                    <option value="normal">Normal</option>
+                    <option value="medium">Medium</option>
+                    <option value="severe">Severe</option>
+                </select>
+                <div class="form-group mt-3">
+                    <label for="damageCost">Cost of Repair</label>
+                    <input type="number" class="form-control" id="damageCost" name="damageCost" placeholder="Enter cost" min="0">
                 </div>
-                <div class="modal-body">
-                    <form id="inputReturnForm">
-                        <input type="hidden" id="notificationId" name="notificationId">
-                        <input type="hidden" id="bookId" name="bookId">
-                        <div class="form-group">
-                            <label for="returnerId">ID Number</label>
-                            <input type="text" class="form-control" id="returnerId" name="returnerId" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="borrower1">Borrower's Name</label>
-                            <input type="text" class="form-control" id="borrower1" name="borrower1" required readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="title1">Book Title</label>
-                            <input type="text" class="form-control" id="title1" name="title1" required readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="author1">Author</label>
-                            <input type="text" class="form-control" id="author1" name="author1" required readonly>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Return Book</button>
-                    </form>
-                </div>
+                <button class="btn btn-primary" id="reportDamageBtn">Report Damage</button>
+                <button class="btn btn-secondary" data-dismiss="modal">No Damage</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- End of Page Wrapper -->
+<!-- Modal for Inputting Data After Approval (for Borrowing/Returning) -->
+<div class="modal fade" id="inputReturnModal" tabindex="-1" aria-labelledby="inputReturnModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inputReturnModalLabel">Return Book</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="inputReturnForm">
+                    <input type="hidden" id="notificationId" name="notificationId">
+                    <input type="hidden" id="bookId" name="bookId">
+                    <div class="form-group">
+                        <label for="returnerId">ID Number</label>
+                        <input type="text" class="form-control" id="returnerId" name="returnerId" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="borrower1">Borrower's Name</label>
+                        <input type="text" class="form-control" id="borrower1" name="borrower1" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="title1">Book Title</label>
+                        <input type="text" class="form-control" id="title1" name="title1" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="author1">Author</label>
+                        <input type="text" class="form-control" id="author1" name="author1" required readonly>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Return Book</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!-- Scroll to Top Button-->
-    <!-- <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a> -->
-
-    <!-- Bootstrap core JavaScript-->
-    <!-- <script src="assets/vendor/jquery/jquery.min.js"></script> -->
-
-    <!-- Core plugin JavaScript-->
-    <!-- <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script> -->
-
-    <!-- Custom scripts for all pages-->
-     
-    <script src="assets/js/sb-admin-2.min.js"></script>
-
-</body>
-
-</html>
 <script>
     let currentNotificationId = null;
     let currentBookId = null;
@@ -299,13 +307,13 @@
     let currentBook = null;
     let currentAuthor = null;
     let currentBorrower = null;
-    let currentType = null; // Track whether the type is 'borrow' or 'return'
+    let currentType = null;
 
     function openApprovalModal(notificationId, bookId, borrowerId, type, title, author, borrower) {
         currentNotificationId = notificationId;
         currentBookId = bookId;
         currentBorrowerId = borrowerId;
-        currentType = type; // Store the type
+        currentType = type;
         currentBook = title;
         currentAuthor = author;
         currentBorrower = borrower;
@@ -320,7 +328,10 @@
     $(document).ready(function () {
         // When approve button is clicked
         $('#approveBtn').on('click', function () {
-        $('#approveModal').modal('hide'); // Hide the approval modal
+            $('#approveModal').modal('hide'); // Hide the approval modal
+
+            // Show the damage report modal first
+    
 
         if (currentType === 'borrow') {
             // Show the input modal for borrowing
@@ -332,7 +343,46 @@
             $('#author').val(currentAuthor);
             $('#borrower').val(currentBorrower);
         } else if (currentType === 'return') {
-            // Show the input modal for returning
+         $('#damageReportModal').modal('show');
+ 
+        // Handle reporting damage
+        $('#reportDamageBtn').on('click', function () {
+            const damageSeverity = $('#damageSeverity').val();
+            const damageCost = $('#damageCost').val();
+
+            // Save penalty details to the database
+            $.ajax({
+                url: 'process/report-damage.php',
+                type: 'POST',
+                data: {
+                    borrowerId: currentBorrowerId,
+                    bookId: currentBookId,
+                    damageSeverity: damageSeverity,
+                    damageCost: damageCost
+                },
+                success: function (response) {
+                    alert('Damage reported successfully.');
+                    $('#damageReportModal').modal('hide'); // Close the damage report modal
+
+                    // Now show the return modal
+                    $('#inputReturnModal').modal('show');
+                    $('#notificationId').val(currentNotificationId);
+                    $('#bookId').val(currentBookId);
+                    $('#title1').val(currentBook);
+                    $('#author1').val(currentAuthor);
+                    $('#borrower1').val(currentBorrower);
+                    $('#returnerId').val(currentBorrowerId);
+                },
+                error: function () {
+                    alert('Error reporting damage. Please try again.');
+                }
+            });
+            })       };
+        });
+
+        // No damage reported, go straight to return modal
+        $('#damageReportModal button[data-dismiss="modal"]').on('click', function () {
+            $('#damageReportModal').modal('hide'); // Close the damage report modal
             $('#inputReturnModal').modal('show');
             $('#notificationId').val(currentNotificationId);
             $('#bookId').val(currentBookId);
@@ -340,10 +390,9 @@
             $('#author1').val(currentAuthor);
             $('#borrower1').val(currentBorrower);
             $('#returnerId').val(currentBorrowerId);
-        }
-    });
+        });
 
-        // Submit the input form for borrowing
+              // Submit the input form for borrowing
         $('#inputDataForm').on('submit', function (e) {
             e.preventDefault(); // Prevent default form submission behavior
 
@@ -371,29 +420,31 @@
             });
         });
 
-        // Submit the input form for returning
+
+        // Submit the return form
         $('#inputReturnForm').on('submit', function (e) {
-            e.preventDefault(); // Prevent default form submission behavior
+            e.preventDefault();
 
             const bookId = $('#bookId').val();
             const returnerId = $('#returnerId').val();
-            console.log(bookId)
 
             $.ajax({
                 url: 'transactions/return-book.php',
                 type: 'POST',
                 data: { bookId, idNumber: returnerId },
                 success: function (response) {
-                    alert(response); // Display success message
-                    $('#inputReturnModal').modal('hide'); // Close the input modal
-                    location.reload(); // Reload the page to reflect changes
+                    alert(response);
+                    $('#inputReturnModal').modal('hide');
+                    location.reload();
                 },
                 error: function () {
                     alert('Error returning the book. Please try again.');
-                },
+                }
             });
         });
     });
+
+
 
 
 
