@@ -133,6 +133,28 @@ $result = $stmt->get_result();
         </table>
     </div>
 
+    <div id="borrowModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+        <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
+            <h2>Confirm Borrow</h2>
+            <p>Please enter your ID number for confirmation:</p>
+            <input type="text" id="userIdInput" placeholder="Enter ID number" style="width:80%; padding:5px; margin:10px 0;">
+            <br>
+            <button id="confirmBorrowBtn" style="background:blue; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Approve</button>
+            <button onclick="closeModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <div id="returnModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+        <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
+            <h2>Confirm Return</h2>
+            <p>Please enter your ID number for confirmation:</p>
+            <input type="text" id="userIdInputReturn" placeholder="Enter ID number" style="width:80%; padding:5px; margin:10px 0;">
+            <br>
+            <button id="confirmReturnBtn" style="background:green; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Approve</button>
+            <button onclick="closeReturnModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
@@ -145,50 +167,107 @@ $result = $stmt->get_result();
         });
 
         // Handle Borrow
-        function handleBorrow(bookId) {
-            if (confirm('Do you want to borrow this book?')) {
-                const userId = <?= $_SESSION['user_id']; ?>;
-                const username = "<?= $_SESSION['username']; ?>"; // Enclose in quotes for string
+        let currentBookId = null; // Track the selected book ID
+
+            // Open modal for borrow confirmation
+            function handleBorrow(bookId) {
+                currentBookId = bookId;
+                document.getElementById('borrowModal').style.display = 'block';
+            }
+
+            // Close the modal
+            function closeModal() {
+                document.getElementById('borrowModal').style.display = 'none';
+                document.getElementById('userIdInput').value = '';
+            }
+
+            // Approve borrow and send AJAX request
+            document.getElementById('confirmBorrowBtn').addEventListener('click', function() {
+                const userId = document.getElementById('userIdInput').value.trim();
+                const username = "<?= $_SESSION['username']; ?>";
+                const user_id = "<?= $_SESSION['user_id']; ?>";
+
+
+                if (userId === '') {
+                    alert('Please enter your ID number.');
+                    return;
+                }
+
+                if (userId !== user_id) {
+                    alert('Please use your ID Number.');
+                    return;
+                }
+
                 $.ajax({
                     url: 'process/borrow-book.php',
                     type: 'POST',
                     data: { 
-                        bookId: bookId, 
-                        userId: userId,
-                        username, username},
-                    success: function (response) {
-                        alert(response.message);
-                        location.reload();
+                        bookId: currentBookId, 
+                        userId: userId, 
+                        username: username 
                     },
-                    error: function () {
-                        alert('Error borrowing the book. Please try again.');
+                    success: function(response) {
+                        alert(response.message);
+                        location.reload(); // Reload page to update UI
+                    },
+                    error: function() {
+                        alert('Error processing borrow request. Please try again.');
                     }
                 });
-            }
-        }
 
-        // Handle Return
-        function handleReturn(bookId) {
-            if (confirm('Do you want to return this book?')) {
-                const userId = <?= $_SESSION['user_id']; ?>;
-                const username = "<?= $_SESSION['username']; ?>"; // Enclose in quotes for string
+                closeModal(); // Close modal after request
+            });
+
+        let currentBookIdReturn = null; // Track the selected book ID for return
+
+            // Open modal for return confirmation
+            function handleReturn(bookId) {
+                currentBookIdReturn = bookId;
+                document.getElementById('returnModal').style.display = 'block';
+            }
+
+            // Close the return modal
+            function closeReturnModal() {
+                document.getElementById('returnModal').style.display = 'none';
+                document.getElementById('userIdInputReturn').value = '';
+            }
+
+            // Approve return and send AJAX request
+            document.getElementById('confirmReturnBtn').addEventListener('click', function() {
+                const userId = document.getElementById('userIdInputReturn').value.trim();
+                const username = "<?= $_SESSION['username']; ?>";
+                const user_id = "<?= $_SESSION['user_id']; ?>";
+
+
+                if (userId === '') {
+                    alert('Please enter your ID number.');
+                    return;
+                }
+
+                if (userId !== user_id) {
+                    alert('Please use your ID Number.');
+                    return;
+                }
+
                 $.ajax({
                     url: 'process/return-book.php',
                     type: 'POST',
                     data: { 
-                        bookId: bookId, 
-                        userId: userId,
-                        username, username},
-                    success: function (response) {
-                        alert(response.message);
-                        location.reload();
+                        bookId: currentBookIdReturn, 
+                        userId: userId, 
+                        username: username 
                     },
-                    error: function () {
-                        alert('Error returning the book. Please try again.');
+                    success: function(response) {
+                        alert(response.message);
+                        location.reload(); // Reload page to update UI
+                    },
+                    error: function() {
+                        alert('Error processing return request. Please try again.');
                     }
                 });
-            }
-        }
+
+                closeReturnModal(); // Close modal after request
+            });
     </script>
 </body>
 </html>
