@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2024 at 09:42 AM
+-- Generation Time: Dec 10, 2024 at 11:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,7 +67,7 @@ CREATE TABLE `tblbooks` (
 
 INSERT INTO `tblbooks` (`bookId`, `title`, `dateAdded`, `quantity`, `authorId`, `categoryId`, `callNum`, `accessionNum`, `barcodeNum`, `publisher`, `publishedDate`) VALUES
 (39, 'The Book', '2024-12-05 10:07:00', 1, 4, 3, '123', '123', '123', 'Ako', '2024-12-10'),
-(41, 'The Nesst', '2024-12-06 00:30:10', 9, 5, 4, '1234', '1242', '2143', 'What', '2024-12-10');
+(41, 'The Nesst', '2024-12-06 00:30:10', 10, 5, 4, '1234', '1242', '2143', 'What', '2024-12-10');
 
 -- --------------------------------------------------------
 
@@ -162,7 +162,35 @@ INSERT INTO `tblnotifications` (`notificationId`, `borrowerId`, `bookId`, `messa
 (84, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-10 07:01:52'),
 (85, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 07:03:29'),
 (87, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 07:04:30'),
-(91, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 07:28:37');
+(91, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 07:28:37'),
+(92, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-10 09:34:22'),
+(93, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-10 09:34:42'),
+(94, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 09:34:53'),
+(95, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 09:36:29'),
+(96, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 09:36:38'),
+(97, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-10 09:39:39'),
+(98, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-10 09:39:58'),
+(99, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 09:45:06'),
+(100, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 09:45:21'),
+(101, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 09:47:27'),
+(102, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 09:47:41'),
+(103, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-10 10:17:46'),
+(104, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-10 10:18:01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblpenalties`
+--
+
+CREATE TABLE `tblpenalties` (
+  `penaltyId` int(11) NOT NULL,
+  `borrowerId` int(11) NOT NULL,
+  `bookId` int(11) NOT NULL,
+  `penalty` enum('Medium','Severe','Normal') NOT NULL,
+  `cost` int(11) NOT NULL,
+  `paid` enum('No','Yes','','') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -214,8 +242,14 @@ INSERT INTO `tblreturnborrow` (`borrowId`, `borrowedDate`, `returnDate`, `borrow
 (43, '2024-12-06 06:16:48', '2024-12-10', 1, 39, 'Me', 'Yes'),
 (44, '2024-12-06 07:55:55', '2024-12-10', 1, 39, 'Test', 'Yes'),
 (45, '2024-12-10 06:55:38', '2024-12-25', 1, 41, 'Me', 'Yes'),
-(46, '2024-12-10 07:04:08', '2024-12-27', 1, 41, 'daw', 'No'),
-(47, '2024-12-10 07:28:49', '0000-00-00', 1, 41, '', 'No');
+(46, '2024-12-10 07:04:08', '2024-12-27', 1, 41, 'daw', 'Yes'),
+(47, '2024-12-10 07:28:49', '0000-00-00', 1, 41, '', 'Yes'),
+(48, '2024-12-10 09:36:21', '2024-12-22', 1, 41, 'dawda', 'Yes'),
+(49, '2024-12-10 09:39:50', '2024-12-11', 1, 39, 'whar', 'Yes'),
+(50, '2024-12-10 09:40:35', '2024-12-26', 1, 39, 'dawda', 'Yes'),
+(51, '2024-12-10 09:45:15', '2024-12-17', 1, 41, 'dawda', 'Yes'),
+(52, '2024-12-10 09:47:36', '2024-12-26', 1, 41, 'dwada', 'Yes'),
+(53, '2024-12-10 10:17:55', '2024-12-16', 1, 39, 'dawda', 'Yes');
 
 -- --------------------------------------------------------
 
@@ -283,6 +317,12 @@ ALTER TABLE `tblnotifications`
   ADD KEY `fk_bookId` (`bookId`);
 
 --
+-- Indexes for table `tblpenalties`
+--
+ALTER TABLE `tblpenalties`
+  ADD PRIMARY KEY (`penaltyId`);
+
+--
 -- Indexes for table `tblreference`
 --
 ALTER TABLE `tblreference`
@@ -329,7 +369,13 @@ ALTER TABLE `tblcategory`
 -- AUTO_INCREMENT for table `tblnotifications`
 --
 ALTER TABLE `tblnotifications`
-  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+
+--
+-- AUTO_INCREMENT for table `tblpenalties`
+--
+ALTER TABLE `tblpenalties`
+  MODIFY `penaltyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tblreference`
@@ -341,7 +387,7 @@ ALTER TABLE `tblreference`
 -- AUTO_INCREMENT for table `tblreturnborrow`
 --
 ALTER TABLE `tblreturnborrow`
-  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `tbluser`
