@@ -53,6 +53,14 @@ $result = $conn->query($query);
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <style>
+        .delete-btn {
+            background-color: red;
+        }
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -92,31 +100,40 @@ $result = $conn->query($query);
                     <th>Author</th>
                     <th>Category</th>
                     <th>Returned</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $borrowedDate = new DateTime($row['borrowedDate']);
-                        $formattedborrowedDate = $borrowedDate->format('F j, Y, g:i A'); // Format: 12-hour time with AM/PM
-                        $returnDate = new DateTime($row['returnDate']);
-                        $formattedreturnDate = $returnDate->format('F j, Y'); // Format: December 19, 2024
-                        
-                        echo "<tr>";
-                        echo "<td><a href='pdf/generate-slip.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Slip</a></td>"; // Print Button with borrowId
-                        echo "<td><a href='pdf/generate-card.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Card</a></td>"; // Print Button with borrowId
-                        echo "<td>" . $row['borrowerId'] . "</td>"; // Borrower ID
-                        echo "<td>" . $formattedborrowedDate . "</td>"; // Borrowed Date
-                        echo "<td>" . $formattedreturnDate . "</td>"; // Return Date
-                        echo "<td>" . $row['firstName'] . " " . $row['surName'] . "</td>"; // Borrower Name
-                        echo "<td>" . $row['bookTitle'] . "</td>"; // Book Title
-                        echo "<td>" . $row['bookAuthor'] . "</td>"; // Author
-                        echo "<td>" . $row['bookCategory'] . "</td>"; // Category
-                        echo "<td>" . ($row['returned'] == "Yes" ? 'Yes' : 'No') . "</td>"; // Returned
-                        echo "</tr>";
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $borrowedDate = new DateTime($row['borrowedDate']);
+                            $formattedborrowedDate = $borrowedDate->format('F j, Y, g:i A'); // Format: 12-hour time with AM/PM
+                            $returnDate = new DateTime($row['returnDate']);
+                            $formattedreturnDate = $returnDate->format('F j, Y'); // Format: December 19, 2024
+                            
+                            echo "<tr>";
+                            echo "<td><a href='pdf/generate-slip.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Slip</a></td>"; // Print Button with borrowId
+                            echo "<td><a href='pdf/generate-card.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Card</a></td>"; // Print Button with borrowId
+                            echo "<td>" . $row['borrowerId'] . "</td>"; // Borrower ID
+                            echo "<td>" . $formattedborrowedDate . "</td>"; // Borrowed Date
+                            echo "<td>" . $formattedreturnDate . "</td>"; // Return Date
+                            echo "<td>" . $row['firstName'] . " " . $row['surName'] . "</td>"; // Borrower Name
+                            echo "<td>" . $row['bookTitle'] . "</td>"; // Book Title
+                            echo "<td>" . $row['bookAuthor'] . "</td>"; // Author
+                            echo "<td>" . $row['bookCategory'] . "</td>"; // Category
+                            echo "<td>" . ($row['returned'] == "Yes" ? 'Yes' : 'No') . "</td>"; // Returned
+                            echo "<td>";
+                            // Add the delete button in the last column
+                            if ($row['returned'] == "No") {
+                                echo "<span style='color: red;'>Cannot Delete - Hasn't Returned</span>";
+                            } else {
+                                echo "<button class='delete-btn' data-borrower-id='" . $row['borrowId'] . "'>Delete</button>";
+                            }
+                            echo "</td>";                           
+                            echo "</tr>";
+                        }
                     }
-                }
                 ?>
             </tbody>
         </table>
@@ -129,8 +146,35 @@ $result = $conn->query($query);
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
-       $(document).ready(function() {
-            $('#dataTable').DataTable(); // Matches <table id="dataTable">
+
+        $(document).ready(function() {
+        // Initialize DataTables
+            $('#dataTable').DataTable();
+
+            // Handle delete button click
+            $('.delete-btn').click(function() {
+                var borrowId = $(this).data('borrower-id');  // Get the borrowId from the button's data attribute
+                console.log(borrowId)
+                // Ask for confirmation before deleting
+                if (confirm('Are you sure you want to delete this record?')) {
+                    $.ajax({
+                        url: 'process/delete-return.php',  // Path to your PHP delete script
+                        type: 'POST',
+                        data: { borrowId: borrowId },
+                        success: function(response) {
+                            if (response.success) {
+                                alert('Record deleted successfully.');
+                                location.reload();  // Reload the page to reflect the changes
+                            } else {
+                                alert('Error deleting the record.');
+                            }
+                        },
+                        error: function() {
+                            alert('Error processing the request.');
+                        }
+                    });
+                }
+            });
         });
     </script>
 </body>
