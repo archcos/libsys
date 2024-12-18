@@ -1,23 +1,27 @@
 <?php
 include('db-connect.php'); // Adjust the path to your database connection file
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $idNumber = $_POST['idNumber']; // Get Library ID from POST request
-    $remarks = $_POST['remarks']; // Get Remarks value (1 for Activated, 0 for Deactivated)
+var_dump($_POST); // Check the received POST data
+$idNumber = $_POST['idNumber'] ?? null;
+$remarks = $_POST['remarks'] ?? null;
 
-    // Prepare and execute update query
-    $query = "UPDATE tblborrowers SET remarks = ? WHERE idNumber = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param('ii', $remarks, $idNumber); 
-
-    if ($stmt->execute()) {
-        echo "Remarks updated successfully!";
-    } else {
-        http_response_code(500);
-        echo "Error: Unable to update remarks.";
-    }
-
-    $stmt->close();
-    $conn->close();
+if ($idNumber === null || $remarks === null) {
+    echo "Missing idNumber or remarks!";
+    exit;
 }
+
+// Proceed with database query
+include('db-connect.php');
+$query = "UPDATE tblborrowers SET remarks = ? WHERE idNumber = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('si', $remarks, $idNumber); // First parameter is now a string
+
+if ($stmt->execute()) {
+    echo "Update successful for ID $idNumber with remarks $remarks";
+} else {
+    echo "Database update failed: " . $stmt->error;
+}
+
+$stmt->close();
+$conn->close();
 ?>

@@ -48,6 +48,7 @@
                 <a class="collapse-item" href="list-borrower.php?borrowerType=Student">Students</a>
                 <a class="collapse-item" href="list-borrower.php?borrowerType=Faculty">Faculty</a>
                 <a class="collapse-item" href="list-borrower.php?borrowerType=Staff">Staff</a>
+                <a class="collapse-item" href="list-course.php">Course</a>
             </div>
         </div>
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseOne">

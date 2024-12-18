@@ -112,14 +112,14 @@ if ($borrowerType) {
                     <th>Gender</th>
                     <th>Email Address</th>
                     <th>Remarks</th>
-                    <th>Actions</th>
+                    <!-- <th>Actions</th> -->
                 </tr>
             </thead>
             <tbody>
                 <?php
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            $remarksStatus = ($row['remarks'] == 1) ? 'Activated' : 'Deactivated';
+                            $remarksStatus = ($row['remarks'] == 'Activated') ? 'Activated' : 'Deactivated';
                             echo "<tr>";
                             echo "<td>
                                     <a href='pdf/generate-pdf.php?idNumber=" . $row['idNumber'] . "'>
@@ -134,17 +134,17 @@ if ($borrowerType) {
                             echo "<td>" . htmlspecialchars($row['emailAddress']) . "</td>";
                             echo "<td>
                                     <select class='remarks-dropdown' data-borrower-id='" . $row['idNumber'] . "'>
-                                        <option value='1' " . ($row['remarks'] == 1 ? 'selected' : '') . ">Activated</option>
-                                        <option value='0' " . ($row['remarks'] == 0 ? 'selected' : '') . ">Deactivated</option>
+                                        <option value='Activated' " . ($row['remarks'] == 'Activated' ? 'selected' : '') . ">Activated</option>
+                                        <option value='Deactivated' " . ($row['remarks'] == 'Deactivated' ? 'selected' : '') . ">Deactivated</option>
                                     </select>
                                 </td>";
-                            echo "<td>";
-                            if ($row['hasUnreturnedBooks']) {
-                                echo "<span style='color: red;'>Cannot Delete - Has Unreturned Books</span>";
-                            } else {
-                                echo "<button class='delete-btn' data-borrower-id='" . $row['idNumber'] . "'>Delete</button>";
-                            }
-                            echo "</td>";
+                            // echo "<td>";
+                            // if ($row['hasUnreturnedBooks']) {
+                            //     echo "<span style='color: red;'>Cannot Delete - Has Unreturned Books</span>";
+                            // } else {
+                            //     echo "<button class='delete-btn' data-borrower-id='" . $row['idNumber'] . "'>Delete</button>";
+                            // }
+                            // echo "</td>";
                             echo "</tr>";
                         }
                     }
@@ -298,25 +298,28 @@ if ($borrowerType) {
 
             // Handle remarks change (Activated/Deactivated)
             $('.remarks-dropdown').on('change', function() {
-                var idNumber = $(this).data('borrower-id');
-                var remarksValue = parseInt($(this).val(), 10); // Convert to integer (1 for Activated, 0 for Deactivated)
+                var idNumber = parseInt($(this).data('borrower-id'), 10); // Ensure it's an integer
+                var remarksValue = $(this).val(); // Convert to integer (1 for Activated, 0 for Deactivated)
 
                 console.log(idNumber, remarksValue)
                 // Send AJAX request to update the remarks in the database
-                $.ajax({
-                    url: 'process/update-remarks.php', // Backend script to handle remarks update
+               $.ajax({
+                    url: 'process/update-remarks.php',
                     type: 'POST',
                     data: {
                         idNumber: idNumber,
                         remarks: remarksValue
                     },
                     success: function(response) {
+                        console.log('Success response:', response); // Debug response
                         alert('Remarks updated successfully!');
                     },
-                    error: function() {
+                    error: function(xhr, status, error) {
+                        console.error('Error response:', xhr.responseText); // Debug error
                         alert('Error updating remarks.');
                     }
                 });
+
             });
         });
     </script>

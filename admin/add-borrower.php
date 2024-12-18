@@ -15,6 +15,8 @@ include('process/db-connect.php');
 
 // Start output buffering to inject this content into the main template
 ob_start();
+$levelsQuery = "SELECT DISTINCT level FROM tblcourses";
+$levelsResult = $conn->query($levelsQuery);
 
 // Capture the borrowerType from the query parameter
 $borrowerType = isset($_GET['borrowerType']) ? $_GET['borrowerType'] : 'Student'; // Default to Student
@@ -77,12 +79,35 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
     </style>
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script>
+         $(document).ready(function () {
+            // Populate the course dropdown based on the selected level
+            $('#level').change(function () {
+                const selectedLevel = $(this).val();
+
+                if (selectedLevel) {
+                    $.ajax({
+                        url: 'process/fetch-courses.php',
+                        type: 'POST',
+                        data: { level: selectedLevel },
+                        success: function (data) {
+                            $('#course').html(data);
+                        },
+                        error: function () {
+                            alert('An error occurred while fetching courses.');
+                        }
+                    });
+                } else {
+                    $('#course').html('<option value="">Select a course</option>');
+                }
+            });
+        });
         // Function to dynamically adjust form fields based on borrower type
         function adjustFormBasedOnType(value) {
             const facultyField = document.getElementById('facultyField');
             const courseField = document.getElementById('courseField');
             const yearField = document.getElementById('yearField');
             const positionField = document.getElementById('positionField');
+            const levelField = document.getElementById('levelField');
 
             if (value === 'Student') {
                 positionField.classList.add('hidden'); // Hide position
@@ -92,6 +117,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
                 positionField.classList.remove('hidden'); // Show position
                 courseField.classList.add('hidden');    // Hide course
                 yearField.classList.add('hidden');      // Hide year
+                levelField.classList.add('hidden');      // Hide year
             }
         }
 
@@ -159,13 +185,27 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             <label for="position">Position:</label>
             <input type="text" id="position" name="position">
         </div>
-        <div id="courseField" class="form-group hidden">
+        <div id="levelField" class="form-group">
+            <label for="level">Level:</label>
+            <select id="level" name="level">
+                <option value="">Select a level</option>
+                <?php while ($row = $levelsResult->fetch_assoc()): ?>
+                    <option value="<?= htmlspecialchars($row['level']); ?>">
+                        <?= htmlspecialchars($row['level']); ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+        </div>
+        <div id="courseField" class="form-group">
             <label for="course">Course:</label>
-            <input type="text" id="course" name="course">
+            <select id="course" name="courseId">
+                <option value="">Select a course</option>
+                <!-- Courses will be dynamically populated here -->
+            </select>
         </div>
         <div id="yearField" class="form-group hidden">
             <label for="year">Year:</label>
-            <input type="number" id="year" name="year" min="1" max="5">
+            <input type="number" id="year" name="year" min="1">
         </div>
         <div class="form-group">
             <label for="gender">Gender:</label>

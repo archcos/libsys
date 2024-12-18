@@ -29,12 +29,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $result->fetch_assoc();
 
         if ($user) {
-            $_SESSION['user_id'] = $user['idNumber'];  // Store ID number in session (or user ID if needed)
-            $_SESSION['username'] = $user['firstName'] . ' ' . $user['surName'];  // Assuming you're storing full name
-            $_SESSION['borrowerType'] = $user['borrowerType'];  // Store borrower type if necessary
+            // Check the `remarks` field
+            if ($user['remarks'] == 'Activated') {
+                // Allow login
+                $_SESSION['user_id'] = $user['idNumber'];  // Store ID number in session (or user ID if needed)
+                $_SESSION['username'] = $user['firstName'] . ' ' . $user['surName'];  // Full name
+                $_SESSION['borrowerType'] = $user['borrowerType'];  // Borrower type if necessary
 
-            echo json_encode(['success' => true, 'message' => 'Login successful']);
+                echo json_encode(['success' => true, 'message' => 'Login successful']);
+            } else {
+                // Account is deactivated
+                echo json_encode([
+                    'success' => false, 
+                    'message' => "Your account is currently deactivated. Please contact the Librarian."
+                ]);
+            }
         } else {
+            // ID number not found
             echo json_encode(['success' => false, 'message' => 'Invalid ID number']);
         }
 

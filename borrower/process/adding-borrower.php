@@ -12,10 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $middleName = $conn->real_escape_string($_POST['middleName']);
     $emailAddress = $conn->real_escape_string($_POST['emailAddress']);
     $position = isset($_POST['position']) ? $conn->real_escape_string($_POST['position']) : null;
-    $course = isset($_POST['course']) ? $conn->real_escape_string($_POST['course']) : null;
+    $course = isset($_POST['courseId']) ? $conn->real_escape_string($_POST['courseId']) : null;
     $year = isset($_POST['year']) ? $conn->real_escape_string($_POST['year']) : null;
     $gender = $conn->real_escape_string($_POST['gender']);
     $birthDate = $conn->real_escape_string($_POST['birthDate']);
+    $remarks = $conn->real_escape_string('Activated');
     $homeAddress = $conn->real_escape_string($_POST['homeAddress']);
 
     // Check if the ID number already exists
@@ -29,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Insert new borrower into the database
-    $query = "INSERT INTO tblborrowers (idNumber, libraryId, surName, firstName, middleName, emailAddress, position, course, year, gender, birthDate, homeAddress, borrowerType) 
-              VALUES ('$idNumber', '$libraryId', '$surName', '$firstName', '$middleName', '$emailAddress', '$position', '$course', '$year', '$gender', '$birthDate', '$homeAddress', '$borrowerType')";
+    $query = "INSERT INTO tblborrowers (idNumber, libraryId, surName, firstName, middleName, emailAddress, position, course, year, gender, birthDate, remarks, homeAddress, borrowerType) 
+    VALUES ('$idNumber', '$libraryId', '$surName', '$firstName', '$middleName', '$emailAddress', '$position', '$course', '$year', '$gender', '$birthDate', '$remarks', '$homeAddress', '$borrowerType')";
 
     if ($conn->query($query)) {
         // Success, redirect back with a success message
