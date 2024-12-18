@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2024 at 11:19 AM
+-- Generation Time: Dec 18, 2024 at 04:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -84,13 +84,13 @@ CREATE TABLE `tblborrowers` (
   `firstName` varchar(30) NOT NULL,
   `middleName` varchar(20) NOT NULL,
   `emailAddress` varchar(40) NOT NULL,
-  `course` varchar(20) DEFAULT NULL,
+  `course` int(11) NOT NULL,
   `year` int(1) DEFAULT NULL,
   `position` varchar(20) DEFAULT NULL,
   `gender` enum('Male','Female','','') NOT NULL,
   `birthDate` varchar(15) NOT NULL,
   `homeAddress` varchar(100) NOT NULL,
-  `remarks` enum('1','0','','') NOT NULL,
+  `remarks` varchar(20) NOT NULL,
   `receipt` enum('No','Yes','','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -99,7 +99,8 @@ CREATE TABLE `tblborrowers` (
 --
 
 INSERT INTO `tblborrowers` (`idNumber`, `borrowerType`, `dateRegistered`, `libraryId`, `surName`, `firstName`, `middleName`, `emailAddress`, `course`, `year`, `position`, `gender`, `birthDate`, `homeAddress`, `remarks`, `receipt`) VALUES
-(1, 'Student', '2024-12-06 05:52:24', 1, 'Uzumaki', 'Naruto', 'Secret', 'naruto@gmail.com', 'BS Information Techn', 4, '', 'Male', '2002-02-11', 'Konohas', '1', 'Yes');
+(1, 'Student', '2024-12-18 03:55:33', 1, 'dwa', 'dwada', 'dwada', 'dawd', 4, 1, '', 'Male', '2024-12-25', 'dwada', 'Activated', 'No'),
+(2, 'Student', '2024-12-18 03:56:16', 1, '1', '1', '1', '1', 5, 1, '', 'Female', '2024-12-23', '1', 'Activated', 'No');
 
 -- --------------------------------------------------------
 
@@ -124,6 +125,28 @@ INSERT INTO `tblcategory` (`categoryId`, `categoryName`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tblcourses`
+--
+
+CREATE TABLE `tblcourses` (
+  `courseId` int(11) NOT NULL,
+  `level` enum('Undergraduate','Postgraduate','Doctoral','') NOT NULL,
+  `courseName` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tblcourses`
+--
+
+INSERT INTO `tblcourses` (`courseId`, `level`, `courseName`) VALUES
+(4, 'Postgraduate', 'Information technoly'),
+(5, 'Undergraduate', 'Test'),
+(6, 'Doctoral', 'Dragon'),
+(7, 'Undergraduate', 'Civil Engineering');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tblnotifications`
 --
 
@@ -136,46 +159,6 @@ CREATE TABLE `tblnotifications` (
   `type` enum('borrow','return','','') NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblnotifications`
---
-
-INSERT INTO `tblnotifications` (`notificationId`, `borrowerId`, `bookId`, `message`, `status`, `type`, `timestamp`) VALUES
-(67, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-06 00:07:52'),
-(68, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 00:09:22'),
-(69, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-06 00:30:20'),
-(70, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-06 01:11:26'),
-(71, 1, 39, ' has returned the book: The Book', 'read', 'return', '2024-12-06 03:13:39'),
-(72, 1, 39, ' has returned the book: The Book', 'read', 'return', '2024-12-06 03:15:22'),
-(73, 1, 39, ' has returned the book: The Book', 'read', 'return', '2024-12-06 03:15:31'),
-(74, 1, 39, ' has returned the book: The Book', 'read', 'return', '2024-12-06 03:15:34'),
-(75, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-06 03:23:39'),
-(76, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-06 03:24:54'),
-(77, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 03:25:34'),
-(78, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 03:25:57'),
-(79, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-06 05:17:21'),
-(80, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 05:55:53'),
-(81, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-06 06:16:34'),
-(82, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 06:55:12'),
-(83, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 06:55:51'),
-(84, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-10 07:01:52'),
-(85, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 07:03:29'),
-(87, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 07:04:30'),
-(91, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 07:28:37'),
-(92, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-10 09:34:22'),
-(93, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-10 09:34:42'),
-(94, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 09:34:53'),
-(95, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 09:36:29'),
-(96, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 09:36:38'),
-(97, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-10 09:39:39'),
-(98, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-10 09:39:58'),
-(99, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 09:45:06'),
-(100, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 09:45:21'),
-(101, 1, 41, 'Naruto Uzumaki has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-10 09:47:27'),
-(102, 1, 41, 'Naruto Uzumaki has returned the book: The Nesst', 'read', 'return', '2024-12-10 09:47:41'),
-(103, 1, 39, 'Naruto Uzumaki has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-10 10:17:46'),
-(104, 1, 39, 'Naruto Uzumaki has returned the book: The Book', 'read', 'return', '2024-12-10 10:18:01');
 
 -- --------------------------------------------------------
 
@@ -207,13 +190,6 @@ CREATE TABLE `tblreference` (
   `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblreference`
---
-
-INSERT INTO `tblreference` (`referenceId`, `borrowerId`, `author`, `title`, `category`, `date`) VALUES
-(7, 1, 'The |Guko', 'What', 'Science', '2024-12-31');
-
 -- --------------------------------------------------------
 
 --
@@ -229,27 +205,6 @@ CREATE TABLE `tblreturnborrow` (
   `librarianName` varchar(50) NOT NULL,
   `returned` enum('No','Yes','','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblreturnborrow`
---
-
-INSERT INTO `tblreturnborrow` (`borrowId`, `borrowedDate`, `returnDate`, `borrowerId`, `bookId`, `librarianName`, `returned`) VALUES
-(39, '2024-12-06 00:09:36', '2024-12-10', 1, 39, 'Me', 'Yes'),
-(40, '2024-12-06 00:30:47', '2024-12-05', 1, 41, 'Jay z', 'Yes'),
-(41, '2024-12-06 03:26:14', '2024-12-10', 1, 39, 'Arjay', 'Yes'),
-(42, '2024-12-06 05:56:10', '2024-12-10', 1, 39, '', 'Yes'),
-(43, '2024-12-06 06:16:48', '2024-12-10', 1, 39, 'Me', 'Yes'),
-(44, '2024-12-06 07:55:55', '2024-12-10', 1, 39, 'Test', 'Yes'),
-(45, '2024-12-10 06:55:38', '2024-12-25', 1, 41, 'Me', 'Yes'),
-(46, '2024-12-10 07:04:08', '2024-12-27', 1, 41, 'daw', 'Yes'),
-(47, '2024-12-10 07:28:49', '0000-00-00', 1, 41, '', 'Yes'),
-(48, '2024-12-10 09:36:21', '2024-12-22', 1, 41, 'dawda', 'Yes'),
-(49, '2024-12-10 09:39:50', '2024-12-11', 1, 39, 'whar', 'Yes'),
-(50, '2024-12-10 09:40:35', '2024-12-26', 1, 39, 'dawda', 'Yes'),
-(51, '2024-12-10 09:45:15', '2024-12-17', 1, 41, 'dawda', 'Yes'),
-(52, '2024-12-10 09:47:36', '2024-12-26', 1, 41, 'dwada', 'Yes'),
-(53, '2024-12-10 10:17:55', '2024-12-16', 1, 39, 'dawda', 'Yes');
 
 -- --------------------------------------------------------
 
@@ -273,7 +228,7 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userId`, `accountType`, `username`, `password`, `firstName`, `lastName`, `lastLogin`, `dateCreated`) VALUES
-(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2024-12-10 06:55:24', '2024-11-25 02:40:02'),
+(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2024-12-18 01:56:49', '2024-11-25 02:40:02'),
 (2, 'Librarian', 'test', 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4', 'Testing', 'Ko', '2024-12-03 09:01:14', '2024-12-03 09:01:14'),
 (4, 'Librarian', 'rain214', '8cb2237d0679ca88db6464eac60da96345513964', 'password', 'password', '2024-12-09 07:13:28', '2024-12-03 09:24:16'),
 (5, 'Admin', 'dwa', 'f98421770a791fdf0338f87df795cd758ad5d87b', 'dwad', 'dwad', '2024-12-09 07:15:07', '2024-12-09 07:15:07');
@@ -300,13 +255,20 @@ ALTER TABLE `tblbooks`
 -- Indexes for table `tblborrowers`
 --
 ALTER TABLE `tblborrowers`
-  ADD PRIMARY KEY (`idNumber`);
+  ADD PRIMARY KEY (`idNumber`),
+  ADD KEY `fk_course` (`course`);
 
 --
 -- Indexes for table `tblcategory`
 --
 ALTER TABLE `tblcategory`
   ADD PRIMARY KEY (`categoryId`);
+
+--
+-- Indexes for table `tblcourses`
+--
+ALTER TABLE `tblcourses`
+  ADD PRIMARY KEY (`courseId`);
 
 --
 -- Indexes for table `tblnotifications`
@@ -366,6 +328,12 @@ ALTER TABLE `tblcategory`
   MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `tblcourses`
+--
+ALTER TABLE `tblcourses`
+  MODIFY `courseId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `tblnotifications`
 --
 ALTER TABLE `tblnotifications`
@@ -405,6 +373,12 @@ ALTER TABLE `tbluser`
 ALTER TABLE `tblbooks`
   ADD CONSTRAINT `fk_author` FOREIGN KEY (`authorId`) REFERENCES `tblauthor` (`authorId`),
   ADD CONSTRAINT `fk_category` FOREIGN KEY (`categoryId`) REFERENCES `tblcategory` (`categoryId`);
+
+--
+-- Constraints for table `tblborrowers`
+--
+ALTER TABLE `tblborrowers`
+  ADD CONSTRAINT `fk_course` FOREIGN KEY (`course`) REFERENCES `tblcourses` (`courseId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tblnotifications`
