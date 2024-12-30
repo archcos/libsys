@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2024 at 04:59 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Dec 30, 2024 at 04:57 PM
+-- Server version: 10.4.25-MariaDB
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -31,7 +31,7 @@ CREATE TABLE `tblauthor` (
   `authorId` int(11) NOT NULL,
   `firstName` varchar(30) NOT NULL,
   `lastName` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tblauthor`
@@ -59,7 +59,7 @@ CREATE TABLE `tblbooks` (
   `barcodeNum` varchar(11) NOT NULL,
   `publisher` varchar(30) NOT NULL,
   `publishedDate` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tblbooks`
@@ -67,7 +67,7 @@ CREATE TABLE `tblbooks` (
 
 INSERT INTO `tblbooks` (`bookId`, `title`, `dateAdded`, `quantity`, `authorId`, `categoryId`, `callNum`, `accessionNum`, `barcodeNum`, `publisher`, `publishedDate`) VALUES
 (39, 'The Book', '2024-12-05 10:07:00', 1, 4, 3, '123', '123', '123', 'Ako', '2024-12-10'),
-(41, 'The Nesst', '2024-12-06 00:30:10', 10, 5, 4, '1234', '1242', '2143', 'What', '2024-12-10');
+(41, 'The Nesst', '2024-12-06 00:30:10', 2, 5, 4, '1234', '1242', '2143', 'What', '2024-12-10');
 
 -- --------------------------------------------------------
 
@@ -92,7 +92,7 @@ CREATE TABLE `tblborrowers` (
   `homeAddress` varchar(100) NOT NULL,
   `remarks` varchar(20) NOT NULL,
   `receipt` enum('No','Yes','','') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tblborrowers`
@@ -100,7 +100,8 @@ CREATE TABLE `tblborrowers` (
 
 INSERT INTO `tblborrowers` (`idNumber`, `borrowerType`, `dateRegistered`, `libraryId`, `surName`, `firstName`, `middleName`, `emailAddress`, `course`, `year`, `position`, `gender`, `birthDate`, `homeAddress`, `remarks`, `receipt`) VALUES
 (1, 'Student', '2024-12-18 03:55:33', 1, 'dwa', 'dwada', 'dwada', 'dawd', 4, 1, '', 'Male', '2024-12-25', 'dwada', 'Activated', 'No'),
-(2, 'Student', '2024-12-18 03:56:16', 1, '1', '1', '1', '1', 5, 1, '', 'Female', '2024-12-23', '1', 'Activated', 'No');
+(2, 'Faculty', '2024-12-30 13:18:45', 1, '1', '1', '1', 'gmail@gmail.com', 5, 1, 'computer', 'Female', '2024-12-23', '1', 'Activated', 'No'),
+(3, 'Student', '2024-12-30 15:54:58', 1, 'A', 'daw', 'daw', 'dwada@gmail.com', 4, 5, '', 'Male', '2025-01-08', 'daw', 'Activated', 'No');
 
 -- --------------------------------------------------------
 
@@ -111,7 +112,7 @@ INSERT INTO `tblborrowers` (`idNumber`, `borrowerType`, `dateRegistered`, `libra
 CREATE TABLE `tblcategory` (
   `categoryId` int(11) NOT NULL,
   `categoryName` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tblcategory`
@@ -132,7 +133,7 @@ CREATE TABLE `tblcourses` (
   `courseId` int(11) NOT NULL,
   `level` enum('Undergraduate','Postgraduate','Doctoral','') NOT NULL,
   `courseName` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tblcourses`
@@ -158,7 +159,21 @@ CREATE TABLE `tblnotifications` (
   `status` enum('unread','read') DEFAULT 'unread',
   `type` enum('borrow','return','','') NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblnotifications`
+--
+
+INSERT INTO `tblnotifications` (`notificationId`, `borrowerId`, `bookId`, `message`, `status`, `type`, `timestamp`) VALUES
+(105, 1, 39, 'dwada dwa has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-30 11:51:34'),
+(106, 2, 41, '1 1 has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-30 13:18:53'),
+(107, 2, 41, '1 1 has returned the book: The Nesst', 'read', 'return', '2024-12-30 13:40:29'),
+(108, 2, 41, '1 1 has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-30 13:45:23'),
+(109, 1, 41, 'dwada dwa has returned the book: The Nesst', 'read', 'return', '2024-12-30 13:53:35'),
+(110, 2, 39, '1 1 has requested to borrow the book: The Book', 'read', 'borrow', '2024-12-30 14:04:18'),
+(111, 2, 41, '1 1 has requested to borrow the book: The Nesst', 'read', 'borrow', '2024-12-30 14:04:46'),
+(112, 2, 41, '1 1 has returned the book: The Nesst', 'read', 'return', '2024-12-30 14:05:18');
 
 -- --------------------------------------------------------
 
@@ -171,9 +186,9 @@ CREATE TABLE `tblpenalties` (
   `borrowerId` int(11) NOT NULL,
   `bookId` int(11) NOT NULL,
   `penalty` enum('Medium','Severe','Normal') NOT NULL,
-  `cost` int(11) NOT NULL,
+  `cost` float NOT NULL,
   `paid` enum('No','Yes','','') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -188,7 +203,7 @@ CREATE TABLE `tblreference` (
   `title` varchar(30) NOT NULL,
   `category` varchar(30) NOT NULL,
   `date` date NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -204,7 +219,7 @@ CREATE TABLE `tblreturnborrow` (
   `bookId` int(11) NOT NULL,
   `librarianName` varchar(50) NOT NULL,
   `returned` enum('No','Yes','','') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -221,14 +236,14 @@ CREATE TABLE `tbluser` (
   `lastName` varchar(20) NOT NULL,
   `lastLogin` timestamp NOT NULL DEFAULT current_timestamp(),
   `dateCreated` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `tbluser`
 --
 
 INSERT INTO `tbluser` (`userId`, `accountType`, `username`, `password`, `firstName`, `lastName`, `lastLogin`, `dateCreated`) VALUES
-(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2024-12-18 01:56:49', '2024-11-25 02:40:02'),
+(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2024-12-30 11:51:48', '2024-11-25 02:40:02'),
 (2, 'Librarian', 'test', 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4', 'Testing', 'Ko', '2024-12-03 09:01:14', '2024-12-03 09:01:14'),
 (4, 'Librarian', 'rain214', '8cb2237d0679ca88db6464eac60da96345513964', 'password', 'password', '2024-12-09 07:13:28', '2024-12-03 09:24:16'),
 (5, 'Admin', 'dwa', 'f98421770a791fdf0338f87df795cd758ad5d87b', 'dwad', 'dwad', '2024-12-09 07:15:07', '2024-12-09 07:15:07');
@@ -337,13 +352,13 @@ ALTER TABLE `tblcourses`
 -- AUTO_INCREMENT for table `tblnotifications`
 --
 ALTER TABLE `tblnotifications`
-  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `tblpenalties`
 --
 ALTER TABLE `tblpenalties`
-  MODIFY `penaltyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `penaltyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tblreference`
@@ -355,7 +370,7 @@ ALTER TABLE `tblreference`
 -- AUTO_INCREMENT for table `tblreturnborrow`
 --
 ALTER TABLE `tblreturnborrow`
-  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `tbluser`

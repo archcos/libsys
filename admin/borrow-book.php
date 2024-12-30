@@ -13,11 +13,11 @@ ob_start();
 
 // Fetch data from tblbooks with author and category names
 $query = "SELECT b.bookId, b.title, b.quantity, 
-                 CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
-                 c.categoryName 
-          FROM tblbooks b
-          JOIN tblauthor a ON b.authorId = a.authorId
-          JOIN tblcategory c ON b.categoryId = c.categoryId";
+                CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
+                c.categoryName 
+        FROM tblbooks b
+        JOIN tblauthor a ON b.authorId = a.authorId
+        JOIN tblcategory c ON b.categoryId = c.categoryId";
 $result = $conn->query($query);
 ?>
 
@@ -97,8 +97,8 @@ $result = $conn->query($query);
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>Available</th>
-                    <th>Return</th>
+                    <th>Action</th>
+                    <!-- <th>Return</th> -->
                     <th>Book ID</th>
                     <th>Title</th>
                     <th>Author</th>
@@ -121,9 +121,9 @@ $result = $conn->query($query);
                         echo "</td>";
 
                         // Return button
-                        echo "<td>";
-                        echo "<button class='btn-action return-btn' onclick='handleReturn(" . $row['bookId'] . ")'>Return</button>";
-                        echo "</td>";
+                        // echo "<td>";
+                        // echo "<button class='btn-action return-btn' onclick='handleReturn(" . $row['bookId'] . ")'>Return</button>";
+                        // echo "</td>";
 
                         // Book details
                         echo "<td>" . $row['bookId'] . "</td>";
@@ -131,7 +131,6 @@ $result = $conn->query($query);
                         echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
                         echo "<td>" . $row['quantity'] . "</td>";
-
                     }
                 }
                 ?>
@@ -149,8 +148,9 @@ $result = $conn->query($query);
                 <input type="number" id="borrowerIds" required><br><br>
                 <label for="librarianName">Librarian Full Name:</label><br>
                 <input type="text" id="librarianName" required><br><br>
-                <label for="returnDate">Return Date:</label><br>
-                <input type="date" id="returnDate" required><br><br>
+                <label for="formattedReturnDate">Return Date:</label><br>
+                <input type="text" id="formattedReturnDate" readonly><br>
+                <input type="date" id="returnDate" name="returnDate" readonly required style="display: none;"><br>
                 <button type="submit" class="btn-action">Approve</button>
                 <button type="button" onclick="closeModal('borrowModal')" class="cancel-btn">Cancel</button>
             </form>
@@ -185,10 +185,77 @@ $result = $conn->query($query);
         });
                 // Handle Borrow
                 // Open Borrow Modal
-        function handleBorrow(bookId) {
-            document.getElementById('borrowModalBookId').value = bookId; // Store bookId in the modal
-            document.getElementById('borrowModal').style.display = 'flex';
-        }
+// Handle Borrow
+// Handle Borrow
+function handleBorrow(bookId) {
+    const borrowModal = document.getElementById('borrowModal');
+    const returnDateInput = document.getElementById('returnDate');
+    const formattedReturnDateInput = document.getElementById('formattedReturnDate');
+    const borrowerIdInput = document.getElementById('borrowerIds');
+
+    // Clear the return date fields when opening the modal
+    returnDateInput.value = '';
+    formattedReturnDateInput.value = '';
+
+    // Set bookId and display the modal
+    document.getElementById('borrowModalBookId').value = bookId;
+    borrowModal.style.display = 'flex';
+}
+
+// Handle the input of borrower ID
+document.getElementById('borrowerIds').addEventListener('input', function () {
+    const borrowerId = this.value;
+
+    // Only proceed if borrower ID is provided
+    if (borrowerId) {
+        const returnDateInput = document.getElementById('returnDate');
+        const formattedReturnDateInput = document.getElementById('formattedReturnDate');
+
+        // Send AJAX request to check borrower type
+        $.ajax({
+            url: 'transactions/check-borrower-type.php',  // PHP script to fetch borrower type
+            type: 'POST',
+            data: { borrowerId },
+            success: function (response) {
+                console.log('Borrower Type:', response);  // Log the response to check if it's correct
+                const borrowerType = response.trim(); // Ensure it's trimmed for any extra spaces
+
+                // Set the return date based on borrower type
+                const today = new Date();
+                let returnDate = new Date(today);
+
+                if (borrowerType === 'Student') {
+                    returnDate.setDate(today.getDate() + 3); // 3 days for students
+                } else {
+                    returnDate.setDate(today.getDate() + 80); // 80 days for others
+                }
+
+                // Format the return date as MM/DD/YYYY for display
+                const displayDay = String(returnDate.getDate()).padStart(2, '0');
+                const displayMonth = String(returnDate.getMonth() + 1).padStart(2, '0'); // Month is 0-based
+                const displayYear = returnDate.getFullYear();
+                const formattedDisplayDate = `${displayMonth}/${displayDay}/${displayYear}`;
+
+                // Format the return date as YYYY-MM-DD for database
+                const dbDay = String(returnDate.getDate()).padStart(2, '0');
+                const dbMonth = String(returnDate.getMonth() + 1).padStart(2, '0');
+                const dbYear = returnDate.getFullYear();
+                const dbFormattedDate = `${dbYear}-${dbMonth}-${dbDay}`;
+
+                // Set the calculated return date for display and database
+                formattedReturnDateInput.value = formattedDisplayDate;
+                returnDateInput.value = dbFormattedDate;
+            },
+            error: function () {
+                alert('Error fetching borrower type.');
+            }
+        });
+    }
+});
+
+
+
+
 
         // Open Return Modal
         function handleReturn(bookId) {
