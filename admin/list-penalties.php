@@ -27,6 +27,8 @@ $query = "
         tblborrowers b ON p.borrowerId = b.idNumber
     JOIN 
         tblbooks bk ON p.bookId = bk.bookId
+    ORDER BY 
+        p.penaltyId DESC
 ";
 $result = $conn->query($query);
 
@@ -92,7 +94,7 @@ if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
 <body>
     <div class="container mt-5">
         <h2 class="mb-4">Penalties List</h2>
-        <table class="table table-bordered" id="penaltiesTable">
+        <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
                     <th>Penalty ID</th>
@@ -139,7 +141,7 @@ if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
     <script>
         $(document).ready(function() {
             // Initialize DataTable
-            $('#penaltiesTable').DataTable();
+            $('#dataTable').DataTable();
 
             // Handle change in "Paid" status
             $('.paidStatus').on('change', function() {

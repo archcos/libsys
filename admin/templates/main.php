@@ -225,8 +225,9 @@
                 <input type="text" class="form-control" id="librarianName" name="librarianName" required>
             </div>
             <div class="form-group">
-                <label for="returnDate">Return Date</label>
-                <input type="date" class="form-control" id="returnDate" name="returnDate" required>
+                <label for="formattedReturnDates">Return Date:</label><br>
+                <input type="text" id="formattedReturnDates" readonly class="form-group"><br>
+                <input type="date" id="returnDates" name="returnDates" readonly required class="form-group" style="display: none;"><br>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -236,11 +237,12 @@
 </div>
 
 <!-- Modal for Damage Report -->
+<!-- Modal for Damage Report -->
 <div class="modal fade" id="damageReportModal" tabindex="-1" aria-labelledby="damageReportModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="damageReportModalLabel">Damage Report</h5>
+                <h5 class="modal-title" id="damageReportModalLabel">Penalty Report</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -254,14 +256,26 @@
                 </select>
                 <div class="form-group mt-3">
                     <label for="damageCost">Cost of Repair</label>
-                    <input type="number" class="form-control" id="damageCost" name="damageCost" placeholder="Enter cost" min="0">
+                    <input type="number" class="form-control" id="damageCost" name="damageCost" placeholder="Enter cost" min="0" value="0">
                 </div>
-                <button class="btn btn-primary" id="reportDamageBtn">Report Damage</button>
-                <button class="btn btn-secondary" data-dismiss="modal">No Damage</button>
+
+                <!-- Expected Return Date -->
+                <p id="expectedReturnDate"></p>
+
+                <!-- Time Penalty -->
+                <p id="timePenalty"></p>
+
+                <!-- Total Penalty -->
+                <p id="totalPenalty"></p>
+
+                <button class="btn btn-primary" id="reportDamageBtn">Report Penalty</button>
+                <button class="btn btn-secondary" id="noDamageButton" data-dismiss="modal">No Penalty</button>
             </div>
         </div>
     </div>
 </div>
+
+
 
 <!-- Modal for Inputting Data After Approval (for Borrowing/Returning) -->
 <div class="modal fade" id="inputReturnModal" tabindex="-1" aria-labelledby="inputReturnModalLabel" aria-hidden="true">
@@ -317,98 +331,185 @@
         currentBook = title;
         currentAuthor = author;
         currentBorrower = borrower;
-
-        console.log(`Notification ID: ${notificationId}, Type: ${type}`);
-        console.log(`Book: ${title}, Author: ${author}, Borrower: ${borrower}`);
-
         // Show the approve modal
         $('#approveModal').modal('show');
     }
 
     $(document).ready(function () {
-        // When approve button is clicked
+        // When the approve button is clicked
         $('#approveBtn').on('click', function () {
             $('#approveModal').modal('hide'); // Hide the approval modal
-
-            // Show the damage report modal first
     
+            // Show the damage report modal first
+            if (currentType === 'borrow') {
+                // Show the input modal for borrowing
+                $('#inputDataModal').modal('show');
+                $('#notificationId').val(currentNotificationId);
+                $('#bookId').val(currentBookId);
+                $('#borrowerId').val(currentBorrowerId);
+                $('#title').val(currentBook);
+                $('#author').val(currentAuthor);
+                $('#borrower').val(currentBorrower);
+    
+                // Dynamically calculate the return date
+                const today = new Date();
+    
+                // Fetch borrower type via AJAX based on the current borrowerId
+                $.ajax({
+                    url: 'transactions/check-borrower-type.php',  // PHP script to fetch borrower type
+                    type: 'POST',
+                    data: { borrowerId: currentBorrowerId },
+                    success: function (response) {
+                        const borrowerType = response.trim(); // Get the borrower type and trim any extra spaces
+    
+                        // Calculate the return date based on borrower type
+                        let returnDate = new Date(today);
+    
+                        if (borrowerType === 'Student') {
+                            returnDate.setDate(today.getDate() + 3); // 3 days for students
+                        } else {
+                            returnDate.setDate(today.getDate() + 80); // 80 days for others
+                        }
+    
+                        // Format the return date as YYYY-MM-DD for database and MM/DD/YYYY for display
+                        const dbDay = String(returnDate.getDate()).padStart(2, '0');
+                        const dbMonth = String(returnDate.getMonth() + 1).padStart(2, '0'); // Month is 0-based
+                        const dbYear = returnDate.getFullYear();
+                        const dbFormattedDate = `${dbYear}-${dbMonth}-${dbDay}`; // For database
+                        const formattedDisplayDate = `${dbMonth}/${dbDay}/${dbYear}`; // For user display
+    
+                        // Set the values in the modal fields
+                        $('#formattedReturnDates').val(formattedDisplayDate);  // Set user-friendly formatted date
+                        $('#returnDates').val(dbFormattedDate);  // Set the database-friendly date
+                    },
+                    error: function () {
+                        alert('Error fetching borrower type. Please try again.');
+                    }
+                });
+            } else if (currentType === 'return') {
+                $('#damageReportModal').modal('show');
+            
+                // Fetch return date and calculate penalty before the modal opens
+                $.ajax({
+                    url: 'process/fetch-return-date.php',  // Fetch return date and calculate penalty
+                    type: 'POST',
+                    data: {
+                        borrowerId: currentBorrowerId,
+                        bookId: currentBookId
+                    },
+                    success: function (data) {
+                        const responseData = JSON.parse(data);
+                        const returnDate = responseData.returnDate;
+                        const penalty = responseData.penalty; // Assuming the penalty calculation logic is in the PHP file 
+                
+                        // Display the expected return date in the modal
+                        $('#expectedReturnDate').text("Expected Return Date: " + returnDate);
+                
+                        const currentDate = new Date(); // Get current date and time
+                        const returnDateObj = new Date(returnDate); // Convert returnDate string to Date object
+                        returnDateObj.setHours(0, 0, 0, 0); // Set time to 12:00 AM
 
-        if (currentType === 'borrow') {
-            // Show the input modal for borrowing
-            $('#inputDataModal').modal('show');
-            $('#notificationId').val(currentNotificationId);
-            $('#bookId').val(currentBookId);
-            $('#borrowerId').val(currentBorrowerId);
-            $('#title').val(currentBook);
-            $('#author').val(currentAuthor);
-            $('#borrower').val(currentBorrower);
-        } else if (currentType === 'return') {
-         $('#damageReportModal').modal('show');
- 
-        // Handle reporting damage
-        $('#reportDamageBtn').on('click', function () {
-            const damageSeverity = $('#damageSeverity').val();
-            const damageCost = $('#damageCost').val();
+                        // If the return date is today, start penalty from 12:01 AM on the next day
+                        if (currentDate.toISOString().split('T')[0] === returnDateObj.toISOString().split('T')[0]) {
+                            returnDateObj.setDate(returnDateObj.getDate() + 1); // Set returnDateObj to the next day
+                            returnDateObj.setHours(0, 1, 0, 0); // Set time to 12:01 AM of the next day
+                        }
 
-            // Save penalty details to the database
-            $.ajax({
-                url: 'process/report-damage.php',
-                type: 'POST',
-                data: {
-                    borrowerId: currentBorrowerId,
-                    bookId: currentBookId,
-                    damageSeverity: damageSeverity,
-                    damageCost: damageCost
-                },
-                success: function (response) {
-                    alert('Damage reported successfully.');
-                    $('#damageReportModal').modal('hide'); // Close the damage report modal
+                        // Calculate the difference in hours between the expected return date and the current date
+                        const timeDiff = currentDate - returnDateObj; // Difference in milliseconds
+                        const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60))*5; // Convert milliseconds to hours
+                
+                        // If the difference is positive, we have a penalty, otherwise, no penalty
+                        const timePenalty = hoursDiff > 0 ? hoursDiff : 0;
+                
+                        // Display the current date and the calculated time penalty
+                        $('#currentDate').text("Current Date: " + currentDate.toISOString().split('T')[0]);
+                        $('#timePenalty').text("Time Penalty: " + (timePenalty > 0 ? "Php " + (timePenalty * penalty) : "No penalty"));
+                
+                        // Initialize Total Penalty to just the time penalty
+                        let totalPenalty = timePenalty * penalty; // Assuming the penalty is applied per hour of delay
+                
+                        // Initialize the damage cost to 0
+                        $('#damageCost').val(0);  // Default to 0 as damage cost
+                        $('#totalPenalty').text("Total Penalty: Php " + totalPenalty.toFixed(2));
+                
+                        // Update Total Penalty when damage cost changes
+                        $('#damageCost').on('input', function() {
+                            const damageCost = parseFloat($('#damageCost').val()) || 0;
+                            totalPenalty = (timePenalty * penalty) + damageCost; // Add damage cost to time penalty
+                            $('#totalPenalty').text("Total Penalty: Php " + totalPenalty.toFixed(2)); // Update the total penalty display
+                        });
+            
+                        // Handle damage report submission
+                        $('#reportDamageBtn').on('click', function () {
+                            const damageSeverity = $('#damageSeverity').val();
+                            const damageCost = $('#damageCost').val(); // The value entered by the user for the damage cost
+                            const finalTotalPenalty = totalPenalty; // The final total penalty, which includes time penalty and damage cost
+            
+                            // Send the final total penalty as damageCost to the backend
+                            $.ajax({
+                                url: 'process/report-damage.php',
+                                type: 'POST',
+                                data: {
+                                    borrowerId: currentBorrowerId,
+                                    bookId: currentBookId,
+                                    damageSeverity: damageSeverity,
+                                    damageCost: finalTotalPenalty // Send the final total penalty
+                                },
+                                success: function (response) {
+                                    alert('Penalty reported successfully.');
+                                    $('#damageReportModal').modal('hide'); // Close the damage report modal
+                                    $('#inputReturnModal').modal('show');
+                                    $('#notificationId').val(currentNotificationId);
+                                    $('#bookId').val(currentBookId);
+                                    $('#title1').val(currentBook);
+                                    $('#author1').val(currentAuthor);
+                                    $('#borrower1').val(currentBorrower);
+                                    $('#returnerId').val(currentBorrowerId);
+                                },
+                                error: function () {
+                                    alert('Error reporting damage. Please try again.');
+                                }
+                            });
+                        });
+                    },
+                    error: function () {
+                        alert('Error fetching return date and penalty. Please try again.');
+                    }
+                });
+                    
 
-                    // Now show the return modal
-                    $('#inputReturnModal').modal('show');
+            
+                $('#noDamageButton').on('click', function() {
+                    // Just show the return modal when "No Damage" is clicked
+                    $('#damageReportModal').modal('hide');  // Hide the damage report modal
+                    $('#inputReturnModal').modal('show');  // Show the return modal
+            
+                    // Set values for the return form
                     $('#notificationId').val(currentNotificationId);
                     $('#bookId').val(currentBookId);
                     $('#title1').val(currentBook);
                     $('#author1').val(currentAuthor);
                     $('#borrower1').val(currentBorrower);
                     $('#returnerId').val(currentBorrowerId);
-                },
-                error: function () {
-                    alert('Error reporting damage. Please try again.');
-                }
-            });
-            })       };
+                });
+            }
         });
-
-        // No damage reported, go straight to return modal
-        $('#damageReportModal button[data-dismiss="modal"]').on('click', function () {
-            $('#damageReportModal').modal('hide'); // Close the damage report modal
-            $('#inputReturnModal').modal('show');
-            $('#notificationId').val(currentNotificationId);
-            $('#bookId').val(currentBookId);
-            $('#title1').val(currentBook);
-            $('#author1').val(currentAuthor);
-            $('#borrower1').val(currentBorrower);
-            $('#returnerId').val(currentBorrowerId);
-        });
-
-              // Submit the input form for borrowing
+    
+        // Submit the input form for borrowing
         $('#inputDataForm').on('submit', function (e) {
             e.preventDefault(); // Prevent default form submission behavior
-
+            
             const bookId = $('#bookId').val();
             const borrowerId = $('#borrowerId').val();
             const librarianName = $('#librarianName').val();
-            const returnDate = $('#returnDate').val();
-            // const title = $('#title').val();
-            // const author = $('#author').val();
-            // const borrower = $('#borrower').val();
-
-
+            let returnDate = $('#returnDates').val(); // This will be set dynamically
+    
+            // Now submit the form as usual
             $.ajax({
                 url: 'transactions/borrow-book.php',
                 type: 'POST',
-                data: { bookId, idNumber: borrowerId, librarianName, returnDate },
+                data: { bookId, idNumber: borrowerId, librarianName, returnDate: returnDate },
                 success: function (response) {
                     alert(response); // Display success message
                     $('#inputDataModal').modal('hide'); // Close the input modal
@@ -416,9 +517,10 @@
                 },
                 error: function () {
                     alert('Error borrowing the book. Please try again.');
-                },
+                }
             });
         });
+    });
 
 
         // Submit the return form
@@ -442,7 +544,6 @@
                 }
             });
         });
-    });
 
 
 
@@ -478,6 +579,34 @@
             event.preventDefault(); // Prevent the link from redirecting
             alert("Please contact the Administrator to change your password.");
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const formattedReturnDatesInput = document.getElementById('formattedReturnDates');
+            const returnDatesInput = document.getElementById('returnDates');
+        
+            // Set the return date (e.g., 3 days later)
+            const today = new Date();
+            const returnDates = new Date(today);
+            returnDates.setDate(today.getDate() + 3);
+        
+            // Format the return date as YYYY-MM-DD for the hidden input
+            const dbYear = returnDates.getFullYear();
+            const dbMonth = String(returnDates.getMonth() + 1).padStart(2, '0'); // Month is 0-based
+            const dbDay = String(returnDates.getDate()).padStart(2, '0');
+            const dbFormattedDate = `${dbYear}-${dbMonth}-${dbDay}`;
+        
+            // Set the value for the hidden input (database format)
+            returnDatesInput.value = dbFormattedDate;
+        
+            // Format the return date as MM/DD/YYYY for user display
+            const userMonth = String(returnDates.getMonth() + 1).padStart(2, '0');
+            const userDay = String(returnDates.getDate()).padStart(2, '0');
+            const userFormattedDate = `${userMonth}/${userDay}/${dbYear}`;
+        
+            // Set the value for the visible input (user-friendly format)
+            formattedReturnDatesInput.value = userFormattedDate;
+        });
+        
         
         function fetchNotifications() {
             $.ajax({

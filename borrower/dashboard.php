@@ -54,6 +54,14 @@ $result = $stmt->get_result();
             border-radius: 5px;
             cursor: pointer;
         }
+        .btn-borrowed {
+            padding: 5px 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
         .btn-nostock {
             padding: 5px 10px;
             background-color: grey;
@@ -103,8 +111,22 @@ $result = $stmt->get_result();
                         
                         // Borrow button or unavailable
                         echo "<td>";
+                    // Check if the user has already borrowed the book
+                    $checkQuery = "SELECT * FROM tblreturnborrow WHERE borrowerId = ? AND bookId = ? AND returned = 'No' LIMIT 1";
+                    $checkStmt = $conn->prepare($checkQuery);
+                    $checkStmt->bind_param("ii", $userId, $row['bookId']);  // Bind borrowerId and bookId
+                    $checkStmt->execute();
+                    $checkResult = $checkStmt->get_result();
+
+                        
                         if ($row['quantity'] > 0) {
-                            echo "<button class='btn-action' onclick='handleBorrow(" . $row['bookId'] . ")'>Borrow</button>";
+                            if ($checkResult->num_rows > 0) {
+                                // If the user has already borrowed a book, show "Borrowed"
+                                echo "<button class='btn-borrowed' disabled>Borrowed</button>";
+                            } else {
+                                // Otherwise, show "Borrow" button
+                                echo "<button class='btn-action' onclick='handleBorrow(" . $row['bookId'] . ")'>Borrow</button>";
+                            }
                         } else {
                             echo "<button class='btn-nostock' disabled>Unavailable</button>";
                         }
@@ -133,6 +155,7 @@ $result = $stmt->get_result();
         </table>
     </div>
 
+    <!-- Borrow Modal -->
     <div id="borrowModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
         <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
             <h2>Confirm Borrow</h2>
@@ -144,6 +167,7 @@ $result = $stmt->get_result();
         </div>
     </div>
 
+    <!-- Return Modal -->
     <div id="returnModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
         <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
             <h2>Confirm Return</h2>
@@ -154,14 +178,14 @@ $result = $stmt->get_result();
             <button onclick="closeReturnModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
         </div>
     </div>
-
+    
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
-        $(document).ready(function() {
+         $(document).ready(function() {
             // Initialize DataTables
             $('#dataTable').DataTable();
         });
@@ -186,7 +210,6 @@ $result = $stmt->get_result();
                 const userId = document.getElementById('userIdInput').value.trim();
                 const username = "<?= $_SESSION['username']; ?>";
                 const user_id = "<?= $_SESSION['user_id']; ?>";
-
 
                 if (userId === '') {
                     alert('Please enter your ID number.');

@@ -94,11 +94,11 @@
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Borrowing / Returning</span>
+            <span>Borrowing</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="borrow-book.php">Borrow/Return Book</a>
+                <a class="collapse-item" href="borrow-book.php">Borrow Book</a>
                 <a class="collapse-item" href="book-card.php">Book Card</a>
                 <a class="collapse-item" href="list-penalties.php">Penalties</a>
             </div>
