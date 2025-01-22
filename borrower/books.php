@@ -38,22 +38,27 @@ $result = $stmt->get_result();
 
         .header {
             display: flex;
-            justify-content: space-between; /* Space between elements */
+            justify-content: center; /* Center the header content */
             align-items: center;
             padding: 20px;
+            position: relative; /* Allows positioning of the login button */
             color: white;
         }
 
         .header h1 {
             margin: 0;
             font-size: 1.5rem;
+            text-align: center;
         }
 
         .header .btn-login {
-            margin-left: auto; /* Push the button to the right */
+            position: absolute; /* Position the login button independently */
+            right: 20px; /* Align it to the right side */
+            top: 50%; /* Center vertically within the header */
+            transform: translateY(-50%);
             padding: 8px 16px;
             background-color: #007bff;
-            color: white ;
+            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -63,9 +68,10 @@ $result = $stmt->get_result();
         }
 
         .header .btn-login:hover {
-            background-color:rgb(6, 57, 112);
+            background-color: rgb(6, 57, 112);
             color: white;
         }
+
 
         .container {
             width: 90%;
@@ -167,7 +173,7 @@ $result = $stmt->get_result();
 <body>
     <div class="container">
         <div class="header">
-            <h1>Books Kiosk</h1>
+            <h1>Books Kiosk</h1><br>
             <a href="login.php" class="btn-login">Login</a>
         </div>
 
