@@ -36,6 +36,37 @@ $result = $stmt->get_result();
             color: #333;
         }
 
+        .header {
+            display: flex;
+            justify-content: space-between; /* Space between elements */
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .header .btn-login {
+            margin-left: auto; /* Push the button to the right */
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white ;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .header .btn-login:hover {
+            background-color:rgb(6, 57, 112);
+            color: white;
+        }
+
         .container {
             width: 90%;
             margin: 20px auto;
@@ -135,7 +166,11 @@ $result = $stmt->get_result();
 </head>
 <body>
     <div class="container">
-        <h1>Books Kiosk</h1>
+        <div class="header">
+            <h1>Books Kiosk</h1>
+            <a href="login.php" class="btn-login">Login</a>
+        </div>
+
         <p>Explore the list of books available for borrowing in the library. Search, select, and borrow your favorite books.</p>
 
         <!-- Search Box -->
