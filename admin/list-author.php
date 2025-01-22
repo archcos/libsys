@@ -55,7 +55,7 @@ $result = $conn->query($query);
                 <tr>
                     <th>Author ID</th>
                     <th>Name</th>
-                    <th>Actions</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
