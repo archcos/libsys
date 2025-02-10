@@ -4,3 +4,21 @@ Stack trace:
 #0 {main}
   thrown in C:\xampp\htdocs\bls\borrow\process\login.php on line 11
 [04-Dec-2024 03:28:39 Europe/Berlin] PHP Warning:  Undefined array key "lastName" in C:\xampp\htdocs\bls\borrow\process\login.php on line 33
+[10-Feb-2025 03:38:28 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown database 'balibsysdb' in C:\xampp\htdocs\libsys\borrower\db\db-connect.php:9
+Stack trace:
+#0 C:\xampp\htdocs\libsys\borrower\db\db-connect.php(9): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'balibsysdb')
+#1 C:\xampp\htdocs\libsys\borrower\process\login.php(11): require('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\libsys\borrower\db\db-connect.php on line 9
+[10-Feb-2025 03:38:32 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown database 'balibsysdb' in C:\xampp\htdocs\libsys\borrower\db\db-connect.php:9
+Stack trace:
+#0 C:\xampp\htdocs\libsys\borrower\db\db-connect.php(9): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'balibsysdb')
+#1 C:\xampp\htdocs\libsys\borrower\process\login.php(11): require('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\libsys\borrower\db\db-connect.php on line 9
+[10-Feb-2025 03:38:35 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown database 'balibsysdb' in C:\xampp\htdocs\libsys\borrower\db\db-connect.php:9
+Stack trace:
+#0 C:\xampp\htdocs\libsys\borrower\db\db-connect.php(9): mysqli->__construct('localhost', 'root', Object(SensitiveParameterValue), 'balibsysdb')
+#1 C:\xampp\htdocs\libsys\borrower\process\login.php(11): require('C:\\xampp\\htdocs...')
+#2 {main}
+  thrown in C:\xampp\htdocs\libsys\borrower\db\db-connect.php on line 9
