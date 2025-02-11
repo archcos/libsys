@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             // ID number not found
-            echo json_encode(['success' => false, 'message' => 'Invalid ID number']);
+            echo json_encode(['success' => false, 'message' => 'Invalid ID number. Please register first using your ID Number.']);
         }
 
         $stmt->close();
