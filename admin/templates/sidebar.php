@@ -98,7 +98,7 @@
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="borrow-book.php">Borrow Book</a>
+                <!-- <a class="collapse-item" href="borrow-book.php">Borrow Book</a> -->
                 <a class="collapse-item" href="book-card.php">Book Card</a>
                 <a class="collapse-item" href="list-penalties.php">Penalties</a>
             </div>
