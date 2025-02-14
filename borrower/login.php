@@ -18,7 +18,9 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
   <link href="https://fonts.googleapis.com/css?family=Karla:400,700|Roboto" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link id="main-css-href" rel="stylesheet" href="assets/css/style.css" />
-  <script src="https://unpkg.com/html5-qrcode/html5-qrcode.min.js"></script>
+
+  <!-- QR Code Scanner Library -->
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 
 <body class="bg-light-gray" id="body">
@@ -41,14 +43,18 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
                 <form id="loginForm" method="POST">
                     <div class="row">
                         <div class="form-group col-md-12 mb-4">
-                            <input type="number" class="form-control input-lg" id="idNumber" placeholder="ID Number" />
+                            <input type="number" class="form-control input-lg" id="idNumber" placeholder="ID Number" required />
                         </div>
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary btn-pill mb-4 w-100">Sign In</button>
+
+                        <div class="col-md-12 text-center">
                             <button type="button" class="btn btn-success btn-pill mb-4 w-100" id="startQRScanner">
                                 <i class="fas fa-qrcode"></i> Scan QR Code
                             </button>
-                            <div id="qr-reader" style="width: 100%;"></div>
+                            <div id="qr-reader" style="width: 100%; display: none;"></div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary btn-pill mb-4 w-100">Sign In</button>
                             <button type="button" class="btn btn-secondary btn-pill mb-4 w-100" data-toggle="modal" data-target="#addBorrowerModal">Register</button>
                             <p id="notification" class="d-none text-danger"></p>
                         </div>
@@ -93,81 +99,47 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
   </div>
 </div>
 
-<<<<<<< HEAD
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const qrScannerButton = document.getElementById('startQRScanner');
-        const idNumberInput = document.getElementById('idNumber');
-        const qrReader = document.getElementById('qr-reader');
-=======
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const qrScannerButton = document.getElementById('startQRScanner');
     const idNumberInput = document.getElementById('idNumber');
     const qrReader = document.getElementById('qr-reader');
->>>>>>> 9584d14477bc8f7c24618683eb2514c574eb09eb
+    let html5QrcodeScanner;
 
-        let html5QrcodeScanner = null;
-
-        qrScannerButton.addEventListener('click', function () {
-            if (!html5QrcodeScanner) {
-                html5QrcodeScanner = new Html5Qrcode("qr-reader");
-            }
-
-<<<<<<< HEAD
-            qrReader.style.display = "block"; // Show the scanner
-
-            html5QrcodeScanner.start(
-                { facingMode: "environment" }, // Use rear camera
-                { fps: 10, qrbox: { width: 250, height: 250 } },
-                (decodedText) => {
-                    const first10Digits = decodedText.replace(/\D/g, '').substring(0, 10); // Extract first 10 digits
-                    idNumberInput.value = first10Digits; // Fill the input field
-
-                    html5QrcodeScanner.stop().then(() => {
-                        qrReader.style.display = "none"; // Hide scanner UI
-                    }).catch(err => console.error("Stop Error: ", err));
-                },
-            ).catch(err => console.error("QR Scanner Error: ", err));
-        });
-    });
-
-
-=======
-        qrReader.style.display = "block";
+    qrScannerButton.addEventListener('click', function () {
+        if (!html5QrcodeScanner) {
+            html5QrcodeScanner = new Html5Qrcode("qr-reader");
+        }
+        qrReader.style.display = "block"; // Show the scanner
+        qrReader.innerHTML = ""; // Clear previous scanner UI
 
         html5QrcodeScanner.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: { width: 250, height: 250 } },
+            { facingMode: "environment" }, // Rear camera if available
+            {
+                fps: 10,
+                qrbox: { width: 250, height: 250 }
+            },
             (decodedText) => {
-                const first10Digits = decodedText.replace(/\D/g, '').substring(0, 10);
-                idNumberInput.value = first10Digits;
-
-                html5QrcodeScanner.stop().then(() => {
-                    qrReader.style.display = "none";
-                }).catch(err => console.error("Stop Error: ", err));
+                idNumberInput.value = decodedText; // Auto-fill ID field
+                html5QrcodeScanner.stop(); // Stop scanning after success
+                qrReader.style.display = "none"; // Hide scanner UI
+            },
+            (errorMessage) => {
+                console.warn(errorMessage); // Debugging
             }
         ).catch(err => console.error("QR Scanner Error: ", err));
     });
->>>>>>> 9584d14477bc8f7c24618683eb2514c574eb09eb
 
-    document.getElementById('proceedButton').addEventListener('click', function () {
-        const borrowerType = document.querySelector('input[name="borrowerType"]:checked');
-        if (borrowerType) {
-            const selectedType = borrowerType.value;
-            window.location.href = `registration.php?borrowerType=${selectedType}`;
-        } else {
-            alert('Please select a borrower type before proceeding.');
-        }
-    });
-
+    // Form Submission
     const loginForm = document.getElementById('loginForm');
     const notification = document.getElementById('notification');
-    
-    loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const idNumber = document.getElementById('idNumber').value;
 
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Prevent form from submitting the default way
+
+        const idNumber = idNumberInput.value;
+
+        // Prepare form data
         const formData = new FormData();
         formData.append('idNumber', idNumber);
 
@@ -178,10 +150,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             const result = await response.json();
-            console.log(result);
+            console.log(result); // Debugging
 
             if (result.success) {
-                window.location.href = 'dashboard.php';
+                window.location.href = 'dashboard.php'; // Redirect on success
             } else {
                 notification.textContent = result.message || 'Invalid ID number.';
                 notification.classList.remove('d-none');
@@ -194,11 +166,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
-<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Bootstrap JS -->
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+<!-- QR Code Scanner Library (Ensure this is included!) -->
+<script src="https://unpkg.com/html5-qrcode/html5-qrcode.min.js"></script>
+
 </body>
 </html>
