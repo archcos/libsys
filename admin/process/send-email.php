@@ -16,6 +16,29 @@ include('db-connect.php');
 $today = new DateTime();
 $todayFormatted = $today->format('Y-m-d');
 
+function appendQueryParam($url, $param, $value) {
+    $parsedUrl = parse_url($url);
+    $queryParams = [];
+    
+    if (isset($parsedUrl['query'])) {
+        parse_str($parsedUrl['query'], $queryParams);
+    }
+
+    // Update or add the parameter
+    $queryParams[$param] = $value;
+
+    // Rebuild query string
+    $newQuery = http_build_query($queryParams);
+
+    // Rebuild full URL
+    $newUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $parsedUrl['path'] . '?' . $newQuery;
+
+    return $newUrl;
+}
+
+// Get previous page or default to dashboard
+$redirectUrl = $_SERVER['HTTP_REFERER'] ?? '../dashboard.php';
+
 // Fetch data for books due in 2 days or less and not returned
 $sql = "
     SELECT rb.borrowerId, rb.bookId, rb.returnDate, b.emailAddress, b.firstname
@@ -73,20 +96,17 @@ if ($result->num_rows > 0) {
         }
     }
     
-    // Set success or failure message in session
+
     if ($emailsSent > 0) {
-        // Redirect with status 'success'
-        header("Location: $redirectUrl?status=success");
+        header("Location: " . appendQueryParam($redirectUrl, 'status', 'success'));
         exit();
-    }
-    if ($emailsFailed > 0) {
-        header("Location: $redirectUrl?status=error");
+    } elseif ($emailsFailed > 0) {
+        header("Location: " . appendQueryParam($redirectUrl, 'status', 'error'));
         exit();
     }
 } else {
-    header("Location: $redirectUrl?status=noreturn");
+    header("Location: " . appendQueryParam($redirectUrl, 'status', 'noreturn'));
     exit();
-
 }
 
 // Close connection
