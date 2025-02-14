@@ -84,7 +84,9 @@ if ($result->num_rows > 0) {
         exit();
     }
 } else {
-    $_SESSION['message'] = "No books are due for return in the next 2 days.";
+    header("Location: $redirectUrl?status=noreturn");
+    exit();
+
 }
 
 // Close connection
@@ -92,6 +94,6 @@ $stmt->close();
 $conn->close();
 
 // Redirect back to the previous page (for example, `due-date.php`)
-header('Location: ../due-date.php');
+header('Location: ../dashboard.php');
 exit;
 ?>

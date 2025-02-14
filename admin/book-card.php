@@ -74,8 +74,12 @@ $result = $conn->query($query);
                 <strong>Error!</strong> Email didn't send.
             </div>
         <?php elseif ($status === 'error'): ?>
-            <div class="message error" style="color: white; background: #f2dede; padding: 10px; border: 1px solid #ebccd1; margin-bottom: 20px;">
+            <div class="message fail" style="color: red; background: #f2dede; padding: 10px; border: 1px solid #ebccd1; margin-bottom: 20px;">
                 <strong>Error!</strong> There was an issue with sending the email. Please try again.
+            </div>
+        <?php elseif ($status === 'noreturn'): ?>
+            <div class="message fail" style="color: red; background: #f2dede; padding: 10px; border: 1px solid #ebccd1; margin-bottom: 20px;">
+                <strong>Reminder!</strong> No books are due for return in the next 2 days.
             </div>
         <?php endif; ?>
 

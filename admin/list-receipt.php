@@ -39,6 +39,8 @@ $result = $stmt->get_result();
             <?php echo $receiptFilter === 'Yes' ? 'Receipt Log' : 'Non-Receipt Log'; ?>
         </h1>
 
+        <button id="fetchReceiptData">Print Receipt Data</button>
+
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -110,6 +112,13 @@ $result = $stmt->get_result();
                 });
             });
         });
+
+        document.getElementById('fetchReceiptData').addEventListener('click', function() {
+            const receiptFilter = "<?php echo $receiptFilter; ?>"; // Get PHP variable in JS
+            const targetUrl = receiptFilter === "Yes" ? 'pdf/generate-receipt.php' : 'pdf/generate-nonreceipt.php';
+            window.location.href = targetUrl;
+        });
+
     </script>
 </body>
 </html>

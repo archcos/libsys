@@ -98,34 +98,34 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
 </div>
 
   <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const qrScannerButton = document.getElementById('startQRScanner');
-    const idNumberInput = document.getElementById('idNumber');
-    const qrReader = document.getElementById('qr-reader');
+    document.addEventListener('DOMContentLoaded', function () {
+        const qrScannerButton = document.getElementById('startQRScanner');
+        const idNumberInput = document.getElementById('idNumber');
+        const qrReader = document.getElementById('qr-reader');
 
-    let html5QrcodeScanner = null;
+        let html5QrcodeScanner = null;
 
-    qrScannerButton.addEventListener('click', function () {
-        if (!html5QrcodeScanner) {
-            html5QrcodeScanner = new Html5Qrcode("qr-reader");
-        }
+        qrScannerButton.addEventListener('click', function () {
+            if (!html5QrcodeScanner) {
+                html5QrcodeScanner = new Html5Qrcode("qr-reader");
+            }
 
-        qrReader.style.display = "block"; // Show the scanner
+            qrReader.style.display = "block"; // Show the scanner
 
-        html5QrcodeScanner.start(
-            { facingMode: "environment" }, // Use rear camera
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-            (decodedText) => {
-                const first10Digits = decodedText.replace(/\D/g, '').substring(0, 10); // Extract first 10 digits
-                idNumberInput.value = first10Digits; // Fill the input field
+            html5QrcodeScanner.start(
+                { facingMode: "environment" }, // Use rear camera
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                (decodedText) => {
+                    const first10Digits = decodedText.replace(/\D/g, '').substring(0, 10); // Extract first 10 digits
+                    idNumberInput.value = first10Digits; // Fill the input field
 
-                html5QrcodeScanner.stop().then(() => {
-                    qrReader.style.display = "none"; // Hide scanner UI
-                }).catch(err => console.error("Stop Error: ", err));
-            },
-        ).catch(err => console.error("QR Scanner Error: ", err));
+                    html5QrcodeScanner.stop().then(() => {
+                        qrReader.style.display = "none"; // Hide scanner UI
+                    }).catch(err => console.error("Stop Error: ", err));
+                },
+            ).catch(err => console.error("QR Scanner Error: ", err));
+        });
     });
-});
 
 
 

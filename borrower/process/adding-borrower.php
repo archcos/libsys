@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $year = isset($_POST['year']) ? $conn->real_escape_string($_POST['year']) : null;
     $gender = $conn->real_escape_string($_POST['gender']);
     $birthDate = $conn->real_escape_string($_POST['birthDate']);
-    $remarks = $conn->real_escape_string('Activated');
+    $remarks = $conn->real_escape_string('Deactivated');
     $homeAddress = $conn->real_escape_string($_POST['homeAddress']);
 
     // Check if the ID number already exists
