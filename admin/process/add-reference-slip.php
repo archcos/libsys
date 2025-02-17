@@ -13,14 +13,15 @@ include('db-connect.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $borrowerId = $_POST['borrowerId'];
+    $type = $_POST['type'];
     $title = $_POST['title'];
     $author = $_POST['author'];
     $category = $_POST['category'];
     $date = $_POST['date'];
 
     try {
-        $stmt = $conn->prepare("INSERT INTO tblreference (borrowerId, title, author, category, date) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("issss", $borrowerId, $title, $author, $category, $date);
+        $stmt = $conn->prepare("INSERT INTO tblreference (borrowerId, type, title, author, category, date) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("isssss", $borrowerId, $type, $title, $author, $category, $date);
         $stmt->execute();
 
         if ($stmt->affected_rows > 0) {

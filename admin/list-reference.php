@@ -27,6 +27,18 @@ $result = $conn->query($query);
     <title>Manage Reference Slips</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
+         .print-btn {
+            background-color: green;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .print-btn:hover {
+            background-color: darkgreen;
+        }
         .btn {
             padding: 5px 10px;
             border: none;
@@ -69,12 +81,13 @@ $result = $conn->query($query);
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
         <h1>Manage Reference Slips</h1>
         <button class="btn add-btn" onclick="showAddReferenceModal()">Add New Reference Slip</button>
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
+                    <th>Print</th>
                     <th>Reference ID</th>
                     <th>Borrower Name</th>
                     <th>Author</th>
@@ -85,25 +98,29 @@ $result = $conn->query($query);
                 </tr>
             </thead>
             <tbody>
-            <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $borrowerName = htmlspecialchars($row['firstName'] . ' ' . $row['surName']);
-                        echo "<tr>";
-                        echo "<td>" . $row['referenceId'] . "</td>";
-                        echo "<td>" . $borrowerName . "</td>";
-                        echo "<td>" . htmlspecialchars($row['author']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['category']) . "</td>";
-                        echo "<td>" . $row['date'] . "</td>";
-                        echo "<td>
-                                <button class='btn delete-btn' data-reference-id='" . $row['referenceId'] . "'>Delete</button>
-                            </td>";
-                        echo "</tr>";
+                <?php
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $borrowerName = htmlspecialchars($row['firstName'] . ' ' . $row['surName']);
+                            echo "<tr>";
+                            echo "<td>
+                                    <button class='btn print-btn' onclick='printReferenceSlip(" . $row['referenceId'] . ")'>Print</button>
+                                </td>";
+                            echo "<td>" . $row['referenceId'] . "</td>";
+                            echo "<td>" . $borrowerName . "</td>";
+                            echo "<td>" . htmlspecialchars($row['author']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['title']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['category']) . "</td>";
+                            echo "<td>" . $row['date'] . "</td>";
+                            echo "<td>
+                                    <button class='btn delete-btn' data-reference-id='" . $row['referenceId'] . "'>Delete</button>
+                                </td>";
+                            echo "</tr>"; // Ensure the row closes properly
+                        }
                     }
-                }
-            ?>
+                ?>
             </tbody>
+
         </table>
     </div>
 
@@ -114,6 +131,20 @@ $result = $conn->query($query);
             <form id="addReferenceForm">
                 <label for="borrowerIds">Borrower ID:</label><br>
                 <input type="number" id="borrowerIds" name="borrowerIds" required><br><br>
+                
+                <label for="type">Type:</label><br>
+                <select id="type" name="type" onchange="toggleOtherType()" required>
+                    <option value="Book">Book</option>
+                    <option value="Periodicals">Periodicals</option>
+                    <option value="Thesis/Dissertation">Thesis/Dissertation</option>
+                    <option value="Others">Others</option>
+                </select><br><br>
+                
+                <div id="otherTypeContainer" style="display: none;">
+                    <label for="otherType">Specify Type:</label><br>
+                    <input type="text" id="otherType" name="otherType"><br><br>
+                </div>
+                
                 <label for="author">Author:</label><br>
                 <input type="text" id="author" name="author" required><br><br>
                 <label for="title">Title:</label><br>
@@ -131,6 +162,16 @@ $result = $conn->query($query);
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
+        function toggleOtherType() {
+            var typeSelect = document.getElementById("type");
+            var otherTypeContainer = document.getElementById("otherTypeContainer");
+            
+            if (typeSelect.value === "Others") {
+                otherTypeContainer.style.display = "block";
+            } else {
+                otherTypeContainer.style.display = "none";
+            }
+        }
         $(document).ready(function() {
             $('#dataTable').DataTable();
             $(document).ready(function() {
@@ -162,6 +203,11 @@ $result = $conn->query($query);
             });
         });
 
+        function printReferenceSlip(referenceId) {
+            window.location.href = "pdf/generate-ref.php?referenceId=" + referenceId;
+        }
+
+
         function showAddReferenceModal() {
             document.getElementById('addReferenceModal').style.display = 'flex';
         }
@@ -174,15 +220,22 @@ $result = $conn->query($query);
             e.preventDefault();
 
             const borrowerId = document.getElementById('borrowerIds').value;
+            let type = document.getElementById('type').value;
+            const otherTypeInput = document.getElementById('otherType'); // Get the otherType input field
             const author = document.getElementById('author').value;
             const title = document.getElementById('title').value;
             const category = document.getElementById('category').value;
             const date = document.getElementById('date').value;
 
+            // If "Others" is selected and the user has inputted a value, use that value instead
+            if (type === "Others" && otherTypeInput && otherTypeInput.value.trim() !== "") {
+                type = otherTypeInput.value.trim();
+            }
+
             $.ajax({
                 url: 'process/add-reference-slip.php',
                 type: 'POST',
-                data: { borrowerId, author, title, category, date },
+                data: { borrowerId, type, author, title, category, date },
                 success: function(response) {
                     alert(response);
                     closeModal('addReferenceModal');
