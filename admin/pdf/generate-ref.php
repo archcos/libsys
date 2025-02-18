@@ -16,9 +16,9 @@ $referenceId = isset($_GET['referenceId']) ? intval($_GET['referenceId']) : 1;
 $query = "
     SELECT 
         r.type, 
-        r.author, 
+        CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
         r.borrowerId, 
-        r.title, 
+        bs.title AS bookTitle, 
         r.category, 
         r.date,
         b.firstName, 
@@ -27,8 +27,13 @@ $query = "
         tblreference r
     INNER JOIN 
         tblborrowers b ON r.borrowerId = b.idNumber
+    INNER JOIN
+        tblauthor a ON r.author = a.authorId
+    INNER JOIN
+        tblbooks bs ON r.title = bs.bookId
     WHERE 
         r.referenceId = ?";
+
 
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $referenceId);
@@ -38,8 +43,8 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $record = $result->fetch_assoc();
     $type = $record['type'];
-    $author = $record['author'];
-    $title = $record['title'];
+    $author = $record['authorName'];
+    $title = $record['bookTitle'];
     $category = $record['category'];
     $date = $record['date'];
     $borrowerName = $record['firstName'] . ' ' . $record['surName'];

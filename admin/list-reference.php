@@ -11,13 +11,21 @@ ob_start();
 
 // Fetch all reference slips along with borrower information
 $query = "
-    SELECT rs.referenceId, rs.author, rs.title, rs.category, rs.date, 
-           b.firstName, b.surName
+    SELECT rs.referenceId, 
+           CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
+           b.title AS bookTitle, 
+           rs.type,
+           rs.category, 
+           rs.date, 
+           borrower.firstName, borrower .surName
     FROM tblreference rs
-    JOIN tblborrowers b ON rs.borrowerId = b.idNumber
+    JOIN tblborrowers borrower ON rs.borrowerId = borrower.idNumber
+    JOIN tblauthor a ON rs.author = a.authorId
+    JOIN tblbooks b ON rs.title = b.bookId
 ";
 $result = $conn->query($query);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -100,6 +108,7 @@ $authorsResult = $conn->query($authorsQuery);
                     <th>Author</th>
                     <th>Title</th>
                     <th>Category</th>
+                    <th>Type</th>
                     <th>Date</th>
                     <th>Actions</th>
                 </tr>
@@ -115,9 +124,10 @@ $authorsResult = $conn->query($authorsQuery);
                                 </td>";
                             echo "<td>" . $row['referenceId'] . "</td>";
                             echo "<td>" . $borrowerName . "</td>";
-                            echo "<td>" . htmlspecialchars($row['author']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['title']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['bookTitle']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['category']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['type']) . "</td>";
                             echo "<td>" . $row['date'] . "</td>";
                             echo "<td>
                                     <button class='btn delete-btn' data-reference-id='" . $row['referenceId'] . "'>Delete</button>
