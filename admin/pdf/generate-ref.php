@@ -48,6 +48,8 @@ if ($result->num_rows > 0) {
 }
 
 $logo = '../pdf/ustp.png'; // Path to the USTP logo
+$fm = '../pdf/fm.png'; // Path to the USTP logo
+
 ?>
 
 <!DOCTYPE html>
@@ -73,29 +75,34 @@ $logo = '../pdf/ustp.png'; // Path to the USTP logo
             background-color: #ffffff;
             position: relative;
         }
-
+/* 
         .header {
             text-align: center;
             font-weight: bold;
+        } */
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
 
-        .logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
+        
 
         .logo img {
             max-width: 80px;
         }
 
-        .document-code {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 12px;
-            font-weight: bold;
+        .header {
+            text-align: center;
+            flex: 1; /* Allows the header to take up remaining space */
         }
+
+        .header p {
+            font-size: 10px; /* Adjust size as needed */
+        }
+
 
         .form-section {
             display: flex;
@@ -104,14 +111,12 @@ $logo = '../pdf/ustp.png'; // Path to the USTP logo
 
         .form-section .checkbox-group {
             display: flex;
-            gap: 15px; /* Adjust spacing between checkboxes */
+            gap: 15px;
             align-items: center;
         }
 
-
-
         .form-section label {
-            flex: 0 0 100px; /* Adjust label width as needed */
+            flex: 0 0 100px;
             font-weight: bold;
         }
 
@@ -122,135 +127,117 @@ $logo = '../pdf/ustp.png'; // Path to the USTP logo
             background-color: transparent;
         }
 
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .button-container button {
-            width: 48%;
+        .form-box {
+            border: 2px solid black;
             padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .print-button {
-            background-color: #0056b3;
-            color: white;
-        }
-
-        .back-button {
-            background-color: #f44336;
-            color: white;
-        }
     </style>
+    <script>
+        window.onload = function () {
+            window.print();
+        };
+
+        window.onafterprint = function () {
+            window.history.back();
+        };
+    </script>
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <img src="<?php echo $logo; ?>" alt="USTP Logo">
-        </div>
-        <div class="document-code">
-            Document Code: FM-USTP-LIB-02<br>
-            Rev. No: 01 | Effective Date: 09.01.23 | Page: 4 of 4
+        <div class="header-container">
+            <div class="logo">
+                <img src="<?php echo $logo; ?>" alt="USTP Logo">
+            </div>
+
+            <div class="header">
+                <h3>UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
+                <p>Alubijid | Balubal | Cagayan de Oro | Claveria | Jasaan | Oroquieta | Panaon | Villanueva</p>
+                <h2>REFERENCE ASSISTANCE SLIP</h2>
+            </div>
+
+            <div class="logo">
+                <img src="<?php echo $fm; ?>" alt="USTP Logo">
+            </div>
         </div>
 
-        <div class="header">
-            <h3>UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
-            <p>Alubijid | Balubal | Cagayan de Oro | Claveria | Jasaan | Oroquieta | Panaon | Villanueva</p>
-            <h2>REFERENCE ASSISTANCE SLIP</h2>
-        </div>
+        <div class="form-box">
+
 
         <div class="form-section">
-            <label>What type of library materials do you need?</label>
+            <span><label>What type of library materials do you need?</label></span>
+        </div>
+
+
+        <div class="form-section">
+            <label>Please Check: </label>
             <div class="checkbox-group">
                 <input type="checkbox" <?php echo ($type == 'Book') ? 'checked' : ''; ?> disabled> Book
                 <input type="checkbox" <?php echo ($type == 'Periodicals') ? 'checked' : ''; ?> disabled> Periodicals
                 <input type="checkbox" <?php echo ($type == 'Thesis/Dissertation') ? 'checked' : ''; ?> disabled> Thesis/Dissertation
-                <input type="checkbox" <?php echo ($type == 'Others') ? 'checked' : ''; ?> disabled> Others (Specify)
+                <input type="checkbox" <?php echo (!in_array($type, ['Book', 'Periodicals', 'Thesis/Dissertation'])) ? 'checked' : ''; ?> disabled> 
+                <?php 
+                    echo (!in_array($type, ['Book', 'Periodicals', 'Thesis/Dissertation'])) ? "Others ($type)" : "Others (specify)";
+                ?>
             </div>
         </div>
 
         <div class="form-section">
-            <label>Author:</label>
+            <label>AUTHOR:</label>
             <input type="text" value="<?php echo htmlspecialchars($author); ?>" readonly>
         </div>
 
         <div class="form-section">
-            <label>Title:</label>
+            <label>TITLE:</label>
             <input type="text" value="<?php echo htmlspecialchars($title); ?>" readonly>
         </div>
 
         <div class="form-section">
-            <label>Subject/Topic:</label>
+            <label>SUBJECT/TOPIC:</label>
             <input type="text" value="<?php echo htmlspecialchars($category); ?>" readonly>
         </div>
 
-        <div class="form-section" style="display: flex; align-items: center;">
-            <label style="margin-right: 5px;">CALL NUMBER:</label>
-            <input type="text" value="" readonly style="width: 100px;">
-            
-            <label style="margin-right: 5px;">SUBLOCATION:</label>
-            <input type="text" value="" readonly style="width: 150px;">
-        </div>
+        <br>
 
         <div style="display: flex; justify-content: space-between; gap: 20px;">
-
-            <!-- Group 1 -->
             <div style="flex: 1;">
                 <div class="form-section">
-                    <label>Library User:</label>
-                </div>
-
-                <div class="form-section">
-                    <div class="input-wrapper" style="display: block; width: 40%; margin-top: 5px;">
-                        <input type="text" value="<?php echo htmlspecialchars($borrowerName); ?>" readonly style="display: block; width: 100%;">
-                    </div>
+                    <label>LIBRARY USER</label>
                 </div>
                 <div class="form-section">
-                    <p>
-                        <span>Signature Over-Printed Name</span>
-                    </p>
+                    <input type="text" value="<?php echo htmlspecialchars($borrowerName); ?>" readonly>
+                </div>
+                <div class="form-section">
+                    <p>Signature Over-Printed Name</p>
                 </div>
             </div>
 
-            <!-- Group 2 -->
             <div style="flex: 1;">
                 <div class="form-section">
-                    <label>Library Staff In-Charge</label>
-                </div>
-
-                <div class="form-section">
-                    <div class="input-wrapper" style="display: block; width: 40%; margin-top: 5px;">
-                        <input type="text" value="<?php echo htmlspecialchars($borrowerName); ?>" readonly style="display: block; width: 100%;">
-                    </div>
+                    <span><label>LIBRARY STAFF IN-CHARGE</label></span>
                 </div>
                 <div class="form-section">
-                    <p>
-                        <span>Signature Over-Printed Name</span>
-                    </p>
+                    <input type="text" value="" readonly>
+                </div>
+                <div class="form-section">
+                    <p>Signature Over-Printed Name</p>
                 </div>
             </div>
-
         </div>
-
-
-        <div class="form-section" style="display: flex; ">
+        
+        <div class="form-section">
             <label>College/Department:</label>
             <input type="text" value="" readonly>
-
             <label>Date:</label>
-            <input type="text" value="<?php echo htmlspecialchars($date); ?>" readonly>
+            <input type="text" style= "width: 20px" value="<?php echo htmlspecialchars($date); ?>" readonly>
+        </div>
         </div>
 
-
-        <div class="button-container">
-            <button class="print-button" onclick="window.print()">Print</button>
-            <button class="back-button" onclick="window.history.back()">Go Back</button>
-        </div>
     </div>
 </body>
 </html>
