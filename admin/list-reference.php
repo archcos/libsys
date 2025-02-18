@@ -80,6 +80,13 @@ $result = $conn->query($query);
         }
     </style>
 </head>
+
+<?php
+// Fetch authors with full name (firstName + lastName)
+$authorsQuery = "SELECT authorId, CONCAT(firstName, ' ', lastName) AS authorName FROM tblauthor";
+$authorsResult = $conn->query($authorsQuery);
+?>
+
 <body>
 <div class="container">
         <h1>Manage Reference Slips</h1>
@@ -146,11 +153,21 @@ $result = $conn->query($query);
                 </div>
                 
                 <label for="author">Author:</label><br>
-                <input type="text" id="author" name="author" required><br><br>
+                <select id="author" name="author" onchange="fetchBooksByAuthor()" required>
+                    <option value="">Select an Author</option>
+                    <?php while ($author = $authorsResult->fetch_assoc()): ?>
+                        <option value="<?= $author['authorId']; ?>"><?= htmlspecialchars($author['authorName']); ?></option>
+                    <?php endwhile; ?>
+                </select><br><br>
+
                 <label for="title">Title:</label><br>
-                <input type="text" id="title" name="title" required><br><br>
+                <select id="title" name="title" onchange="fetchCategoryByBook()" required>
+                    <option value="">Select a Title</option>
+                </select><br><br>
+
                 <label for="category">Category:</label><br>
-                <input type="text" id="category" name="category" required><br><br>
+                <input type="text" id="category" name="category" readonly><br><br>
+
                 <label for="date">Date:</label><br>
                 <input type="date" id="date" name="date" required><br><br>
                 <button type="submit" class="btn add-btn">Add</button>
@@ -162,6 +179,48 @@ $result = $conn->query($query);
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
+
+        function fetchBooksByAuthor() {
+            let authorId = document.getElementById("author").value;
+            let titleSelect = document.getElementById("title");
+            titleSelect.innerHTML = '<option value="">Select a Title</option>'; // Reset title dropdown
+
+            if (authorId) {
+                $.ajax({
+                    url: 'process/get-books.php',
+                    type: 'POST',
+                    data: { authorId: authorId },
+                    dataType: 'json',
+                    success: function (books) {
+                        books.forEach(book => {
+                            let option = document.createElement("option");
+                            option.value = book.bookId;
+                            option.textContent = book.title;
+                            titleSelect.appendChild(option);
+                        });
+                    }
+                });
+            }
+        }
+
+        function fetchCategoryByBook() {
+            let bookId = document.getElementById("title").value;
+            let categoryInput = document.getElementById("category");
+            categoryInput.value = ""; // Reset category input
+
+            if (bookId) {
+                $.ajax({
+                    url: 'process/get-category.php',
+                    type: 'POST',
+                    data: { bookId: bookId },
+                    dataType: 'json',
+                    success: function (data) {
+                        categoryInput.value = data.category;
+                    }
+                });
+            }
+        }
+
         function toggleOtherType() {
             var typeSelect = document.getElementById("type");
             var otherTypeContainer = document.getElementById("otherTypeContainer");
