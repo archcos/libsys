@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -23,7 +22,7 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
 
 </head>
 
-<body class="bg-light-gray" id="body">
+<body class="bg-light-gray" id="body" style="background-color: #FFEBB2;">
   <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh">
     <div class="d-flex flex-column justify-content-between">
       <div class="row justify-content-center">
@@ -52,6 +51,7 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
                             <div id="qr-reader" style="width: 100%;"></div>
                             <button type="submit" class="btn btn-primary btn-pill mb-4 w-100">Sign In</button>
                             <button type="button" class="btn btn-secondary btn-pill mb-4 w-100" data-toggle="modal" data-target="#addBorrowerModal">Register</button>
+                            <button type="button" class="btn btn-dark btn-pill w-100" onclick="goBack()">Back</button>
                             <p id="notification" class="d-none text-danger"></p>
                         </div>
                     </div>
@@ -63,8 +63,6 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
     </div>
   </div>
 
-
-  
 <!-- Modal - Add Borrower -->
 <div class="modal fade" id="addBorrowerModal" tabindex="-1" role="dialog" aria-labelledby="addBorrowerModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -97,7 +95,7 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
   </div>
 </div>
 
-  <script>
+<script>
 document.addEventListener('DOMContentLoaded', function () {
     const qrScannerButton = document.getElementById('startQRScanner');
     const idNumberInput = document.getElementById('idNumber');
@@ -127,18 +125,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-
-    document.getElementById('proceedButton').addEventListener('click', function () {
-        const borrowerType = document.querySelector('input[name="borrowerType"]:checked');
-        if (borrowerType) {
+document.getElementById('proceedButton').addEventListener('click', function () {
+    const borrowerType = document.querySelector('input[name="borrowerType"]:checked');
+    if (borrowerType) {
         const selectedType = borrowerType.value;
         window.location.href = `registration.php?borrowerType=${selectedType}`;
-        } else {
+    } else {
         alert('Please select a borrower type before proceeding.');
-        }
-    });
-    document.addEventListener('DOMContentLoaded', function () {
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('loginForm');
     const notification = document.getElementById('notification');
     
@@ -161,10 +158,10 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(result);  // Debugging: Log the response from the server
 
         if (result.success) {
-          // Redirect to dashboard or another page if login is successful
-          window.location.href = 'dashboard.php';  // Adjust to your actual dashboard page
+          // Redirect to dashboard if login is successful
+          window.location.href = 'dashboard.php';  
         } else {
-          // Show error message if the login is unsuccessful
+          // Show error message if login is unsuccessful
           notification.textContent = result.message || 'Invalid ID number.';
           notification.classList.remove('d-none');
         }
@@ -174,16 +171,16 @@ document.addEventListener('DOMContentLoaded', function () {
         notification.classList.remove('d-none');
       }
     });
-  });
-  </script>
+});
 
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+// Back button function
+function goBack() {
+    window.history.back();
+}
+</script>
 
-  <!-- Bootstrap JS -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
-  <!-- <script src="https://unpkg.com/html5-qrcode/html5-qrcode.min.js"></script> -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

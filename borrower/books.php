@@ -41,7 +41,7 @@ $result = $stmt->get_result();
             justify-content: center; /* Center the header content */
             align-items: center;
             padding: 20px;
-            position: relative; /* Allows positioning of the login button */
+            position: relative; /* Allows positioning of the buttons */
             color: white;
         }
 
@@ -49,6 +49,26 @@ $result = $stmt->get_result();
             margin: 0;
             font-size: 1.5rem;
             text-align: center;
+        }
+
+        .header .btn-back {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 16px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .header .btn-back:hover {
+            background-color: #5a6268;
         }
 
         .header .btn-login {
@@ -71,7 +91,6 @@ $result = $stmt->get_result();
             background-color: rgb(6, 57, 112);
             color: white;
         }
-
 
         .container {
             width: 90%;
@@ -173,6 +192,7 @@ $result = $stmt->get_result();
 <body>
     <div class="container">
         <div class="header">
+            <a href="Kiosk.php" class="btn-back">Back</a>
             <h1>Books Kiosk</h1><br>
             <a href="login.php" class="btn-login">Login</a>
         </div>
@@ -232,51 +252,24 @@ $result = $stmt->get_result();
 
     <script>
         $(document).ready(function() {
-            // Initialize DataTables
             $('#dataTable').DataTable();
         });
 
-        // Handle Borrow
-        let currentBookId = null; // Track the selected book ID
-
-        // Open modal for borrow confirmation
         function handleBorrow(bookId) {
-            // Check if user is logged in (You can implement your own check here)
-            const isLoggedIn = false; // Set this flag based on your login state
-
+            const isLoggedIn = false;
             if (!isLoggedIn) {
-                window.location.href = "login.php"; // Redirect to login if not logged in
+                window.location.href = "login.php";
                 return;
             }
-
-            // If logged in, proceed with borrow process (you can add more logic here)
             currentBookId = bookId;
-            // Open modal for borrow confirmation or proceed with other logic
         }
 
-        // Search functionality for books
         function searchBooks() {
             const query = document.getElementById('searchBox').value.toLowerCase();
             const rows = document.getElementById('bookList').getElementsByTagName('tr');
 
             for (let i = 0; i < rows.length; i++) {
-                const cells = rows[i].getElementsByTagName('td');
-                let match = false;
-
-                // Check title, author, and category columns for the query
-                for (let j = 2; j < 5; j++) {
-                    if (cells[j].textContent.toLowerCase().includes(query)) {
-                        match = true;
-                        break;
-                    }
-                }
-
-                // Show or hide rows based on match
-                if (match) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
-                }
+                rows[i].style.display = rows[i].innerText.toLowerCase().includes(query) ? '' : 'none';
             }
         }
     </script>
