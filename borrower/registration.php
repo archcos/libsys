@@ -18,54 +18,40 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borrower Registration</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        h1 { 
-            text-align: center; 
-            margin-bottom: 20px; 
-        }
+        /* Styling for form */
+        h1 { text-align: center; margin-bottom: 20px; }
         form {
-            max-width: 600px; 
-            margin: 0 auto; 
-            padding: 20px;
-            border-radius: 8px; 
-            background-color: #ffffff;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px; margin: 0 auto; padding: 20px;
+            border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;
         }
-        .hidden { 
-            display: none; 
+        .form-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .form-group label { flex: 0 0 150px; font-weight: bold; }
+        .form-group input, .form-group select {
+            flex: 1; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;
         }
+        .hidden { display: none; }
         .message {
             text-align: center;
             padding: 8px;
             margin-bottom: 15px;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 14px; /* Smaller font size */
             color: white;
-            max-width: 100%;
-            margin: 10px auto;
+            max-width: 100%; /* Constrain the width */
+            margin: 10px auto; /* Center the message */
         }
         .success { background-color: #4CAF50; }
         .error { background-color: #f44336; }
-        .btn-violet {
-            background-color: #6f42c1;
-            color: white;
-            border: none;
+        button {
+            display: block; width: 200px; margin: 0 auto; padding: 10px;
+            background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;
         }
-        .btn-violet:hover {
-            background-color: #5a32a3;
-        }
+        button:hover { background-color: #0056b3; }
     </style>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
+          $(document).ready(function () {
             // Populate the course dropdown based on the selected level
             $('#level').change(function () {
                 const selectedLevel = $(this).val();
@@ -87,7 +73,6 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
                 }
             });
         });
-
         // Function to dynamically adjust form fields based on borrower type
         function adjustFormBasedOnType(value) {
             const facultyField = document.getElementById('facultyField');
@@ -97,14 +82,14 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             const levelField = document.getElementById('levelField');
 
             if (value === 'Student') {
-                positionField.classList.add('hidden');
-                courseField.classList.remove('hidden');
-                yearField.classList.remove('hidden');
+                positionField.classList.add('hidden'); // Hide position
+                courseField.classList.remove('hidden'); // Show course
+                yearField.classList.remove('hidden');  // Show year
             } else {
-                positionField.classList.remove('hidden');
-                courseField.classList.add('hidden');
-                yearField.classList.add('hidden');
-                levelField.classList.add('hidden');
+                positionField.classList.remove('hidden'); // Show position
+                courseField.classList.add('hidden');    // Hide course
+                yearField.classList.add('hidden');      // Hide year
+                levelField.classList.add('hidden');      // Hide year
             }
         }
 
@@ -126,48 +111,55 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 
         $conn->close();
     ?>
-        <div class="alert alert-success text-center">
-            Success! Borrower has been added successfully. 
+        <div class="message success">
+            <strong>Success!</strong> Borrower has been added successfully. 
             <?php if ($latestId): ?>
-                <a href="pdf/generate-pdf.php?idNumber=<?= $latestId; ?>" class="text-white text-decoration-underline">Generate Borrower's Card</a>
+                <a href="pdf/generate-pdf.php?idNumber=<?= $latestId; ?>" style="color: white; text-decoration: underline;">Generate Borrower's Card</a>
             <?php endif; ?>
         </div>
     <?php elseif ($status === 'exists'): ?>
-        <div class="alert alert-danger text-center">
-            Error! This ID number already exists. Please use a different one.
+        <div class="message error">
+            <strong>Error!</strong> This ID number already exists. Please use a different one.
         </div>
     <?php elseif ($status === 'error'): ?>
-        <div class="alert alert-danger text-center">
-            Error! There was an issue adding the borrower. Please try again.
+        <div class="message error">
+            <strong>Error!</strong> There was an issue adding the borrower. Please try again.
         </div>
     <?php endif; ?>
 
     <form method="POST" action="process/adding-borrower.php">
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
-        
-        <div class="mb-3">
-            <label for="idNumber" class="form-label">Borrower ID No:</label>
-            <input type="number" class="form-control" id="idNumber" name="idNumber" required>
+        <div class="form-group">
+            <label for="libraryId">Library ID:</label>
+            <input type="number" id="libraryId" name="libraryId" required>
         </div>
-        <div class="mb-3">
-            <label for="surName" class="form-label">Last Name:</label>
-            <input type="text" class="form-control" id="surName" name="surName" required>
+        <div class="form-group">
+            <label for="idNumber">Student/Faculty ID:</label>
+            <input type="number" id="idNumber" name="idNumber" required>
         </div>
-        <div class="mb-3">
-            <label for="firstName" class="form-label">First Name:</label>
-            <input type="text" class="form-control" id="firstName" name="firstName" required>
+        <div class="form-group">
+            <label for="surName">Surname:</label>
+            <input type="text" id="surName" name="surName" required>
         </div>
-        <div class="mb-3">
-            <label for="middleName" class="form-label">Middle Initial:</label>
-            <input type="text" class="form-control" id="middleName" name="middleName">
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
         </div>
-        <div class="mb-3">
-            <label for="emailAddress" class="form-label">Email Address:</label>
-            <input type="email" class="form-control" id="emailAddress" name="emailAddress" required>
+        <div class="form-group">
+            <label for="middleName">Middle Name:</label>
+            <input type="text" id="middleName" name="middleName">
         </div>
-        <div id="levelField" class="mb-3">
-            <label for="level" class="form-label">Level:</label>
-            <select id="level" name="level" class="form-select">
+        <div class="form-group">
+            <label for="emailAddress">Email Address:</label>
+            <input type="text" id="emailAddress" name="emailAddress" required>
+        </div>
+        <div id="positionField" class="form-group hidden">
+            <label for="position">Position:</label>
+            <input type="text" id="position" name="position">
+        </div>
+        <div id="levelField" class="form-group">
+            <label for="level">Level:</label>
+            <select id="level" name="level">
                 <option value="">Select a level</option>
                 <?php while ($row = $levelsResult->fetch_assoc()): ?>
                     <option value="<?= htmlspecialchars($row['level']); ?>">
@@ -176,22 +168,33 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
                 <?php endwhile; ?>
             </select>
         </div>
-        <div id="courseField" class="mb-3">
-            <label for="course" class="form-label">Course:</label>
-            <select id="course" name="courseId" class="form-select">
+        <div id="courseField" class="form-group">
+            <label for="course">Course:</label>
+            <select id="course" name="courseId">
                 <option value="">Select a course</option>
+                <!-- Courses will be dynamically populated here -->
             </select>
         </div>
-        <div class="mb-3">
-            <label for="birthDate" class="form-label">Birth Date:</label>
-            <input type="date" class="form-control" id="birthDate" name="birthDate" required>
+        <div id="yearField" class="form-group hidden">
+            <label for="year">Year:</label>
+            <input type="number" id="year" name="year" min="1">
         </div>
-        
-        <button type="submit" class="btn btn-violet w-100">Submit</button>
-        <button type="button" onclick="history.back()" class="btn btn-secondary w-100 mt-2">Back</button>
+        <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="birthDate">Birth Date:</label>
+            <input type="date" id="birthDate" name="birthDate" required>
+        </div>
+        <div class="form-group">
+            <label for="homeAddress">Home Address:</label>
+            <input type="text" id="homeAddress" name="homeAddress">
+        </div>
+        <button type="submit">Submit</button>
     </form>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
