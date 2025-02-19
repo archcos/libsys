@@ -52,7 +52,8 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
                             <div id="qr-reader" style="width: 100%;"></div>
                             <button type="submit" class="btn btn-primary btn-pill mb-4 w-100">Sign In</button>
                             <button type="button" class="btn btn-secondary btn-pill mb-4 w-100" data-toggle="modal" data-target="#addBorrowerModal">Register</button>
-                            <button type="button" class="btn btn-dark btn-pill w-100" onclick="goBack()">Back</button>
+                            <button type="button" class="btn btn-dark btn-pill w-100" onclick="window.location.href='kiosk.php'">Kiosk</button>
+
                             <p id="notification" class="d-none text-danger"></p>
                         </div>
                     </div>
@@ -89,7 +90,8 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+
         <button type="button" class="btn btn-primary" id="proceedButton">Proceed</button>
       </div>
     </div>
