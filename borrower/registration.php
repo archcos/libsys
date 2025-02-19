@@ -36,36 +36,26 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             padding: 8px;
             margin-bottom: 15px;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 14px; /* Smaller font size */
             color: white;
-            max-width: 100%;
-            margin: 10px auto;
+            max-width: 100%; /* Constrain the width */
+            margin: 10px auto; /* Center the message */
         }
         .success { background-color: #4CAF50; }
         .error { background-color: #f44336; }
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
         button {
-            flex: 1;
-            padding: 10px;
-            font-size: 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            display: block; width: 200px; margin: 0 auto; padding: 10px;
+            background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;
         }
-        .submit-btn { background-color: #007bff; color: white; }
-        .submit-btn:hover { background-color: #0056b3; }
-        .back-btn { background-color: #6c757d; color: white; margin-right: 10px; }
-        .back-btn:hover { background-color: #5a6268; }
+        button:hover { background-color: #0056b3; }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
+          $(document).ready(function () {
+            // Populate the course dropdown based on the selected level
             $('#level').change(function () {
                 const selectedLevel = $(this).val();
+
                 if (selectedLevel) {
                     $.ajax({
                         url: 'process/fetch-courses.php',
@@ -83,42 +73,42 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
                 }
             });
         });
-
+        // Function to dynamically adjust form fields based on borrower type
         function adjustFormBasedOnType(value) {
-            const positionField = document.getElementById('positionField');
+            const facultyField = document.getElementById('facultyField');
             const courseField = document.getElementById('courseField');
             const yearField = document.getElementById('yearField');
+            const positionField = document.getElementById('positionField');
             const levelField = document.getElementById('levelField');
 
             if (value === 'Student') {
-                positionField.classList.add('hidden');
-                courseField.classList.remove('hidden');
-                yearField.classList.remove('hidden');
+                positionField.classList.add('hidden'); // Hide position
+                courseField.classList.remove('hidden'); // Show course
+                yearField.classList.remove('hidden');  // Show year
             } else {
-                positionField.classList.remove('hidden');
-                courseField.classList.add('hidden');
-                yearField.classList.add('hidden');
-                levelField.classList.add('hidden');
+                positionField.classList.remove('hidden'); // Show position
+                courseField.classList.add('hidden');    // Hide course
+                yearField.classList.add('hidden');      // Hide year
+                levelField.classList.add('hidden');      // Hide year
             }
         }
 
+        // Adjust form on page load based on pre-selected value
         document.addEventListener('DOMContentLoaded', () => {
             const borrowerType = document.getElementById('borrowerType').value;
             adjustFormBasedOnType(borrowerType);
         });
-
-        function goBack() {
-            window.history.back();
-        }
     </script>
 </head>
 <body>
     <h1>Borrower Registration Form - <?= htmlspecialchars($borrowerType); ?></h1>
 
     <?php if ($status === 'success'): 
+        // Fetch the latest ID
         $query = "SELECT idNumber FROM tblborrowers ORDER BY dateRegistered DESC LIMIT 1";
         $result = $conn->query($query);
         $latestId = $result->num_rows > 0 ? $result->fetch_assoc()['idNumber'] : null;
+
         $conn->close();
     ?>
         <div class="message success">
@@ -140,7 +130,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
     <form method="POST" action="process/adding-borrower.php">
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
         <div class="form-group">
-            <label for="idNumber">Borrower ID Number:</label>
+            <label for="idNumber">Student/Faculty ID:</label>
             <input type="number" id="idNumber" name="idNumber" required>
         </div>
         <div class="form-group">
@@ -178,7 +168,12 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             <label for="course">Course:</label>
             <select id="course" name="courseId">
                 <option value="">Select a course</option>
+                <!-- Courses will be dynamically populated here -->
             </select>
+        </div>
+        <div id="yearField" class="form-group hidden">
+            <label for="year">Year:</label>
+            <input type="number" id="year" name="year" min="1">
         </div>
         <div class="form-group">
             <label for="gender">Gender:</label>
@@ -191,11 +186,11 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             <label for="birthDate">Birth Date:</label>
             <input type="date" id="birthDate" name="birthDate" required>
         </div>
-
-        <div class="button-container">
-            <button type="button" class="back-btn" onclick="goBack()">Back</button>
-            <button type="submit" class="submit-btn">Submit</button>
+        <div class="form-group">
+            <label for="homeAddress">Home Address:</label>
+            <input type="text" id="homeAddress" name="homeAddress">
         </div>
+        <button type="submit">Submit</button>
     </form>
 </body>
 </html>
