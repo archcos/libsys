@@ -151,6 +151,7 @@ $result = $conn->query($query);
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>
+                                <td>{$row['libraryId']}</td>
                                 <td>{$row['dateRegistered']}</td>
                                 <td>{$row['idNumber']}</td>
                                 <td>{$row['surName']}</td>
