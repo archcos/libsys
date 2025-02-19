@@ -20,9 +20,10 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
   <link id="main-css-href" rel="stylesheet" href="assets/css/style.css" />
   <script src="https://unpkg.com/html5-qrcode/html5-qrcode.min.js"></script>
 
+  
 </head>
 
-<body class="bg-light-gray" id="body" style="background-color: #FFEBB2;">
+<body class="bg-light-gray" id="body" style="background-color: ;">
   <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh">
     <div class="d-flex flex-column justify-content-between">
       <div class="row justify-content-center">
