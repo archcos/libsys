@@ -98,6 +98,7 @@ if ($borrowerType) {
             <?php if ($borrowerType): ?>
                 <h2>Borrower List: <?php echo htmlspecialchars($borrowerType); ?></h2>
             <?php endif; ?>
+        <button class="btn add-btn" onclick="openGenerateList()">Generate List</button>
         <button class="btn add-btn" href="#" data-toggle="modal" data-target="#addBorrowerModal">Add New Borrower</button>
         <button class="btn add-btn" href="#" data-toggle="modal" data-target="#borrowerModal">Edit Borrower</button>
         <p>Below is the list of registered borrowers.</p>
@@ -217,6 +218,11 @@ if ($borrowerType) {
 
     <!-- Initialize DataTables and Handle Delete -->
     <script>
+
+        function openGenerateList() {
+            window.location.href = 'pdf/generate-list.php';
+        }
+
         document.getElementById('proceedButton').addEventListener('click', function () {
             const borrowerType = document.querySelector('input[name="borrowerType"]:checked');
             if (borrowerType) {
