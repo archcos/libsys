@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 18, 2025 at 02:13 AM
+-- Generation Time: Feb 19, 2025 at 11:07 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -84,7 +84,7 @@ CREATE TABLE `tblborrowers` (
   `firstName` varchar(30) NOT NULL,
   `middleName` varchar(20) NOT NULL,
   `emailAddress` varchar(40) NOT NULL,
-  `course` int(11) NOT NULL,
+  `course` int(11) DEFAULT NULL,
   `year` int(1) DEFAULT NULL,
   `position` varchar(20) DEFAULT NULL,
   `gender` enum('Male','Female','','') NOT NULL,
@@ -221,7 +221,7 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userId`, `accountType`, `username`, `password`, `firstName`, `lastName`, `lastLogin`, `dateCreated`) VALUES
-(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-02-18 00:22:29', '2024-11-25 02:40:02'),
+(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-02-19 08:27:55', '2024-11-25 02:40:02'),
 (2, 'Librarian', 'test', 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4', 'Testing', 'Ko', '2024-12-03 09:01:14', '2024-12-03 09:01:14'),
 (4, 'Librarian', 'rain214', '8cb2237d0679ca88db6464eac60da96345513964', 'password', 'password', '2024-12-09 07:13:28', '2024-12-03 09:24:16'),
 (5, 'Admin', 'dwa', 'f98421770a791fdf0338f87df795cd758ad5d87b', 'dwad', 'dwad', '2024-12-09 07:15:07', '2024-12-09 07:15:07');
@@ -249,8 +249,7 @@ ALTER TABLE `tblbooks`
 --
 ALTER TABLE `tblborrowers`
   ADD PRIMARY KEY (`idNumber`),
-  ADD UNIQUE KEY `libraryId` (`libraryId`),
-  ADD KEY `fk_course` (`course`);
+  ADD UNIQUE KEY `libraryId` (`libraryId`);
 
 --
 -- Indexes for table `tblcategory`
@@ -319,7 +318,7 @@ ALTER TABLE `tblbooks`
 -- AUTO_INCREMENT for table `tblborrowers`
 --
 ALTER TABLE `tblborrowers`
-  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `tblcategory`
@@ -349,7 +348,7 @@ ALTER TABLE `tblpenalties`
 -- AUTO_INCREMENT for table `tblreference`
 --
 ALTER TABLE `tblreference`
-  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `tblreturnborrow`
@@ -373,12 +372,6 @@ ALTER TABLE `tbluser`
 ALTER TABLE `tblbooks`
   ADD CONSTRAINT `fk_author` FOREIGN KEY (`authorId`) REFERENCES `tblauthor` (`authorId`),
   ADD CONSTRAINT `fk_category` FOREIGN KEY (`categoryId`) REFERENCES `tblcategory` (`categoryId`);
-
---
--- Constraints for table `tblborrowers`
---
-ALTER TABLE `tblborrowers`
-  ADD CONSTRAINT `fk_course` FOREIGN KEY (`course`) REFERENCES `tblcourses` (`courseId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tblnotifications`
