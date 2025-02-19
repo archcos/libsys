@@ -72,9 +72,13 @@ $photo = 'image.png';
         <div class="header">
             <h3>UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
             <p>Alubijid | Balubal | Cagayan de Oro | Claveria | Jasaan | Oroquieta | Panaon | Villanueva</p>
+
+            <h2>LIBRARY CARD NON-RECEIPT LOG</h2>
         </div>
 
     </div>
+
+
     
     <table class="table">
         <thead>
@@ -83,9 +87,9 @@ $photo = 'image.png';
                 <th>NAME OF STUDENT/USER</th>
                 <th>ID NUMBER</th>
                 <th>PROGRAM/COURSE</th>
-                <th>TIME OF RECEIPT</th>
-                <th>RECEIVED BY (SIGNATURE)</th>
-                <th>NOTES (E.G., SPECIAL INSTRUCTIONS)</th>
+                <th>REASON FOR NON-RECEIPT</th>
+                <th>SCHEDULED PICK-UP DATE</th>
+                <th>STAFF-IN CHARGE</th>
             </tr>
         </thead>
         <tbody>

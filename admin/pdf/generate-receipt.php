@@ -72,6 +72,8 @@ $photo = 'image.png';
         <div class="header">
             <h3>UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
             <p>Alubijid | Balubal | Cagayan de Oro | Claveria | Jasaan | Oroquieta | Panaon | Villanueva</p>
+            <h2>LIBRARY CARD RECEIPT LOG</h2>
+
         </div>
 
     </div>
