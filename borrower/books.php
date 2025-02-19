@@ -29,12 +29,14 @@ $result = $stmt->get_result();
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+    font-family: 'Roboto', sans-serif;
+    background: url('assets/img/lib.png') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
 
         .header {
             display: flex;

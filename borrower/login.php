@@ -23,7 +23,7 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
   
 </head>
 
-<body class="bg-light-gray" id="body" style="background-color: ;">
+<body class="bg-light-gray" id="body" style="background: url('assets/img/lib.png') no-repeat center center fixed; background-size: cover;">
   <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh">
     <div class="d-flex flex-column justify-content-between">
       <div class="row justify-content-center">
