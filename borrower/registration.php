@@ -115,7 +115,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
         });
     </script>
 </head>
-<body>
+<body class="bg-light-gray" id="body" style="background: url('assets/img/lib.png') no-repeat center center fixed; background-size: cover;">
     <h1>Borrower Registration Form - <?= htmlspecialchars($borrowerType); ?></h1>
 
     <?php if ($status === 'success'): 

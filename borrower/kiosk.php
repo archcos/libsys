@@ -85,7 +85,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Balubal Library</h1>
+        <h1>Welcome to Balubal Library!</h1>
         <p>Choose an option to proceed:</p>
         <div class="buttons">
             <a href="books.php" class="btn">LIBRARY KIOSK</a>
