@@ -57,16 +57,16 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
                             <input type="number" class="form-control input-lg" id="idNumber" placeholder="ID Number" />
                         </div>
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-success btn-pill mb-4 w-100" id="startQRScanner">
+                            <button type="button" class="btn btn-secondary btn-pill mb-4 w-100" id="startQRScanner">
                                     <i class="fas fa-qrcode"></i> Scan QR Code
                             </button>
                             <div id="qr-reader" style="width: 100%;"></div>
                             <button type="submit" class="btn btn-secondary btn-pill mb-4 w-100">
     <i class="fas fa-sign-in-alt"></i> Sign In  </button>
-<button type="button" class="btn btn-primary btn-pill mb-4 w-100" data-toggle="modal" data-target="#addBorrowerModal">
+<button type="button" class="btn btn-light btn-pill mb-4 w-100" data-toggle="modal" data-target="#addBorrowerModal">
     <i class="fas fa-user-plus"></i> Register
 </button>
-<button type="button" class="btn btn-dark btn-pill w-100" onclick="window.location.href='kiosk.php'">
+<button type="button" class="btn btn-light btn-pill w-100" onclick="window.location.href='kiosk.php'">
     <i class="fas fa-th"></i> Kiosk
 </button>
 
@@ -94,21 +94,21 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
       <div class="modal-body">
         <p>Please select the type of borrower:</p>
         <div class="btn-group btn-group-toggle d-flex justify-content-center" data-toggle="buttons">
-          <label class="btn btn-outline-primary mx-2">
+          <label class="btn btn-outline-dark mx-2">
             <input type="radio" name="borrowerType" value="Student" id="studentOption"> Student
           </label>
-          <label class="btn btn-outline-primary mx-2">
+          <label class="btn btn-outline-dark mx-2">
             <input type="radio" name="borrowerType" value="Faculty" id="facultyOption"> Faculty
           </label>
-          <label class="btn btn-outline-primary mx-2">
+          <label class="btn btn-outline-dark mx-2">
             <input type="radio" name="borrowerType" value="Staff" id="staffOption"> Staff
           </label>
         </div>
       </div>
       <div class="modal-footer">
-      <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
 
-        <button type="button" class="btn btn-primary" id="proceedButton">Proceed</button>
+        <button type="button" class="btn btn-secondary" id="proceedButton">Proceed</button>
       </div>
     </div>
   </div>

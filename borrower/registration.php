@@ -25,6 +25,15 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
   <script src="https://unpkg.com/html5-qrcode/html5-qrcode.min.js"></script>
 
     <style>
+        .btn-secondary {
+    background-color: #0077b6 !important; /* Use your desired blue color */
+    border-color: #0077b6 !important;     /* Match the border color */
+}
+
+.btn-secondary:hover {
+    background-color: #0041C2 !important; /* Darker blue on hover */
+    border-color: #0041C2 !important;
+}
         /* Styling for form */
         h1 { text-align: center; margin-bottom: 20px; }
         form {
@@ -137,7 +146,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
         
         <div class="form-group">
-            <label for="idNumber">Student/Faculty ID:</label>
+            <label for="idNumber">Borrower ID No:</label>
             <input type="number" id="idNumber" name="idNumber" required>
         </div>
         <div class="form-group">
@@ -198,10 +207,10 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             <input type="text" id="homeAddress" name="homeAddress">
         </div>
         
-        <div class="d-flex justify-content-between">  <button type="button" class="btn btn-primary btn-pill mb-4 w-50" onclick="window.history.back()">
+        <div class="d-flex justify-content-between">  <button type="button" class="btn btn-light btn-pill mb-4 w-50" onclick="window.history.back()">
 Back
     </button>
-    <button type="submit" class="btn btn-primary btn-pill mb-4 w-50">Submit</button>
+    <button type="submit" class="btn btn-secondary btn-pill mb-4 w-50">Submit</button>
 </div>
     </form>
 

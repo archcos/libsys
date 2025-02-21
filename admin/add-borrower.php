@@ -158,7 +158,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
     <form method="POST" action="process/adding-borrower.php">
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
         <div class="form-group">
-            <label for="idNumber">Student/Faculty ID:</label>
+            <label for="idNumber">Borrower ID No:</label>
             <input type="number" id="idNumber" name="idNumber" required>
         </div>
         <div class="form-group">
