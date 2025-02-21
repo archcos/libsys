@@ -194,12 +194,14 @@ $result = $stmt->get_result();
                 width: 100%;
             }
         }
+        
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <a href="Kiosk.php" class="btn-back">Back</a>
+        <a href="Kiosk.php" class="btn-back">
+        <i class="fas fa-arrow-left"></i>  </a>
             <h1>Library Kiosk</h1><br>
             <a href="login.php" class="btn-login">Login</a>
         </div>
@@ -234,7 +236,7 @@ $result = $stmt->get_result();
                         if ($row['quantity'] > 0) {
                             echo "<button class='btn-action' onclick='handleBorrow(" . $row['bookId'] . ")'>Borrow</button>";
                         } else {
-                            echo "<button class='btn-nostock' disabled>Unavailable</button>";
+                            echo "<button class='btn-nostock btn-light' disabled>Unavailable</button>";
                         }
                         echo "</td>";
 
