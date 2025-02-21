@@ -89,7 +89,7 @@
         <p>Choose an option to proceed:</p>
         <div class="buttons">
             <a href="books.php" class="btn">LIBRARY KIOSK</a>
-            <a href="login.php" class="btn">LOGIN / REGISTER</a>
+            <a href="login.php" class="btn">SIGNIN / REGISTER</a>
         </div>
     </div>
 

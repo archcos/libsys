@@ -34,6 +34,26 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
     background-color: #0041C2 !important; /* Darker blue on hover */
     border-color: #0041C2 !important;
 }
+.btn-outline-custom { /* A custom class for the lighter buttons */
+    color: #868e96; /* A light gray color - adjust as needed */
+    border-color: #868e96; /* Match the border color */
+}
+
+.btn-outline-custom:hover {
+    color: #6c757d; /* Slightly darker on hover */
+    border-color: #6c757d;
+    background-color: transparent; /* Keep background transparent */
+}
+
+.btn-outline-custom:focus {
+    box-shadow: 0 0 0 0.2rem rgba(134, 142, 150, 0.5); /* Lighter shadow on focus */
+}
+
+.btn-outline-custom.active, .btn-outline-custom:active, .btn-outline-custom.focus, .btn-outline-custom:focus {
+    color: black; /* Darker text on active */
+    border-color: black;
+    background-color: light;
+}
 </style>
 <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh">
     <div class="d-flex flex-column justify-content-between">
@@ -94,13 +114,13 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
       <div class="modal-body">
         <p>Please select the type of borrower:</p>
         <div class="btn-group btn-group-toggle d-flex justify-content-center" data-toggle="buttons">
-          <label class="btn btn-outline-dark mx-2">
+          <label class="btn btn-outline-custom mx-2">
             <input type="radio" name="borrowerType" value="Student" id="studentOption"> Student
           </label>
-          <label class="btn btn-outline-dark mx-2">
+          <label class="btn btn-outline-custom mx-2">
             <input type="radio" name="borrowerType" value="Faculty" id="facultyOption"> Faculty
           </label>
-          <label class="btn btn-outline-dark mx-2">
+          <label class="btn btn-outline-custom mx-2">
             <input type="radio" name="borrowerType" value="Staff" id="staffOption"> Staff
           </label>
         </div>
