@@ -49,7 +49,9 @@ $result = $conn->query($query);
 <body>
     <div class="container">
         <h1>Manage Authors</h1>
-        <button class="btn add-btn" onclick="showAddAuthorModal()">Add New Author</button>
+        <button class="btn btn-primary" onclick="showAddAuthorModal()">Add New Author</button>
+        <div style="margin-top: 20px;">  
+</div>
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -91,7 +93,7 @@ $result = $conn->query($query);
                 <input type="text" id="firstName" name="firstName" required><br><br>
                 <label for="lastName">Last Name:</label><br>
                 <input type="text" id="lastName" name="lastName" required><br><br>
-                <button type="submit" class="btn add-btn">Add</button>
+                <button type="submit" class="btn btn-primary">Add</button>
                 <button type="button" onclick="closeModal('addAuthorModal')" class="btn cancel-btn">Cancel</button>
             </form>
         </div>

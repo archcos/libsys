@@ -39,7 +39,9 @@ $result = $stmt->get_result();
             <?php echo $receiptFilter === 'Yes' ? 'Receipt Log' : 'Non-Receipt Log'; ?>
         </h1>
 
-        <button id="fetchReceiptData">Print Receipt Data</button>
+        <button id="fetchReceiptData" class="btn btn-primary">Print Receipt Data</button>
+<div style="margin-top: 20px;">  
+</div>
 
         <table id="dataTable" class="display" style="width:100%">
             <thead>

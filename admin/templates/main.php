@@ -185,7 +185,7 @@
             <div class="modal-body">
                 <p>Do you want to approve this notification?</p>
                 <button class="btn btn-primary" id="approveBtn">Approve</button>
-                <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal">Decline</button>
             </div>
         </div>
     </div>

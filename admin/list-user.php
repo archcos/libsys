@@ -52,7 +52,9 @@ $result = $conn->query($query);
 <body>
     <div class="container">
         <h3>Manage Administrators</h3>
-        <button class="btn add-btn" onclick="showAddUserModal()">Add New Admin</button>
+        <button class="btn btn-primary" onclick="showAddUserModal()">Add New Admin</button>
+        <div style="margin-top: 20px;">  
+</div>
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -77,7 +79,7 @@ $result = $conn->query($query);
                         echo "<td>" . htmlspecialchars($row['lastLogin']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['dateCreated']) . "</td>";
                         echo "<td>
-                                <button class='btn edit-btn' data-user-id='" . $row['userId'] . "' onclick='editUser(" . $row['userId'] . ")'>Edit</button>
+                                <button class='btn btn-primary' data-user-id='" . $row['userId'] . "' onclick='editUser(" . $row['userId'] . ")'>Edit</button>
                                 <button class='btn delete-btn' data-user-id='" . $row['userId'] . "' onclick='deleteUser(" . $row['userId'] . ")'>Delete</button>
                             </td>";
                         echo "</tr>";
@@ -108,7 +110,7 @@ $result = $conn->query($query);
                     <option value="Admin">Admin</option>
                     <option value="Librarian">Librarian</option>
                 </select><br><br>
-                <button type="submit" class="btn add-btn">Add User</button>
+                <button type="submit" class="btn btn-primary">Add User</button>
                 <button type="button" onclick="closeModal('addUserModal')" class="btn cancel-btn">Cancel</button>
             </form>
         </div>
@@ -134,7 +136,7 @@ $result = $conn->query($query);
                     <option value="Librarian">Librarian</option>
                 </select>
                 <br><br>
-                <button type="submit" class="btn add-btn">Save Changes</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
                 <button type="button" onclick="closeModal('editUserModal')" class="btn cancel-btn">Cancel</button>
             </form>
         </div>

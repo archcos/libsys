@@ -33,7 +33,7 @@ $result = $conn->query($query);
             color: white;
         }
         .add-btn {
-            background-color: green;
+            background-color: blue;
         }
         .edit-btn {
             background-color: blue;
@@ -69,7 +69,7 @@ $result = $conn->query($query);
                         echo "<td>" . htmlspecialchars($row['level']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['courseName']) . "</td>";
                         echo "<td>
-                                <button class='btn edit-btn' onclick='openEditModal(" . $row['courseId'] . ", \"" . addslashes($row['courseName']) . "\", \"" . $row['level'] . "\")'>Edit</button>
+                                <button class='btn btn-primary' onclick='openEditModal(" . $row['courseId'] . ", \"" . addslashes($row['courseName']) . "\", \"" . $row['level'] . "\")'>Edit</button>
                                 <button class='btn delete-btn' onclick='deleteCourse(" . $row['courseId'] . ")'>Delete</button>
                               </td>";
                         echo "</tr>";

@@ -98,7 +98,9 @@ $authorsResult = $conn->query($authorsQuery);
 <body>
 <div class="container">
         <h1>Manage Reference Slips</h1>
-        <button class="btn add-btn" onclick="showAddReferenceModal()">Add New Reference Slip</button>
+        <button class="btn btn-primary" onclick="showAddReferenceModal()">Add New Reference Slip</button>
+        <div style="margin-top: 20px;">  
+</div>
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -180,7 +182,7 @@ $authorsResult = $conn->query($authorsQuery);
 
                 <label for="date">Date:</label><br>
                 <input type="date" id="date" name="date" required><br><br>
-                <button type="submit" class="btn add-btn">Add</button>
+                <button type="submit" class="btn btn-primary">Add</button>
                 <button type="button" onclick="closeModal('addReferenceModal')" class="btn cancel-btn">Cancel</button>
             </form>
         </div>

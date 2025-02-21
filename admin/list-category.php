@@ -67,7 +67,9 @@ $result = $conn->query($query);
 <body>
     <div class="container">
         <h1>Manage Categories</h1>
-        <button class="btn add-btn" onclick="showModal('addCategoryModal')">Add New Category</button>
+        <button class="btn btn-primary" onclick="showModal('addCategoryModal')">Add New Category</button>
+        <div style="margin-top: 20px;">  
+</div>
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -106,7 +108,7 @@ $result = $conn->query($query);
             <form id="addCategoryForm">
                 <label for="categoryName">Category Name:</label><br>
                 <input type="text" id="categoryName" name="categoryName" required><br><br>
-                <button type="submit" class="btn add-btn">Add</button>
+                <button type="submit" class="btn btn-primary">Add</button>
                 <button type="button" onclick="closeModal('addCategoryModal')" class="btn cancel-btn">Cancel</button>
             </form>
         </div>

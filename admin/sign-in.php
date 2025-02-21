@@ -47,7 +47,7 @@ session_start();  // Start the session to manage session variables
                     </div>
                   </div>
                   <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary btn-pill mb-4">Sign In</button>
+                  <button type="submit" class="btn btn-primary" style="background-color: #007bff !important; border-color: #007bff !important;">Sign In</button>
                     <p id="notification" class="d-none text-danger"></p>
                   </div>
                 </div>

@@ -114,7 +114,9 @@ $result = $stmt->get_result();
 <body>
     <div class="container">
         <h1>Books List</h1>
-        <button class="btn add-btn" onclick="window.location.href='add-book.php'">Add New Book</button>
+        <button class="btn btn-primary" onclick="window.location.href='add-book.php'">Add New Book</button>
+        <div style="margin-top: 20px;">  
+</div>
         <!-- Display Active Filters -->
         <div class="filters">
             <?php if ($categoryId): ?>
@@ -152,7 +154,6 @@ $result = $stmt->get_result();
             <?php endif; ?>
 
             <?php if (!$categoryId && !$authorId): ?>
-                <h3>All Books</h3>
             <?php endif; ?>
         </div>
 

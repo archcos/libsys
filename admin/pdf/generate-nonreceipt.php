@@ -41,7 +41,7 @@ $photo = 'image.png';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Receipt List</title>
+    <title>Non Receipt List</title>
     <style>
         body { font-family: Arial, sans-serif; font-size: 12px; text-align: center; }
         .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
