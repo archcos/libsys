@@ -10,7 +10,9 @@
         body {
             font-family: 'Poppins', sans-serif;
             text-align: center;
-            background-color: #FFEBB2; /* Happy and lively color */
+            background-image: url("assets/img/libww.png"); /* Replace with your image path */
+    background-size: cover; /* or contain, 100% 100%, etc. - see explanation below */
+    background-repeat: no-repeat; /* Prevents image tiling */
             margin: 0;
             display: flex;
             justify-content: center;
@@ -87,7 +89,7 @@
         <p>Choose an option to proceed:</p>
         <div class="buttons">
             <a href="books.php" class="btn">LIBRARY KIOSK</a>
-            <a href="login.php" class="btn">LOGIN</a>
+            <a href="login.php" class="btn">LOGIN / REGISTER</a>
         </div>
     </div>
 

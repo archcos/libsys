@@ -25,6 +25,11 @@ $result = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Books Kiosk</title>
 
+    <link href="https://fonts.googleapis.com/css?family=Karla:400,700|Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link id="main-css-href" rel="stylesheet" href="assets/css/style.css" />
+  <script src="https://unpkg.com/html5-qrcode/html5-qrcode.min.js"></script>
+
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
@@ -105,7 +110,7 @@ $result = $stmt->get_result();
 
         h1 {
             text-align: center;
-            color: #007bff;
+            color: black;
             font-size: 2rem;
         }
 
@@ -195,7 +200,7 @@ $result = $stmt->get_result();
     <div class="container">
         <div class="header">
             <a href="Kiosk.php" class="btn-back">Back</a>
-            <h1>Books Kiosk</h1><br>
+            <h1>Library Kiosk</h1><br>
             <a href="login.php" class="btn-login">Login</a>
         </div>
 
@@ -275,6 +280,10 @@ $result = $stmt->get_result();
             }
         }
     </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
 

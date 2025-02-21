@@ -18,6 +18,12 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borrower Registration</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Karla:400,700|Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link id="main-css-href" rel="stylesheet" href="assets/css/style.css" />
+  <script src="https://unpkg.com/html5-qrcode/html5-qrcode.min.js"></script>
+
     <style>
         /* Styling for form */
         h1 { text-align: center; margin-bottom: 20px; }
@@ -129,10 +135,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
 
     <form method="POST" action="process/adding-borrower.php">
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
-        <div class="form-group">
-            <label for="libraryId">Library ID:</label>
-            <input type="number" id="libraryId" name="libraryId" required>
-        </div>
+        
         <div class="form-group">
             <label for="idNumber">Student/Faculty ID:</label>
             <input type="number" id="idNumber" name="idNumber" required>
@@ -194,7 +197,16 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             <label for="homeAddress">Home Address:</label>
             <input type="text" id="homeAddress" name="homeAddress">
         </div>
-        <button type="submit">Submit</button>
+        
+        <div class="d-flex justify-content-between">  <button type="button" class="btn btn-primary btn-pill mb-4 w-50" onclick="window.history.back()">
+Back
+    </button>
+    <button type="submit" class="btn btn-primary btn-pill mb-4 w-50">Submit</button>
+</div>
     </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

@@ -24,7 +24,18 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
 </head>
 
 <body class="bg-light-gray" id="body" style="background: url('assets/img/lib.png') no-repeat center center fixed; background-size: cover;">
-  <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh">
+<style>
+.btn-secondary {
+    background-color: #0077b6 !important; /* Use your desired blue color */
+    border-color: #0077b6 !important;     /* Match the border color */
+}
+
+.btn-secondary:hover {
+    background-color: #0041C2 !important; /* Darker blue on hover */
+    border-color: #0041C2 !important;
+}
+</style>
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh">
     <div class="d-flex flex-column justify-content-between">
       <div class="row justify-content-center">
         <div class="col-lg-6 col-md-10">
@@ -50,9 +61,14 @@ if (isset($_GET['status']) && $_GET['status'] === 'success') {
                                     <i class="fas fa-qrcode"></i> Scan QR Code
                             </button>
                             <div id="qr-reader" style="width: 100%;"></div>
-                            <button type="submit" class="btn btn-primary btn-pill mb-4 w-100">Sign In</button>
-                            <button type="button" class="btn btn-secondary btn-pill mb-4 w-100" data-toggle="modal" data-target="#addBorrowerModal">Register</button>
-                            <button type="button" class="btn btn-dark btn-pill w-100" onclick="window.location.href='kiosk.php'">Kiosk</button>
+                            <button type="submit" class="btn btn-secondary btn-pill mb-4 w-100">
+    <i class="fas fa-sign-in-alt"></i> Sign In  </button>
+<button type="button" class="btn btn-primary btn-pill mb-4 w-100" data-toggle="modal" data-target="#addBorrowerModal">
+    <i class="fas fa-user-plus"></i> Register
+</button>
+<button type="button" class="btn btn-dark btn-pill w-100" onclick="window.location.href='kiosk.php'">
+    <i class="fas fa-th"></i> Kiosk
+</button>
 
                             <p id="notification" class="d-none text-danger"></p>
                         </div>
