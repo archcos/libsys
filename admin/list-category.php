@@ -33,6 +33,12 @@ $result = $conn->query($query);
         .add-btn {
             background-color: blue;
         }
+        .edit-btn {
+            background-color: blue;
+        }
+        .edit-btn:hover {
+            background-color: darkblue;
+        }
         .delete-btn {
             background-color: red;
         }
@@ -53,12 +59,17 @@ $result = $conn->query($query);
             left: 0;
             width: 100%;
             height: 100%;
+            justify-content: center;
+            align-items: center;
         }
         .modal-content {
             background: white;
             padding: 20px;
             border-radius: 10px;
+            width: 300px;
+            text-align: center;
         }
+
         .modal-content form {
             margin: 0;
         }
@@ -91,6 +102,7 @@ $result = $conn->query($query);
                                 </a>
                             </td>";
                         echo "<td>
+                                <button class='btn edit-btn' data-category-id='" . $row['categoryId'] . "' data-category-name='" . htmlspecialchars($row['categoryName']) . "'>Edit</button>
                                 <button class='btn delete-btn' data-category-id='" . $row['categoryId'] . "'>Delete</button>
                             </td>";
                         echo "</tr>";
@@ -135,9 +147,58 @@ $result = $conn->query($query);
         </div>
     </div>
 
+    <!-- Edit Category Modal -->
+    <div id="editCategoryModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Category</h3>
+            <form id="editCategoryForm">
+                <input type="hidden" id="editCategoryId" name="categoryId">
+                <label for="editCategoryName">Category Name:</label><br>
+                <input type="text" id="editCategoryName" name="categoryName" required><br><br>
+                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="button" onclick="closeModal('editCategoryModal')" class="btn cancel-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
         <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
+
+        $(document).ready(function() {
+                $('#dataTable').DataTable();
+
+                // Open edit modal and populate fields
+                $('.edit-btn').on('click', function() {
+                    let categoryId = $(this).data('category-id');
+                    let categoryName = $(this).data('category-name');
+
+                    $('#editCategoryId').val(categoryId);
+                    $('#editCategoryName').val(categoryName);
+
+                    showModal('editCategoryModal');
+                });
+
+                // Handle category update form submission
+                $('#editCategoryForm').on('submit', function(e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: 'process/edit-category.php', // Backend script to handle editing
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            alert(response);
+                            closeModal('editCategoryModal');
+                            location.reload();
+                        },
+                        error: function() {
+                            alert('Error updating category. Please try again.');
+                        }
+                    });
+                });
+            });
+
         $(document).ready(function() {
             
             $('#dataTable').DataTable();
@@ -189,13 +250,19 @@ $result = $conn->query($query);
 
         // Show modal
         function showModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
+            let modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'flex';
+            }
         }
 
-        // Close modal
         function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
+            let modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+            }
         }
+
 
         // Handle Add Category Form Submission
         document.getElementById('addCategoryForm').addEventListener('submit', function(e) {

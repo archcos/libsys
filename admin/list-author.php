@@ -32,6 +32,12 @@ $result = $conn->query($query);
         .add-btn {
             background-color: blue;
         }
+        .edit-btn {
+            background-color: blue;
+        }
+        .edit-btn:hover {
+            background-color: darkblue;
+        }
         .delete-btn {
             background-color: red;
         }
@@ -73,6 +79,7 @@ $result = $conn->query($query);
                                 </a>
                             </td>";
                         echo "<td>
+                                <button class='btn edit-btn' data-author-id='" . $row['authorId'] . "' data-first-name='" . htmlspecialchars($row['firstName']) . "' data-last-name='" . htmlspecialchars($row['lastName']) . "'>Edit</button>
                                 <button class='btn delete-btn' data-author-id='" . $row['authorId'] . "'>Delete</button>
                             </td>";
                         echo "</tr>";
@@ -99,11 +106,61 @@ $result = $conn->query($query);
         </div>
     </div>
 
+
+    <!-- Edit Author Modal -->
+    <div id="editAuthorModal" class="modal" style="display: none; position: fixed; z-index: 1000; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 20px; border-radius: 10px; width: 300px;">
+            <h3>Edit Author</h3>
+            <form id="editAuthorForm">
+                <input type="hidden" id="editAuthorId" name="authorId">
+                <label for="editFirstName">First Name:</label><br>
+                <input type="text" id="editFirstName" name="firstName" required><br><br>
+                <label for="editLastName">Last Name:</label><br>
+                <input type="text" id="editLastName" name="lastName" required><br><br>
+                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="button" onclick="closeModal('editAuthorModal')" class="btn cancel-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
-        $(document).ready(function() {
+
+    $(document).ready(function() {
             $('#dataTable').DataTable();
+
+            // Open edit modal and populate fields
+            $('.edit-btn').on('click', function() {
+                let authorId = $(this).data('author-id');
+                let firstName = $(this).data('first-name');
+                let lastName = $(this).data('last-name');
+
+                $('#editAuthorId').val(authorId);
+                $('#editFirstName').val(firstName);
+                $('#editLastName').val(lastName);
+
+                showModal('editAuthorModal');
+            });
+
+            // Handle edit form submission
+            $('#editAuthorForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: 'process/edit-author.php', // Backend script to handle editing
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        alert(response);
+                        closeModal('editAuthorModal');
+                        location.reload();
+                    },
+                    error: function() {
+                        alert('Error updating author. Please try again.');
+                    }
+                });
+            });
 
             $('.delete-btn').on('click', function() {
                 const authorId = $(this).data('author-id');
@@ -123,6 +180,15 @@ $result = $conn->query($query);
                 }
             });
         });
+
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
 
         function showAddAuthorModal() {
             document.getElementById('addAuthorModal').style.display = 'flex';
