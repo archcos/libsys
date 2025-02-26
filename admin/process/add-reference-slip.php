@@ -17,11 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title'];
     $author = $_POST['author'];
     $category = $_POST['category'];
+    $callNumber = $_POST['callNumber'];
+    $subLocation = $_POST['subLocation'];
     $date = $_POST['date'];
 
     try {
-        $stmt = $conn->prepare("INSERT INTO tblreference (borrowerId, type, title, author, category, date) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("isssss", $borrowerId, $type, $title, $author, $category, $date);
+        $stmt = $conn->prepare("INSERT INTO tblreference (borrowerId, type, title, author, category, callNumber, subLocation, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("isssssss", $borrowerId, $type, $title, $author, $category, $callNumber, $subLocation, $date);
         $stmt->execute();
 
         if ($stmt->affected_rows > 0) {

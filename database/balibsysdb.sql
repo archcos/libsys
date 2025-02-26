@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2025 at 11:07 AM
+-- Generation Time: Feb 26, 2025 at 10:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,7 +66,7 @@ CREATE TABLE `tblbooks` (
 --
 
 INSERT INTO `tblbooks` (`bookId`, `title`, `dateAdded`, `quantity`, `authorId`, `categoryId`, `callNum`, `accessionNum`, `barcodeNum`, `publisher`, `publishedDate`) VALUES
-(39, 'The Book', '2024-12-05 10:07:00', 1, 4, 3, '123', '123', '123', 'Ako', '2024-12-10'),
+(39, 'The Books', '2024-12-05 10:07:00', 12, 4, 3, '123', '123', '123', 'Ako', '2024-12-10'),
 (41, 'The Nesst', '2024-12-06 00:30:10', 1, 5, 4, '1234', '1242', '2143', 'What', '2024-12-10');
 
 -- --------------------------------------------------------
@@ -94,6 +94,13 @@ CREATE TABLE `tblborrowers` (
   `receipt` enum('No','Yes','','') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tblborrowers`
+--
+
+INSERT INTO `tblborrowers` (`idNumber`, `borrowerType`, `dateRegistered`, `libraryId`, `surName`, `firstName`, `middleName`, `emailAddress`, `course`, `year`, `position`, `gender`, `birthDate`, `homeAddress`, `remarks`, `receipt`) VALUES
+(1, 'Student', '2025-02-26 05:05:47', 27, 'Test', 'Test', 'A', 'test@gmail.com', 4, 1, '', 'Male', '2025-02-26', 'test', 'Deactivated', 'No');
+
 -- --------------------------------------------------------
 
 --
@@ -110,9 +117,10 @@ CREATE TABLE `tblcategory` (
 --
 
 INSERT INTO `tblcategory` (`categoryId`, `categoryName`) VALUES
-(3, 'Science'),
+(3, 'Sciences'),
 (4, 'Mathematics'),
-(6, 'JJ');
+(6, 'JJ'),
+(7, 'test');
 
 -- --------------------------------------------------------
 
@@ -180,6 +188,8 @@ CREATE TABLE `tblreference` (
   `author` varchar(30) NOT NULL,
   `title` varchar(30) NOT NULL,
   `category` varchar(30) NOT NULL,
+  `callNumber` varchar(30) NOT NULL,
+  `subLocation` varchar(30) NOT NULL,
   `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -221,7 +231,7 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userId`, `accountType`, `username`, `password`, `firstName`, `lastName`, `lastLogin`, `dateCreated`) VALUES
-(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-02-19 08:27:55', '2024-11-25 02:40:02'),
+(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-02-26 02:43:23', '2024-11-25 02:40:02'),
 (2, 'Librarian', 'test', 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4', 'Testing', 'Ko', '2024-12-03 09:01:14', '2024-12-03 09:01:14'),
 (4, 'Librarian', 'rain214', '8cb2237d0679ca88db6464eac60da96345513964', 'password', 'password', '2024-12-09 07:13:28', '2024-12-03 09:24:16'),
 (5, 'Admin', 'dwa', 'f98421770a791fdf0338f87df795cd758ad5d87b', 'dwad', 'dwad', '2024-12-09 07:15:07', '2024-12-09 07:15:07');
@@ -306,7 +316,7 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tblauthor`
 --
 ALTER TABLE `tblauthor`
-  MODIFY `authorId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `authorId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tblbooks`
@@ -318,13 +328,13 @@ ALTER TABLE `tblbooks`
 -- AUTO_INCREMENT for table `tblborrowers`
 --
 ALTER TABLE `tblborrowers`
-  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `tblcategory`
 --
 ALTER TABLE `tblcategory`
-  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tblcourses`
@@ -348,7 +358,7 @@ ALTER TABLE `tblpenalties`
 -- AUTO_INCREMENT for table `tblreference`
 --
 ALTER TABLE `tblreference`
-  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `tblreturnborrow`
@@ -372,6 +382,12 @@ ALTER TABLE `tbluser`
 ALTER TABLE `tblbooks`
   ADD CONSTRAINT `fk_author` FOREIGN KEY (`authorId`) REFERENCES `tblauthor` (`authorId`),
   ADD CONSTRAINT `fk_category` FOREIGN KEY (`categoryId`) REFERENCES `tblcategory` (`categoryId`);
+
+--
+-- Constraints for table `tblborrowers`
+--
+ALTER TABLE `tblborrowers`
+  ADD CONSTRAINT `fk_course` FOREIGN KEY (`course`) REFERENCES `tblcourses` (`courseId`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tblnotifications`
