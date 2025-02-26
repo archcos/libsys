@@ -21,6 +21,8 @@ $query = "
         bs.title AS bookTitle, 
         r.category, 
         r.date,
+        r.callNumber,
+        r.subLocation,
         b.firstName, 
         b.surName
     FROM 
@@ -47,6 +49,8 @@ if ($result->num_rows > 0) {
     $title = $record['bookTitle'];
     $category = $record['category'];
     $date = $record['date'];
+    $callNumber = $record['callNumber'];
+    $subLocation = $record['subLocation'];
     $borrowerName = $record['firstName'] . ' ' . $record['surName'];
 } else {
     die("Reference record not found.");
@@ -209,6 +213,16 @@ $fm = '../pdf/fm.png'; // Path to the USTP logo
 
         <br>
 
+        <div class="form-section">
+            <label>CALL NUMBER:</label>
+            <input type="text" style= "width: 20px" value="<?php echo htmlspecialchars($callNumber); ?>" readonly>
+            <label>SUBLOCATION:</label>
+            <input type="text" style= "width: 20px" value="<?php echo htmlspecialchars($subLocation); ?>" readonly>
+        </div>
+
+        <br>
+
+
         <div style="display: flex; justify-content: space-between; gap: 20px;">
             <div style="flex: 1;">
                 <div class="form-section">
@@ -235,12 +249,12 @@ $fm = '../pdf/fm.png'; // Path to the USTP logo
             </div>
         </div>
         
-        <div class="form-section">
-            <label>College/Department:</label>
-            <input type="text" value="" readonly>
-            <label>Date:</label>
-            <input type="text" style= "width: 20px" value="<?php echo htmlspecialchars($date); ?>" readonly>
-        </div>
+            <div class="form-section">
+                <label>College/Department:</label>
+                <input type="text" value="" readonly>
+                <label>Date:</label>
+                <input type="text" style= "width: 20px" value="<?php echo htmlspecialchars($date); ?>" readonly>
+            </div>
         </div>
 
     </div>

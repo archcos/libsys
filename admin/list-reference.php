@@ -15,6 +15,8 @@ $query = "
            CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
            b.title AS bookTitle, 
            rs.type,
+           rs.callNumber,
+           rs.subLocation,
            rs.category, 
            rs.date, 
            borrower.firstName, borrower .surName
@@ -111,6 +113,8 @@ $authorsResult = $conn->query($authorsQuery);
                     <th>Title</th>
                     <th>Category</th>
                     <th>Type</th>
+                    <th>Call Number</th>
+                    <th>SubLocation</th>
                     <th>Date</th>
                     <th>Actions</th>
                 </tr>
@@ -130,6 +134,8 @@ $authorsResult = $conn->query($authorsQuery);
                             echo "<td>" . htmlspecialchars($row['bookTitle']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['category']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['type']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['callNumber']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['subLocation']) . "</td>";
                             echo "<td>" . $row['date'] . "</td>";
                             echo "<td>
                                     <button class='btn delete-btn' data-reference-id='" . $row['referenceId'] . "'>Delete</button>
@@ -179,6 +185,12 @@ $authorsResult = $conn->query($authorsQuery);
 
                 <label for="category">Category:</label><br>
                 <input type="text" id="category" name="category" readonly><br><br>
+
+                <label for="callNumber">Call Number:</label><br>
+                <input type="text" id="callNumber" name="callNumber" required><br><br>
+
+                <label for="subLocation">SubLocation:</label><br>
+                <input type="text" id="subLocation" name="subLocation" required><br><br>
 
                 <label for="date">Date:</label><br>
                 <input type="date" id="date" name="date" required><br><br>
@@ -296,6 +308,8 @@ $authorsResult = $conn->query($authorsQuery);
             const author = document.getElementById('author').value;
             const title = document.getElementById('title').value;
             const category = document.getElementById('category').value;
+            const callNumber = document.getElementById('callNumber').value;
+            const subLocation = document.getElementById('subLocation').value;
             const date = document.getElementById('date').value;
 
             // If "Others" is selected and the user has inputted a value, use that value instead
@@ -306,7 +320,7 @@ $authorsResult = $conn->query($authorsQuery);
             $.ajax({
                 url: 'process/add-reference-slip.php',
                 type: 'POST',
-                data: { borrowerId, type, author, title, category, date },
+                data: { borrowerId, type, author, title, category, callNumber, subLocation, date },
                 success: function(response) {
                     alert(response);
                     closeModal('addReferenceModal');
