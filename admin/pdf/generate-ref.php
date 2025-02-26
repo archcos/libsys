@@ -53,7 +53,7 @@ if ($result->num_rows > 0) {
 }
 
 $logo = '../pdf/ustp.png'; // Path to the USTP logo
-$fm = '../pdf/fm.png'; // Path to the USTP logo
+$fm = '../pdf/fmm.png'; // Path to the USTP logo
 
 ?>
 
