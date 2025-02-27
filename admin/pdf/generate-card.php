@@ -84,6 +84,7 @@ if ($bookResult->num_rows > 0) {
 }
 
 $logo = '../pdf/ustp.png'; // Path to USTP logo
+$fm = '../pdf/bc.png'; // Path to the USTP logo
 ?>
 
 <!DOCTYPE html>
@@ -102,37 +103,32 @@ $logo = '../pdf/ustp.png'; // Path to USTP logo
         }
 
         .container {
-            width: 100%;
-            max-width: 500px;
-            margin: 30px auto;
+            width: 40%;
+            margin: 20px auto;
             padding: 20px;
+            border: 1px solid black;
             background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             position: relative;
         }
 
-        .logo {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
+
+        
 
         .logo img {
             max-width: 80px;
         }
 
-        .logo-right {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
         .header {
             text-align: center;
-            font-weight: bold;
-            margin-top: 80px;
+            flex: 1; /* Allows the header to take up remaining space */
         }
+
 
         .details {
             display: flex;
@@ -205,7 +201,7 @@ $logo = '../pdf/ustp.png'; // Path to USTP logo
         }
 
         .back-button {
-            background-color: #f44336; /* Different color for Go Back button */
+            background-color: grey; /* Different color for Go Back button */
             color: white;
         }
 
@@ -217,19 +213,24 @@ $logo = '../pdf/ustp.png'; // Path to USTP logo
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <img src="<?php echo $logo; ?>" alt="USTP Logo">
-        </div>
-        <div class="logo-right">
-            <img src="<?php echo $logo; ?>" alt="USTP Logo">
-        </div>
+<div class="container">
+    <div class="header-container">
+            <div class="logo">
+                <img src="<?php echo $logo; ?>" alt="USTP Logo">
+            </div>
 
-        <div class="header">
-            <h3>UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
-            <p>Alubijid | Balubal | Cagayan de Oro | Claveria | Jasaan | Oroquieta | Panaon | Villanueva</p>
+            <div class="header">
+                <h3>UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
+                <p>Alubijid | Balubal | Cagayan de Oro | Claveria | Jasaan | Oroquieta | Panaon | Villanueva</p>
+            
+            </div>
+            <div class="logo">
+                <img src="<?php echo $fm; ?>" alt="USTP Logo">
+            </div>
         </div>
-
+        <div style="margin-top: 20px;">
+    </div>
+    <h4>BOOK CARD</h4>
         <div class="details">
             <div>
                     <p><b>Call Number:</b> <?php echo $callNum; ?></p>
@@ -247,7 +248,6 @@ $logo = '../pdf/ustp.png'; // Path to USTP logo
             </div>
         </div>
 
-        <h4>BOOK CARD</h4>
 
         <table class="table">
             <thead>
@@ -289,89 +289,143 @@ $logo = '../pdf/ustp.png'; // Path to USTP logo
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
                     <title>Book Return Card</title>
                     <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            font-size: 12px;
-                        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
 
-                        .container {
-                            width: 100%;
-                            max-width: 500px;
-                            margin: 30px auto;
-                            padding: 20px;
-                            background-color: #ffffff;
-                            border-radius: 10px;
-                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                            position: relative;
-                        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid black;
+            background-color: #ffffff;
+            position: relative;
+        }
 
-                        .logo {
-                            position: absolute;
-                            top: 20px;
-                            left: 20px;
-                        }
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
 
-                        .logo img {
-                            max-width: 80px;
-                        }
+        
 
-                        .logo-right {
-                            position: absolute;
-                            top: 20px;
-                            right: 20px;
-                        }
-                            
-                        .logo-right img {
-                            max-width: 80px;
-                        }
+        .logo img {
+            max-width: 80px;
+        }
 
-                        .header {
-                            text-align: center;
-                            font-weight: bold;
-                            margin-top: 10px;
-                        }
+        .header {
+            text-align: center;
+            flex: 1; /* Allows the header to take up remaining space */
+        }
 
-                        .details {
-                            display: flex;
-                            justify-content: space-between;
-                            margin-bottom: 15px;
-                            padding: 0 10px;
-                        }
 
-                        .details div {
-                            width: 45%;
-                        }
+        .details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 0 10px;
+        }
 
-                        .table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin-top: 20px;
-                        }
+        .details div {
+            width: 45%;
+        }
 
-                        .table th, .table td {
-                            border: 1px solid black;
-                            padding: 8px;
-                            text-align: center;
-                        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
 
-                        .table th {
-                            background-color: #f2f2f2;
-                        }
-                    </style>
+        .table th, .table td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+        }
+
+        h4 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #0056b3;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #003d80;
+            transform: scale(1.05);
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between; /* Space between buttons */
+            gap: 10px; /* Optional: adds space between the buttons */
+        }
+
+        .button-container button {
+            width: 48%; /* Adjust button width if necessary */
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .button-container button:hover {
+            background-color: #003d80; /* Optional: Change button color on hover */
+        }
+
+        .back-button {
+            background-color: grey; /* Different color for Go Back button */
+            color: white;
+        }
+
+        button {
+            background-color: #0056b3; /* Default color for Print button */
+            color: white;
+        }
+
+    </style>
                 </head>
                 <body>
                     <div class="container">
-                        <div class="logo">
-                            <img src="<?php echo $logo; ?>" alt="USTP Logo">
-                        </div>
-                        <div class="header">
-                            <h5>UNIVERSITY OF SCIENCE AND TECHNOLOGY <br>OF SOUTHERN PHILIPPINES</h5>
-                            <h6>Alubijid | Balubal | Cagayan de Oro | Claveria | Jasaan | Oroquieta | Panaon | Villanueva</h6>
-                        </div>
-                        <div class="logo-right">
-                            <img src="<?php echo $logo; ?>" alt="USTP Logo">
-                        </div>
-                        <h4 style="text-align: center;">BOOK CARD</h4>
+                        <div class="header-container">
+            <div class="logo">
+                <img src="<?php echo $logo; ?>" alt="USTP Logo">
+            </div>
+
+            <div class="header">
+                <h3>UNIVERSITY OF SCIENCE AND TECHNOLOGY OF SOUTHERN PHILIPPINES</h3>
+                <p>Alubijid | Balubal | Cagayan de Oro | Claveria | Jasaan | Oroquieta | Panaon | Villanueva</p>
+            
+            </div>
+            <div class="logo">
+                <img src="<?php echo $fm; ?>" alt="USTP Logo">
+            </div>
+        </div>
+        <div style="margin-top: 20px;">
+    </div>
+    <h4>BOOK CARD</h4>
                         <div class="details">
                             <div>
                                 <p><b>Call Number:</b> <?php echo $callNum; ?></p>

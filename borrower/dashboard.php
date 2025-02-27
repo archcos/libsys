@@ -60,7 +60,7 @@ $result = $stmt->get_result();
         }
         .btn-borrowed {
             padding: 5px 10px;
-            background-color: red;
+            background-color: grey;
             color: white;
             border: none;
             border-radius: 5px;
