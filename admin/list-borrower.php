@@ -91,6 +91,10 @@ if ($borrowerType) {
         .modal-content form {
             margin: 0;
         }
+        .print-btn {
+            background-color: green;
+            color: white;
+        }
     </style>
 </head>
 <body>

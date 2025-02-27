@@ -255,7 +255,7 @@
                     <option value="severe">Severe</option>
                 </select>
                 <div class="form-group mt-3">
-                    <label for="damageCost">Cost of Repair</label>
+                    <label for="damageCost">Penalty Cost</label>
                     <input type="number" class="form-control" id="damageCost" name="damageCost" placeholder="Enter cost" min="0" value="0">
                 </div>
 
@@ -268,8 +268,8 @@
                 <!-- Total Penalty -->
                 <p id="totalPenalty"></p>
 
-                <button class="btn btn-primary" id="reportDamageBtn">Report Penalty</button>
-                <button class="btn btn-secondary" id="noDamageButton" data-dismiss="modal">No Penalty</button>
+                <button class="btn btn-secondary" id="reportDamageBtn">Report Penalty</button>
+                <button class="btn btn-primary" id="noDamageButton" data-dismiss="modal">No Penalty</button>
             </div>
         </div>
     </div>

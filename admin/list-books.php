@@ -95,7 +95,7 @@ $result = $stmt->get_result();
             background-color: darkblue;
         }
         .delete-btn {
-            background-color: red;
+            background-color: lightcoral;
             color: white;
             border: none;
             padding: 5px 10px;
@@ -197,7 +197,7 @@ $result = $stmt->get_result();
                             if ($row['isBorrowed']) {
                                 echo "<span style='color: red;'>Borrowed - Cannot Delete</span>";
                             } else {
-                                echo "<a href='edit-book.php?bookId=" . $row['bookId'] . "' class='btn edit-btn'>Edit</a>";
+                                echo "<a href='edit-book.php?bookId=" . $row['bookId'] . "' class='btn btn-primary'>Edit</a>";
                                 echo "<button class='delete-btn' data-book-id='" . $row['bookId'] . "'>Delete</button>";
                             }
                             echo "</td>";

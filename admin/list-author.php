@@ -39,13 +39,13 @@ $result = $conn->query($query);
             background-color: darkblue;
         }
         .delete-btn {
-            background-color: red;
+            background-color: lightcoral;
         }
         .delete-btn:hover {
             background-color: darkred;
         }
         .cancel-btn {
-            background-color: red;
+            background-color: lightcoral;
         }
         .cancel-btn:hover {
             background-color: darkred;
@@ -79,7 +79,7 @@ $result = $conn->query($query);
                                 </a>
                             </td>";
                         echo "<td>
-                                <button class='btn edit-btn' data-author-id='" . $row['authorId'] . "' data-first-name='" . htmlspecialchars($row['firstName']) . "' data-last-name='" . htmlspecialchars($row['lastName']) . "'>Edit</button>
+                                <button class='btn btn-primary' data-author-id='" . $row['authorId'] . "' data-first-name='" . htmlspecialchars($row['firstName']) . "' data-last-name='" . htmlspecialchars($row['lastName']) . "'>Edit</button>
                                 <button class='btn delete-btn' data-author-id='" . $row['authorId'] . "'>Delete</button>
                             </td>";
                         echo "</tr>";

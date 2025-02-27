@@ -43,6 +43,41 @@ $photo = 'image.png';
     <meta charset="UTF-8">
     <title>Non Receipt List</title>
     <style>
+        @media print {
+    @page {
+        size: auto;   /* auto is the initial value */
+        margin: 0;  /* this affects the margin in the printer settings */
+    }
+    
+    /* Hide URL and date */
+    @page {
+        margin: 0;
+    }
+    
+    @page :left {
+        @bottom-left {
+            content: "";
+        }
+    }
+    
+    @page :right {
+        @bottom-right {
+            content: "";
+        }
+    }
+    
+    @page :left {
+        @top-left {
+            content: "";
+        }
+    }
+    
+    @page :right {
+        @top-right {
+            content: "";
+        }
+    }
+}
         body { font-family: Arial, sans-serif; font-size: 12px; text-align: center; }
         .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .table th, .table td { border: 1px solid black; padding: 8px; text-align: center; }

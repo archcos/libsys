@@ -93,7 +93,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
             <p>
                         <form method="POST" action="process/send-email.php">
                                 <button type="submit" name="send_notifications" class="remind-btn">
-                                    <i class="fas fa-bell"></i> Remind Book Return Now
+                                    <i class="fas fa-bell"></i> Send Email
                                 </button>
                             </form>
                     </p>

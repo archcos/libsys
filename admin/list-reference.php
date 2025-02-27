@@ -60,13 +60,13 @@ $result = $conn->query($query);
             background-color: blue;
         }
         .delete-btn {
-            background-color: red;
+            background-color: lightcoral;
         }
         .delete-btn:hover {
             background-color: darkred;
         }
         .cancel-btn {
-            background-color: red;
+            background-color: lightcoral;
         }
         .cancel-btn:hover {
             background-color: darkred;

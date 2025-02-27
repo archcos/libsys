@@ -39,7 +39,10 @@ $result = $conn->query($query);
             background-color: blue;
         }
         .delete-btn {
-            background-color: red;
+            background-color: lightcoral;
+        }
+        .delete-btn:hover {
+            background-color: darkred;
         }
         .btn:hover {
             opacity: 0.9;
@@ -50,6 +53,8 @@ $result = $conn->query($query);
     <div class="container">
         <h1>Course List</h1>
         <button class="btn add-btn" onclick="openAddModal()">Add New Course</button>
+        <div style="margin-top: 20px;">
+    </div>
 
         <table id="dataTable" class="display" style="width:100%">
             <thead>
@@ -94,7 +99,7 @@ $result = $conn->query($query);
             <label for="courseName">Course Name:</label><br>
             <input type="text" id="courseName" name="courseName" required><br><br>
             <button type="submit" class="btn add-btn">Save</button>
-            <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
         </form>
     </div>
 
