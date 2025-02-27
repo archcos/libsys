@@ -126,7 +126,7 @@ $fm = '../pdf/fmm.png'; // Path to the USTP logo
 
         .form-section label {
             flex: 0 0 100px;
-            font-weight: bold;
+            font-weight: normal;
         }
 
         .form-section input {
@@ -191,25 +191,33 @@ $fm = '../pdf/fmm.png'; // Path to the USTP logo
                 <input type="checkbox" <?php echo ($type == 'Thesis/Dissertation') ? 'checked' : ''; ?> disabled> Thesis/Dissertation
                 <input type="checkbox" <?php echo (!in_array($type, ['Book', 'Periodicals', 'Thesis/Dissertation'])) ? 'checked' : ''; ?> disabled> 
                 <?php 
-                    echo (!in_array($type, ['Book', 'Periodicals', 'Thesis/Dissertation'])) ? "Others ($type)" : "Others (specify)";
+                    echo (!in_array($type, ['Book', 'Periodicals', 'Thesis/Dissertation'])) ? "Others ($type)" : "Others (Pls. specify)";
                 ?>
             </div>
         </div>
+        <div style="margin-top: 10px;">
+    </div>  
 
         <div class="form-section">
             <label>AUTHOR:</label>
             <input type="text" value="<?php echo htmlspecialchars($author); ?>" readonly>
         </div>
+        <div style="margin-top: 20px;">
+    </div>
 
         <div class="form-section">
             <label>TITLE:</label>
             <input type="text" value="<?php echo htmlspecialchars($title); ?>" readonly>
         </div>
+        <div style="margin-top: 20px;">
+    </div>
 
         <div class="form-section">
             <label>SUBJECT/TOPIC:</label>
             <input type="text" value="<?php echo htmlspecialchars($category); ?>" readonly>
         </div>
+        <div style="margin-top: 20px;">
+    </div>
 
         <br>
 
@@ -219,6 +227,8 @@ $fm = '../pdf/fmm.png'; // Path to the USTP logo
             <label>SUBLOCATION:</label>
             <input type="text" style= "width: 20px" value="<?php echo htmlspecialchars($subLocation); ?>" readonly>
         </div>
+        <div style="margin-top: 20px;">
+    </div>
 
         <br>
 
@@ -228,24 +238,32 @@ $fm = '../pdf/fmm.png'; // Path to the USTP logo
                 <div class="form-section">
                     <label>LIBRARY USER</label>
                 </div>
+                <div style="margin-top: 10px;">
+    </div>
                 <div class="form-section">
                     <input type="text" value="<?php echo htmlspecialchars($borrowerName); ?>" readonly>
                 </div>
                 <div class="form-section">
                     <p>Signature Over-Printed Name</p>
                 </div>
+                <div style="margin-top: 10px;">
+    </div>
             </div>
 
             <div style="flex: 1;">
                 <div class="form-section">
                     <span><label>LIBRARY STAFF IN-CHARGE</label></span>
                 </div>
+                <div style="margin-top: 10px;">
+    </div>
                 <div class="form-section">
                     <input type="text" value="" readonly>
                 </div>
                 <div class="form-section">
                     <p>Signature Over-Printed Name</p>
                 </div>
+                <div style="margin-top: 10px;">
+    </div>
             </div>
         </div>
         

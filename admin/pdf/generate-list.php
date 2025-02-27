@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 include('../process/db-connect.php');
 
 $logo = '../pdf/ustp.png'; // Path to the USTP logo
-$fm = '../pdf/fm.png'; // Path to another logo
+$fm = '../pdf/lrf.png'; // Path to another logo
 
 // Fetch borrower data
 $query = "
