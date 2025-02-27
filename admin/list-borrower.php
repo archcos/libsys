@@ -102,9 +102,9 @@ if ($borrowerType) {
             <?php if ($borrowerType): ?>
                 <h2>Borrower List: <?php echo htmlspecialchars($borrowerType); ?></h2>
             <?php endif; ?>
-        <button class="btn add-btn" onclick="openGenerateList()">Generate List</button>
-        <button class="btn add-btn" href="#" data-toggle="modal" data-target="#addBorrowerModal">Add New Borrower</button>
-        <button class="btn add-btn" href="#" data-toggle="modal" data-target="#borrowerModal">Edit Borrower</button>
+        <button class="btn btn-primary" onclick="openGenerateList()">Generate List</button>
+        <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#addBorrowerModal">Add New Borrower</button>
+        <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#borrowerModal">Edit Borrower</button>
         <p>Below is the list of registered borrowers.</p>
         <table id="dataTable" class="display" style="width:100%">
             <thead>

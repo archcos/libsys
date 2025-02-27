@@ -57,11 +57,11 @@ $mail = new PHPMailer(true);
 $mail->isSMTP();
 $mail->Host = 'smtp.gmail.com';
 $mail->SMTPAuth = true;
-$mail->Username = 'joedavid1345@gmail.com'; // Your email address
-$mail->Password = 'ogdo xldv yyla gley';   // Your app-specific password
+$mail->Username = 'mjaymillanar@gmail.com'; // Your email address
+$mail->Password = 'glkw yaay tmuq zzmd';   // Your app-specific password
 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
-$mail->setFrom('joedavid1345@gmail.com', 'Library Notification');
+$mail->setFrom('mjaymillanar@gmail.com', 'Library Notification');
 
 // Check if there are borrowers who have books due soon
 if ($result->num_rows > 0) {
