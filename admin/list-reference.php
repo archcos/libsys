@@ -59,6 +59,15 @@ $result = $conn->query($query);
         .add-btn {
             background-color: blue;
         }
+        .edit-btn {
+            background-color: blue;
+        }
+        .delete-btn {
+            background-color: lightcoral;
+        }
+        .delete-btn:hover {
+            background-color: darkred;
+        }
         .delete-btn {
             background-color: lightcoral;
         }
@@ -138,6 +147,7 @@ $authorsResult = $conn->query($authorsQuery);
                             echo "<td>" . htmlspecialchars($row['subLocation']) . "</td>";
                             echo "<td>" . $row['date'] . "</td>";
                             echo "<td>
+                                    <button class='btn edit-btn' onclick='editReferenceSlip(" . $row['referenceId'] . ")'>Edit</button>
                                     <button class='btn delete-btn' data-reference-id='" . $row['referenceId'] . "'>Delete</button>
                                 </td>";
                             echo "</tr>"; // Ensure the row closes properly
@@ -255,6 +265,11 @@ $authorsResult = $conn->query($authorsQuery);
                 otherTypeContainer.style.display = "none";
             }
         }
+
+        function editReferenceSlip(referenceId) {
+            window.location.href = "edit-reference.php?referenceId=" + referenceId;
+        }
+
         $(document).ready(function() {
             $('#dataTable').DataTable();
             $(document).ready(function() {
