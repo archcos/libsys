@@ -52,7 +52,7 @@ $result = $conn->query($query);
 <body>
     <div class="container">
         <h1>Course List</h1>
-        <button class="btn add-btn" onclick="openAddModal()">Add New Course</button>
+        <button class="btn btn-primary" onclick="openAddModal()">Add New Course</button>
         <div style="margin-top: 20px;">
     </div>
 

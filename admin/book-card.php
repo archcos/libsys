@@ -55,7 +55,9 @@ $result = $conn->query($query);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         .delete-btn {
-            background-color: red;
+            background-color: lightcoral;
+            color: white;
+            border: none;
         }
         .delete-btn:hover {
             background-color: darkred;

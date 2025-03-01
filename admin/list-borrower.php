@@ -94,6 +94,7 @@ if ($borrowerType) {
         .print-btn {
             background-color: green;
             color: white;
+            border: none;
         }
     </style>
 </head>

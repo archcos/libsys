@@ -98,11 +98,6 @@ $fm = '../pdf/dds.png'; // Path to the USTP logo
             background-color: #ffffff;
             position: relative;
         }
-/* 
-        .header {
-            text-align: center;
-            font-weight: bold;
-        } */
 
         .header-container {
             display: flex;
@@ -433,7 +428,7 @@ $fm = '../pdf/dds.png'; // Path to the USTP logo
                                 <b>Barcode No.:</b> <?php echo $barcodeNum; ?>
                             </div>
                         </div>
-
+ <h4>DATE DUE SLIP</h4>
 
                         <table class="table">
                             <thead>

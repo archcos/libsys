@@ -63,7 +63,7 @@ $authorsResult = $conn->query($authorsQuery);
             background-color: #f9f9f9;
         }
         .container {
-            width: 60%;
+            width: 30%;
             margin: 30px auto;
             background-color: white;
             padding: 15px;
@@ -93,21 +93,21 @@ $authorsResult = $conn->query($authorsQuery);
             border-radius: 4px;
         }
         button {
-            background-color: #4CAF50;
+            background-color: blue;
             color: white;
             border: none;
             cursor: pointer;
             margin-top: 10px;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: blue;
         }
         .cancel-btn {
-            background-color: #f44336;
+            background-color: lightcoral;
             margin-top: 5px;
         }
         .cancel-btn:hover {
-            background-color: #e53935;
+            background-color: darkred;
         }
     </style>
 </head>
@@ -156,7 +156,7 @@ $authorsResult = $conn->query($authorsQuery);
             <label for="date">Date:</label>
             <input type="date" id="date" name="date" value="<?= $reference['date'] ?>" required>
 
-            <button type="submit">Update Reference</button>
+            <button type="submit" class="btn btn-primary">Update Reference</button>
             <button type="button" class="cancel-btn" onclick="window.location.href='list-reference.php'">Cancel</button>
         </form>
     </div>
