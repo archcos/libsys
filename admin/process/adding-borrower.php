@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $middleName = $conn->real_escape_string($_POST['middleName']);
     $emailAddress = $conn->real_escape_string($_POST['emailAddress']);
     $position = isset($_POST['position']) ? $conn->real_escape_string($_POST['position']) : null;
-    $course = isset($_POST['courseId']) ? $conn->real_escape_string($_POST['courseId']) : null;
+    $course = isset($_POST['courseId']) ? $conn->real_escape_string($_POST['courseId']) : 0;
     $year = isset($_POST['year']) ? $conn->real_escape_string($_POST['year']) : null;
     $gender = $conn->real_escape_string($_POST['gender']);
     $birthDate = $conn->real_escape_string($_POST['birthDate']);
