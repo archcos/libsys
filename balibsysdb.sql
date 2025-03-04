@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 26, 2025 at 10:27 AM
+-- Generation Time: Mar 04, 2025 at 10:48 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -78,7 +78,7 @@ INSERT INTO `tblbooks` (`bookId`, `title`, `dateAdded`, `quantity`, `authorId`, 
 CREATE TABLE `tblborrowers` (
   `idNumber` int(15) NOT NULL,
   `borrowerType` varchar(10) NOT NULL,
-  `dateRegistered` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `dateRegistered` timestamp NOT NULL DEFAULT current_timestamp(),
   `libraryId` int(11) NOT NULL,
   `surName` varchar(20) NOT NULL,
   `firstName` varchar(30) NOT NULL,
@@ -91,15 +91,12 @@ CREATE TABLE `tblborrowers` (
   `birthDate` varchar(15) NOT NULL,
   `homeAddress` varchar(100) NOT NULL,
   `remarks` varchar(20) NOT NULL,
-  `receipt` enum('No','Yes','','') NOT NULL
+  `receipt` enum('No','Yes','','') NOT NULL,
+  `timeReceived` datetime DEFAULT NULL,
+  `reason` varchar(200) NOT NULL,
+  `pickupDate` date DEFAULT current_timestamp(),
+  `librarian` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblborrowers`
---
-
-INSERT INTO `tblborrowers` (`idNumber`, `borrowerType`, `dateRegistered`, `libraryId`, `surName`, `firstName`, `middleName`, `emailAddress`, `course`, `year`, `position`, `gender`, `birthDate`, `homeAddress`, `remarks`, `receipt`) VALUES
-(1, 'Student', '2025-02-26 05:05:47', 27, 'Test', 'Test', 'A', 'test@gmail.com', 4, 1, '', 'Male', '2025-02-26', 'test', 'Deactivated', 'No');
 
 -- --------------------------------------------------------
 
@@ -139,10 +136,10 @@ CREATE TABLE `tblcourses` (
 --
 
 INSERT INTO `tblcourses` (`courseId`, `level`, `courseName`) VALUES
+(0, '', 'N/A'),
 (4, 'Postgraduate', 'Information technoly'),
 (5, 'Undergraduate', 'Test'),
-(6, 'Doctoral', 'Dragon'),
-(7, 'Undergraduate', 'Civil Engineering');
+(6, 'Doctoral', 'Dragon');
 
 -- --------------------------------------------------------
 
@@ -259,7 +256,8 @@ ALTER TABLE `tblbooks`
 --
 ALTER TABLE `tblborrowers`
   ADD PRIMARY KEY (`idNumber`),
-  ADD UNIQUE KEY `libraryId` (`libraryId`);
+  ADD UNIQUE KEY `libraryId` (`libraryId`),
+  ADD KEY `fk_course` (`course`);
 
 --
 -- Indexes for table `tblcategory`
@@ -328,7 +326,7 @@ ALTER TABLE `tblbooks`
 -- AUTO_INCREMENT for table `tblborrowers`
 --
 ALTER TABLE `tblborrowers`
-  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `tblcategory`
@@ -346,7 +344,7 @@ ALTER TABLE `tblcourses`
 -- AUTO_INCREMENT for table `tblnotifications`
 --
 ALTER TABLE `tblnotifications`
-  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- AUTO_INCREMENT for table `tblpenalties`
