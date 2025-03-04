@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } else {
             // ID number not found
-            echo json_encode(['success' => false, 'message' => 'Invalid QR Code. Please register first using your ID Number.']);
+            echo json_encode(['success' => false, 'message' => 'Invalid ID Number. Please register first using your ID Number.']);
         }
 
         $stmt->close();

@@ -44,43 +44,50 @@ $result = $stmt->get_result();
 </div>
 
         <table id="dataTable" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>ID Number</th>
-                    <th>Borrower Type</th>
-                    <th>Library ID</th>
-                    <th>Last Name</th>
-                    <th>First Name</th>
-                    <th>Middle Name</th>
-                    <th>Email Address</th>
-                    <th>Remarks</th>
-                    <th>Receipt</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['idNumber']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['borrowerType']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['libraryId']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['surName']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['firstName']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['middleName']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['emailAddress']) . "</td>";
-                        echo "<td>" . ($row['remarks'] == 1 ? 'Yes' : 'No') . "</td>";
+        <thead>
+            <tr>
+                <th>ID Number</th>
+                <th>Borrower Type</th>
+                <th>Library ID</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Email Address</th>
+                <th>Remarks</th>
+                <?php if ($receiptFilter !== 'Yes'): ?>
+                    <th>Receipt</th> <!-- Only show when receipt is NOT "Yes" -->
+                <?php endif; ?>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row['idNumber']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['borrowerType']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['libraryId']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['surName']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['firstName']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['middleName']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['emailAddress']) . "</td>";
+                    echo "<td>" . ($row['remarks'] == 1 ? 'Yes' : 'No') . "</td>";
+                    
+                    if ($receiptFilter !== 'Yes') {
                         echo "<td>
                                 <select class='receipt-dropdown' data-id='" . $row['idNumber'] . "'>
                                     <option value='Yes'" . ($row['receipt'] === 'Yes' ? ' selected' : '') . ">Yes</option>
                                     <option value='No'" . ($row['receipt'] === 'No' ? ' selected' : '') . ">No</option>
                                 </select>
-                              </td>";
-                        echo "</tr>";
+                            </td>";
                     }
+
+                    echo "</tr>";
                 }
-                ?>
-            </tbody>
+            }
+            ?>
+        </tbody>
+
         </table>
     </div>
 

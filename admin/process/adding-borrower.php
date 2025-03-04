@@ -17,6 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $birthDate = $conn->real_escape_string($_POST['birthDate']);
     $remarks = $conn->real_escape_string('Deactivated');
     $homeAddress = $conn->real_escape_string($_POST['homeAddress']);
+    $librarian = $conn->real_escape_string($_POST['librarian']);
+    $reason = $conn->real_escape_string($_POST['reason']);
+
+
 
     // Check if the ID number already exists
     $query = "SELECT 1 FROM tblborrowers WHERE idNumber = '$idNumber' LIMIT 1";
@@ -29,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Insert new borrower into the database
-    $query = "INSERT INTO tblborrowers (idNumber, surName, firstName, middleName, emailAddress, position, course, year, gender, birthDate, remarks, homeAddress, borrowerType) 
-              VALUES ('$idNumber', '$surName', '$firstName', '$middleName', '$emailAddress', '$position', '$course', '$year', '$gender', '$birthDate', '$remarks', '$homeAddress', '$borrowerType')";
+    $query = "INSERT INTO tblborrowers (idNumber, surName, firstName, middleName, emailAddress, position, course, year, gender, birthDate, remarks, homeAddress, borrowerType, librarian, reason) 
+              VALUES ('$idNumber', '$surName', '$firstName', '$middleName', '$emailAddress', '$position', '$course', '$year', '$gender', '$birthDate', '$remarks', '$homeAddress', '$borrowerType', '$librarian', '$reason')";
 
     if ($conn->query($query)) {
         // Success, redirect back with a success message

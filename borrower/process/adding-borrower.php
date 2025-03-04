@@ -6,7 +6,6 @@ include('../db/db-connect.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idNumber = $conn->real_escape_string($_POST['idNumber']);
     $borrowerType = $conn->real_escape_string($_POST['borrowerType']);
-    // $libraryId = $conn->real_escape_string($_POST['libraryId']);
     $surName = $conn->real_escape_string($_POST['surName']);
     $firstName = $conn->real_escape_string($_POST['firstName']);
     $middleName = $conn->real_escape_string($_POST['middleName']);
@@ -18,6 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $birthDate = $conn->real_escape_string($_POST['birthDate']);
     $remarks = $conn->real_escape_string('Deactivated');
     $homeAddress = $conn->real_escape_string($_POST['homeAddress']);
+    $librarian = isset($_POST['librarian']) ? $conn->real_escape_string($_POST['librarian']) : "Account Created in Borrower Page.";
+    $reason = isset($_POST['reason']) ? $conn->real_escape_string($_POST['reason']) : "Account Created in Borrower Page.";
+
 
     // Check if the ID number already exists
     $query = "SELECT 1 FROM tblborrowers WHERE idNumber = '$idNumber' LIMIT 1";
@@ -30,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Insert new borrower into the database
-    $query = "INSERT INTO tblborrowers (idNumber, surName, firstName, middleName, emailAddress, position, course, year, gender, birthDate, remarks, homeAddress, borrowerType) 
-    VALUES ('$idNumber', '$surName', '$firstName', '$middleName', '$emailAddress', '$position', '$course', '$year', '$gender', '$birthDate', '$remarks', '$homeAddress', '$borrowerType')";
-
+    $query = "INSERT INTO tblborrowers (idNumber, surName, firstName, middleName, emailAddress, position, course, year, gender, birthDate, remarks, homeAddress, borrowerType, librarian, reason) 
+              VALUES ('$idNumber', '$surName', '$firstName', '$middleName', '$emailAddress', '$position', '$course', '$year', '$gender', '$birthDate', '$remarks', '$homeAddress', '$borrowerType', '$librarian', '$reason')";
+    
     if ($conn->query($query)) {
         // Success, redirect back with a success message
         header("Location: ../login.php?borrowerType=$borrowerType&status=success");

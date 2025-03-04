@@ -216,7 +216,16 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
         </div>
         <div class="form-group">
             <label for="homeAddress">Home Address:</label>
-            <input type="text" id="homeAddress" name="homeAddress">
+            <input type="text" id="homeAddress" name="homeAddress" required>
+        </div>
+        <div class="form-group">
+            <label for="librarian">Librarian/Staff In-Charge:</label>
+            <input type="text" id="librarian" name="librarian" required>
+        </div>
+        <p> If student/staff isn't able to get the Borrower's Card upon registration, please specify reason, else input "N/A". </p>
+        <div class="form-group">
+            <label for="reason">Reason:</label>
+            <input type="text" id="reason" name="reason" required>
         </div>
         <button type="submit">Submit</button>
     </form>

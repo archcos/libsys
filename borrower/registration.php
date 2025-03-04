@@ -145,6 +145,8 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
     <form method="POST" action="process/adding-borrower.php">
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
         
+        <p> Upon registering, ensure to get your Borrower's Card from the Librarian and ask for the Activation of your Account. </p>
+        <br>      
         <div class="form-group">
             <label for="idNumber">Borrower ID No:</label>
             <input type="number" id="idNumber" name="idNumber" required>
@@ -206,7 +208,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
             <label for="homeAddress">Home Address:</label>
             <input type="text" id="homeAddress" name="homeAddress">
         </div>
-        
+
         <div class="d-flex justify-content-between">  <button type="button" class="btn btn-light btn-pill mb-4 w-50" onclick="window.history.back()">
 Back
     </button>

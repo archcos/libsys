@@ -15,6 +15,10 @@ $query = "
         tblborrowers.surName, 
         tblborrowers.firstName,
         tblborrowers.idNumber, 
+        tblborrowers.reason, 
+        tblborrowers.pickupDate, 
+        tblborrowers.librarian, 
+        tblborrowers.dateRegistered, 
         tblcourses.courseName
     FROM 
         tblborrowers
@@ -27,6 +31,7 @@ $result = $conn->query($query);
 
 $records = [];
 while ($row = $result->fetch_assoc()) {
+    $row['dateRegistered'] = date("m-d-Y", strtotime($row['dateRegistered']));
     $records[] = $row;
 }
 
@@ -130,13 +135,13 @@ $photo = 'image.png';
         <tbody>
             <?php foreach ($records as $record): ?>
             <tr>
-                <td></td> <!-- Blank -->
+                <td><?php echo htmlspecialchars($record['dateRegistered']); ?></td>
                 <td><?php echo htmlspecialchars($record['surName'] . ', ' . $record['firstName']); ?></td>
                 <td><?php echo htmlspecialchars($record['idNumber']); ?></td>
                 <td><?php echo htmlspecialchars($record['courseName']); ?></td>
-                <td></td> <!-- Blank -->
-                <td></td> <!-- Blank -->
-                <td></td> <!-- Blank -->
+                <td><?php echo htmlspecialchars($record['reason']); ?></td>
+                <td><?php echo htmlspecialchars($record['pickupDate']); ?></td>
+                <td><?php echo htmlspecialchars($record['librarian']); ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>

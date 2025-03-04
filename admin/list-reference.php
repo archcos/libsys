@@ -147,9 +147,11 @@ $authorsResult = $conn->query($authorsQuery);
                             echo "<td>" . htmlspecialchars($row['subLocation']) . "</td>";
                             echo "<td>" . $row['date'] . "</td>";
                             echo "<td>
-                                    <button class='btn btn-primary' onclick='editReferenceSlip(" . $row['referenceId'] . ")'>Edit</button>
-                                    <button class='btn delete-btn' data-reference-id='" . $row['referenceId'] . "'>Delete</button>
-                                </td>";
+                                    <div style='display: flex; gap: 5px;'>
+                                        <button class='btn btn-primary' onclick='editReferenceSlip(" . $row['referenceId'] . ")'>Edit</button>
+                                        <button class='btn delete-btn' data-reference-id='" . $row['referenceId'] . "'>Delete</button>
+                                    </div>
+                            </td>";
                             echo "</tr>"; 
                         }
                     }
