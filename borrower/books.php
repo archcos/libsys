@@ -5,7 +5,7 @@ include('db/db-connect.php'); // Adjust the path to your actual connection file
 ob_start();
 
 // Fetch data from tblbooks with author, category names, and borrow status
-$query = "SELECT b.bookId, b.title, b.quantity, 
+$query = "SELECT b.bookId, b.title, b.quantity, b.publisher, b.publishedDate,
                  CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
                  c.categoryName
           FROM tblbooks b
@@ -223,6 +223,8 @@ $result = $stmt->get_result();
                     <th>Title</th>
                     <th>Author</th>
                     <th>Category</th>
+                    <th>Publisher</th>
+                    <th>Published Date</th>
                 </tr>
             </thead>
             <tbody id="bookList">
@@ -246,6 +248,8 @@ $result = $stmt->get_result();
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['publisher']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>";
                         echo "</tr>";
                     }
                 }
