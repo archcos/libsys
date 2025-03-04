@@ -102,7 +102,7 @@ $result = $conn->query($query);
                                 </a>
                             </td>";
                         echo "<td>
-                                <button class='btn btn-primary' data-category-id='" . $row['categoryId'] . "' data-category-name='" . htmlspecialchars($row['categoryName']) . "'>Edit</button>
+                                <button class='btn edit-btn' data-category-id='" . $row['categoryId'] . "' data-category-name='" . htmlspecialchars($row['categoryName']) . "'>Edit</button>
                                 <button class='btn delete-btn' data-category-id='" . $row['categoryId'] . "'>Delete</button>
                             </td>";
                         echo "</tr>";

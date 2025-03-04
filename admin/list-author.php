@@ -79,7 +79,7 @@ $result = $conn->query($query);
                                 </a>
                             </td>";
                         echo "<td>
-                                <button class='btn btn-primary' data-author-id='" . $row['authorId'] . "' data-first-name='" . htmlspecialchars($row['firstName']) . "' data-last-name='" . htmlspecialchars($row['lastName']) . "'>Edit</button>
+                                <button class='btn edit-btn' data-author-id='" . $row['authorId'] . "' data-first-name='" . htmlspecialchars($row['firstName']) . "' data-last-name='" . htmlspecialchars($row['lastName']) . "'>Edit</button>
                                 <button class='btn delete-btn' data-author-id='" . $row['authorId'] . "'>Delete</button>
                             </td>";
                         echo "</tr>";

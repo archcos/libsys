@@ -183,9 +183,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Do you want to approve this notification?</p>
-                <button class="btn btn-primary" id="approveBtn">Approve</button>
-                <button class="btn btn-danger" data-dismiss="modal">Decline</button>
+                <p>Are you sure you want to decline request?</p>
+                <button class="btn btn-primary" id="approveBtn">Yes</button>
+                <button class="btn btn-danger" data-dismiss="modal">No</button>
             </div>
         </div>
     </div>
@@ -230,6 +230,8 @@
                 <input type="date" id="returnDates" name="returnDates" readonly required class="form-group" style="display: none;"><br>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
+            <button class="btn btn-danger" data-dismiss="modal">Decline</button>
+
             </form>
         </div>
         </div>
@@ -332,16 +334,7 @@
         currentAuthor = author;
         currentBorrower = borrower;
         // Show the approve modal
-        $('#approveModal').modal('show');
-    }
-
-    $(document).ready(function () {
-        // When the approve button is clicked
-        $('#approveBtn').on('click', function () {
-            $('#approveModal').modal('hide'); // Hide the approval modal
-    
-            // Show the damage report modal first
-            if (currentType === 'borrow') {
+        if (currentType === 'borrow') {
                 // Show the input modal for borrowing
                 $('#inputDataModal').modal('show');
                 $('#notificationId').val(currentNotificationId);
@@ -494,8 +487,13 @@
                     $('#returnerId').val(currentBorrowerId);
                 });
             }
-        });
+
+        
+    }
     
+
+    $(document).ready(function () {
+
         // Submit the input form for borrowing
         $('#inputDataForm').on('submit', function (e) {
             e.preventDefault(); // Prevent default form submission behavior
@@ -544,6 +542,28 @@
                 }
             });
         });
+
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        // When the Decline button in inputDataModal is clicked
+    document.querySelector("#inputDataModal .btn-danger").addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent default behavior
+            $("#inputDataModal").modal("hide"); // Hide inputDataModal
+            $("#approveModal").modal("show"); // Show approveModal
+        });
+
+        // When the No button in approveModal is clicked
+    document.querySelector("#approveModal .btn-danger").addEventListener("click", function () {
+            $("#approveModal").modal("hide"); // Hide approveModal
+            $("#inputDataModal").modal("show"); // Show inputDataModal
+        });
+
+        // When the Yes button in approveModal is clicked
+    document.querySelector("#approveBtn").addEventListener("click", function () {
+            $("#approveModal").modal("hide"); // Hide approveModal
+            $("#inputDataModal").modal("hide"); // Hide inputDataModal
+        });
+    });
 
 
 
