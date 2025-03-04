@@ -7,6 +7,9 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+ob_start();
+
+
 // Include database connection
 include('process/db-connect.php');
 
@@ -222,3 +225,8 @@ $authorsResult = $conn->query($authorsQuery);
     </script>
 </body>
 </html>
+
+<?php
+$content = ob_get_clean();
+include('templates/main.php');
+?>
