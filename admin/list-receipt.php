@@ -71,7 +71,7 @@ $result = $stmt->get_result();
                     echo "<td>" . htmlspecialchars($row['firstName']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['middleName']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['emailAddress']) . "</td>";
-                    echo "<td>" . ($row['remarks'] == 1 ? 'Yes' : 'No') . "</td>";
+                    echo "<td>" . htmlspecialchars($row['remarks']) . "</td>";
                     
                     if ($receiptFilter !== 'Yes') {
                         echo "<td>
