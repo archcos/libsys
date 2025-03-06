@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2025 at 10:48 AM
+-- Generation Time: Mar 06, 2025 at 09:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -98,6 +98,14 @@ CREATE TABLE `tblborrowers` (
   `librarian` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tblborrowers`
+--
+
+INSERT INTO `tblborrowers` (`idNumber`, `borrowerType`, `dateRegistered`, `libraryId`, `surName`, `firstName`, `middleName`, `emailAddress`, `course`, `year`, `position`, `gender`, `birthDate`, `homeAddress`, `remarks`, `receipt`, `timeReceived`, `reason`, `pickupDate`, `librarian`) VALUES
+(1, 'Faculty', '2025-03-05 00:15:44', 32, 'test', 'test', 'test', 'aw@gmail.com', 0, 0, 'Test', 'Male', '2025-03-05', 'test', 'Activated', 'Yes', '2025-03-05 01:16:46', 'test', '2025-03-05', 'test'),
+(2, 'Student', '2025-03-06 08:50:07', 33, 'Charcos', 'Arjay', 'w', 'aw@gmail.com', 4, 2, '', 'Male', '2025-03-06', 'dawda', 'Activated', 'No', NULL, 'Account Created in Borrower Page.', '2025-03-06', 'Account Created in Borrower Page.');
+
 -- --------------------------------------------------------
 
 --
@@ -154,7 +162,8 @@ CREATE TABLE `tblnotifications` (
   `message` text DEFAULT NULL,
   `status` enum('unread','read') DEFAULT 'unread',
   `type` enum('borrow','return','','') NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `remarks` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -228,7 +237,7 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userId`, `accountType`, `username`, `password`, `firstName`, `lastName`, `lastLogin`, `dateCreated`) VALUES
-(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-02-26 02:43:23', '2024-11-25 02:40:02'),
+(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-03-06 03:41:29', '2024-11-25 02:40:02'),
 (2, 'Librarian', 'test', 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4', 'Testing', 'Ko', '2024-12-03 09:01:14', '2024-12-03 09:01:14'),
 (4, 'Librarian', 'rain214', '8cb2237d0679ca88db6464eac60da96345513964', 'password', 'password', '2024-12-09 07:13:28', '2024-12-03 09:24:16'),
 (5, 'Admin', 'dwa', 'f98421770a791fdf0338f87df795cd758ad5d87b', 'dwad', 'dwad', '2024-12-09 07:15:07', '2024-12-09 07:15:07');
@@ -326,7 +335,7 @@ ALTER TABLE `tblbooks`
 -- AUTO_INCREMENT for table `tblborrowers`
 --
 ALTER TABLE `tblborrowers`
-  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `tblcategory`
@@ -344,7 +353,7 @@ ALTER TABLE `tblcourses`
 -- AUTO_INCREMENT for table `tblnotifications`
 --
 ALTER TABLE `tblnotifications`
-  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
+  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
 
 --
 -- AUTO_INCREMENT for table `tblpenalties`
