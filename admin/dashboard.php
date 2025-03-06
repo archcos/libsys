@@ -199,11 +199,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
                     </div>
                 </div>
 
-                
-                <canvas id="availabilityChart"></canvas> <!-- The bar chart will be rendered here -->
-            </div>
-        </div>
-        <p>
+                <p>
                     <form method="POST" action="">
                         <select name="year" onchange="this.form.submit()">
                             <?php foreach ($years as $year) : ?>
@@ -216,8 +212,11 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
                 </p>
 
         <!-- Borrowed Books per Month Chart -->
-        <h3>Borrowed Books per Month for <?php echo $selectedYear; ?></h3>
+        <h5>Borrowed Books per Month for <?php echo $selectedYear; ?></h5>
         <canvas id="monthlyBorrowedChart"></canvas>
+            </div>
+        </div>
+       
 
     </div>
     <!-- End Content -->
@@ -225,34 +224,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    var ctx = document.getElementById('availabilityChart').getContext('2d');
-    var availabilityChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Available : <?php echo $totalQuantity ?>', 'Borrowed : <?php echo $totalNotReturned ?>'], // Labels for the chart
-            datasets: [{
-                label: 'Book Count',
-                data: [<?php echo $totalQuantity; ?>, <?php echo $totalNotReturned; ?>], // Data from the database
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.2)', // Color for "Available"
-                    'rgba(255, 99, 132, 0.2)'  // Color for "Not Available"
-                ],
-                borderColor: [
-                    'rgba(75, 192, 192, 1)', // Border for "Available"
-                    'rgba(255, 99, 132, 1)'  // Border for "Not Available"
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+   
     var ctx = document.getElementById('monthlyBorrowedChart').getContext('2d');
     var monthlyBorrowedChart = new Chart(ctx, {
         type: 'bar',

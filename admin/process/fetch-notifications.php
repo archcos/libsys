@@ -18,6 +18,7 @@ $sql = "
     JOIN tblbooks b ON n.bookId = b.bookId
     JOIN tblauthor a ON b.authorId = a.authorId
     JOIN tblborrowers br ON n.borrowerId = br.idNumber
+    WHERE n.remarks = 'Sent'
     ORDER BY n.notificationId DESC
 ";
 

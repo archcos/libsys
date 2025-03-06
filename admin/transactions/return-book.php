@@ -6,6 +6,8 @@ include('../process/db-connect.php');
 if (isset($_POST['bookId']) && isset($_POST['idNumber'])) {
     $bookId = intval($_POST['bookId']); // Sanitize input
     $idNumber = intval($_POST['idNumber']); // Sanitize input
+    $notificationId = $_POST['notificationId'];
+
 
     // Step 1: Check if the idNumber and bookId exist in tblreturnborrow with "returned = 'No'"
     $checkQuery = "SELECT * FROM tblreturnborrow WHERE bookId = ? AND borrowerId = ? AND returned = 'No'";
@@ -29,9 +31,17 @@ if (isset($_POST['bookId']) && isset($_POST['idNumber'])) {
         exit;
     }
 
+    $updateNotif = "UPDATE tblnotifications 
+        SET remarks = 'Approved'
+        WHERE notificationId = ?";
+    $stmt = $conn->prepare($updateNotif);
+    $stmt->bind_param("i", $notificationId);
+    $stmt->execute();
+
     // Step 2: Proceed to mark the book as returned
     $updateReturn = "UPDATE tblreturnborrow SET returned = 'Yes' WHERE bookId = ? AND borrowerId = ?";
     $stmt1 = $conn->prepare($updateReturn);
+
 
     if ($stmt1) {
         $stmt1->bind_param("ii", $bookId, $idNumber);

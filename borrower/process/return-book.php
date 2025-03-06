@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = "$username has returned the book: $bookTitle";
 
                 // Insert notification into tblnotifications
-                $notifQuery = "INSERT INTO tblnotifications (borrowerId, bookId, message, status, type) VALUES (?, ?, ?, 'unread', 'return')";
+                $notifQuery = "INSERT INTO tblnotifications (borrowerId, bookId, message, status, type, remarks) VALUES (?, ?, ?, 'unread', 'return', 'Sent')";
                 if ($notifStmt = $conn->prepare($notifQuery)) {
                     $notifStmt->bind_param("iis", $userId, $bookId, $message);
                     if ($notifStmt->execute()) {

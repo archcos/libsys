@@ -13,7 +13,7 @@ ob_start();
 $userId = $_SESSION['user_id']; 
 
 // Fetch notifications based on user_id (Only the message and timestamp)
-$notificationQuery = "SELECT message, timestamp FROM tblnotifications WHERE borrowerId = ? ORDER BY timestamp DESC";
+$notificationQuery = "SELECT message, timestamp, status, remarks FROM tblnotifications WHERE borrowerId = ? ORDER BY timestamp DESC";
 $notificationStmt = $conn->prepare($notificationQuery);
 $notificationStmt->bind_param('i', $userId);
 $notificationStmt->execute();
@@ -51,8 +51,10 @@ $notificationResult = $notificationStmt->get_result();
         <table>
             <thead>
                 <tr>
-                    <th>Message</th>
                     <th>Timestamp</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,8 +68,10 @@ $notificationResult = $notificationStmt->get_result();
                         $formattedTimestamp = $timestamp->format('g:i A, F j, Y'); // Format: 12-hour time with AM/PM
 
                         echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['message']) . "</td>";
                         echo "<td>" . htmlspecialchars($formattedTimestamp) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['message']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['status']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['remarks']) . "</td>";
                         echo "</tr>";
                     }
                 } else {

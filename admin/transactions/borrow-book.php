@@ -5,6 +5,7 @@ include('../process/db-connect.php');
 
 // Get POST data
 $bookId = $_POST['bookId'];
+$notificationId = $_POST['notificationId'];
 $idNumber = $_POST['idNumber'];
 $librarianName = $_POST['librarianName'];
 $returnDate = $_POST['returnDate'];
@@ -21,12 +22,32 @@ if ($result->num_rows === 0) {
     exit;
 }
 
+// Check if borrower has already borrowed this specific book and not returned it
+$checkBookLoan = "SELECT * FROM tblreturnborrow WHERE borrowerId = ? AND bookId = ? AND returned = 'No'";
+$stmt = $conn->prepare($checkBookLoan);
+$stmt->bind_param("si", $idNumber, $bookId);
+$stmt->execute();
+$loanResult = $stmt->get_result();
+
+if ($loanResult->num_rows > 0) {
+    echo "Borrower already borrowed the book and hasn't been returned.";
+    exit;
+}
+
+
 // Insert a new record into tblreturnborrow
 $insertQuery = "INSERT INTO tblreturnborrow (bookId, borrowerId, borrowedDate, librarianName, returnDate, returned) 
                 VALUES (?, ?, NOW(), ?, ?, 'No')";
 $stmt = $conn->prepare($insertQuery);
 $stmt->bind_param("iiss", $bookId, $idNumber, $librarianName, $returnDate);
 $insertResult = $stmt->execute();
+
+$insertQuery = "INSERT INTO tblreturnborrow (bookId, borrowerId, borrowedDate, librarianName, returnDate, returned) 
+                VALUES (?, ?, NOW(), ?, ?, 'No')";
+$stmt = $conn->prepare($insertQuery);
+$stmt->bind_param("iiss", $bookId, $idNumber, $librarianName, $returnDate);
+$insertResult = $stmt->execute();
+
 
 if ($insertResult) {
     // Decrease quantity and update availability in tblbooks
@@ -35,6 +56,13 @@ if ($insertResult) {
                     WHERE bookId = ?";
     $stmt = $conn->prepare($updateQuery);
     $stmt->bind_param("i", $bookId);
+    $stmt->execute();
+
+    $updateNotif = "UPDATE tblnotifications 
+                    SET remarks = 'Approved'
+                    WHERE notificationId = ?";
+    $stmt = $conn->prepare($updateNotif);
+    $stmt->bind_param("i", $notificationId);
     $stmt->execute();
 
     echo "Book borrowed successfully!";

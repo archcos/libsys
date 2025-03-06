@@ -31,6 +31,7 @@
                 <a class="collapse-item" href="list-transactions.php"><i class="fas fa-clipboard-list"></i> Transactions</a> <!-- Changed to 'fa-clipboard-list' -->
                 <a class="collapse-item" href="list-books.php?returned=No"><i class="fas fa-book-open"></i> Borrowed Books</a> <!-- Changed to 'fa-book-open' -->
                 <a class="collapse-item" href="list-books.php?returned=Yes"><i class="fas fa-archive"></i> Returned Books</a> <!-- Changed to 'fa-archive' -->
+                <a class="collapse-item" href="list-penalties.php"><i class="fas fa-archive"></i> Penalties</a> <!-- Changed to 'fa-archive' -->
             </div>
         </div>
     </li>

@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = "$username has requested to borrow the book: $bookTitle";
 
                 // Insert notification into tblnotifications
-                $notifQuery = "INSERT INTO tblnotifications (borrowerId, bookId, message, status, type) VALUES (?, ?, ?, 'unread', 'borrow')";
+                $notifQuery = "INSERT INTO tblnotifications (borrowerId, bookId, message, status, type, remarks) VALUES (?, ?, ?, 'unread', 'borrow', 'Sent')";
                 if ($notifStmt = $conn->prepare($notifQuery)) {
                     $notifStmt->bind_param("iis", $userId, $bookId, $message); // Remove "status" from bind_param
                     if ($notifStmt->execute()) {

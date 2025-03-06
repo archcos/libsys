@@ -13,17 +13,29 @@ ob_start();
 // Get the current user's ID from the session
 $userId = $_SESSION['user_id'];
 
+// Check if the user has unpaid penalties
+$penaltyCheckQuery = "
+    SELECT COUNT(*) AS unpaidPenalties
+    FROM tblpenalties
+    WHERE borrowerId = ? AND paid = 'No'
+";
+$penaltyCheckStmt = $conn->prepare($penaltyCheckQuery);
+$penaltyCheckStmt->bind_param("i", $userId);
+$penaltyCheckStmt->execute();
+$penaltyCheckResult = $penaltyCheckStmt->get_result();
+$penaltyCheckRow = $penaltyCheckResult->fetch_assoc();
+$unpaidPenalties = $penaltyCheckRow['unpaidPenalties'] > 0;
 
 // Fetch data from tblbooks with author, category names, and borrow/return status
 $query = "SELECT b.bookId, b.title, b.quantity, 
                  CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
                  c.categoryName,
-                 COALESCE((
+                 COALESCE(( 
                      SELECT returned
                      FROM tblreturnborrow
                      WHERE tblreturnborrow.bookId = b.bookId
-                       AND tblreturnborrow.borrowerId = ?
-                     ORDER BY borrowId DESC
+                       AND tblreturnborrow.borrowerId = ? 
+                     ORDER BY borrowId DESC 
                      LIMIT 1
                  ), 'Yes') AS returnedStatus
           FROM tblbooks b
@@ -44,8 +56,8 @@ $result = $stmt->get_result();
     <title>Books List</title>
 
     <link href="https://fonts.googleapis.com/css?family=Karla:400,700|Roboto" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link id="main-css-href" rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link id="main-css-href" rel="stylesheet" href="assets/css/style.css" />
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -89,10 +101,21 @@ $result = $stmt->get_result();
             border-radius: 5px;
             cursor: pointer;
         }
+        .penalty-warning {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <?php if ($unpaidPenalties): ?>
+            <div class="penalty-warning">
+                You have unpaid penalties. <a href="list-penalties.php">Click here</a> to view your penalties.
+            </div>
+        <?php endif; ?>
+        
         <h1>Books List</h1>
         <p>Below is the list of all available books in the library.</p>
         <table id="dataTable" class="display" style="width:100%">
@@ -115,13 +138,12 @@ $result = $stmt->get_result();
                         
                         // Borrow button or unavailable
                         echo "<td>";
-                    // Check if the user has already borrowed the book
-                    $checkQuery = "SELECT * FROM tblreturnborrow WHERE borrowerId = ? AND bookId = ? AND returned = 'No' LIMIT 1";
-                    $checkStmt = $conn->prepare($checkQuery);
-                    $checkStmt->bind_param("ii", $userId, $row['bookId']);  // Bind borrowerId and bookId
-                    $checkStmt->execute();
-                    $checkResult = $checkStmt->get_result();
-
+                        // Check if the user has already borrowed the book
+                        $checkQuery = "SELECT * FROM tblreturnborrow WHERE borrowerId = ? AND bookId = ? AND returned = 'No' LIMIT 1";
+                        $checkStmt = $conn->prepare($checkQuery);
+                        $checkStmt->bind_param("ii", $userId, $row['bookId']);  // Bind borrowerId and bookId
+                        $checkStmt->execute();
+                        $checkResult = $checkStmt->get_result();
                         
                         if ($row['quantity'] > 0) {
                             if ($checkResult->num_rows > 0) {
@@ -159,30 +181,6 @@ $result = $stmt->get_result();
         </table>
     </div>
 
-    <!-- Borrow Modal -->
-    <div id="borrowModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
-        <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
-            <h2>Confirm Borrow</h2>
-            <p>Please enter your ID number for confirmation:</p>
-            <input type="text" id="userIdInput" placeholder="Enter ID number" style="width:80%; padding:5px; margin:10px 0;">
-            <br>
-            <button id="confirmBorrowBtn" style="background:blue; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Approve</button>
-            <button onclick="closeModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
-        </div>
-    </div>
-
-    <!-- Return Modal -->
-    <div id="returnModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
-        <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
-            <h2>Confirm Return</h2>
-            <p>Please enter your ID number for confirmation:</p>
-            <input type="text" id="userIdInputReturn" placeholder="Enter ID number" style="width:80%; padding:5px; margin:10px 0;">
-            <br>
-            <button id="confirmReturnBtn" style="background:green; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Approve</button>
-            <button onclick="closeReturnModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
-        </div>
-    </div>
-    
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
@@ -197,104 +195,103 @@ $result = $stmt->get_result();
         // Handle Borrow
         let currentBookId = null; // Track the selected book ID
 
-            // Open modal for borrow confirmation
-            function handleBorrow(bookId) {
-                currentBookId = bookId;
-                document.getElementById('borrowModal').style.display = 'block';
+        // Open modal for borrow confirmation
+        function handleBorrow(bookId) {
+            currentBookId = bookId;
+            document.getElementById('borrowModal').style.display = 'block';
+        }
+
+        // Close the modal
+        function closeModal() {
+            document.getElementById('borrowModal').style.display = 'none';
+            document.getElementById('userIdInput').value = '';
+        }
+
+        // Approve borrow and send AJAX request
+        document.getElementById('confirmBorrowBtn').addEventListener('click', function() {
+            const userId = document.getElementById('userIdInput').value.trim();
+            const username = "<?= $_SESSION['username']; ?>";
+            const user_id = "<?= $_SESSION['user_id']; ?>";
+
+            if (userId === '') {
+                alert('Please enter your ID number.');
+                return;
             }
 
-            // Close the modal
-            function closeModal() {
-                document.getElementById('borrowModal').style.display = 'none';
-                document.getElementById('userIdInput').value = '';
+            if (userId !== user_id) {
+                alert('Please use your ID Number.');
+                return;
             }
 
-            // Approve borrow and send AJAX request
-            document.getElementById('confirmBorrowBtn').addEventListener('click', function() {
-                const userId = document.getElementById('userIdInput').value.trim();
-                const username = "<?= $_SESSION['username']; ?>";
-                const user_id = "<?= $_SESSION['user_id']; ?>";
-
-                if (userId === '') {
-                    alert('Please enter your ID number.');
-                    return;
+            $.ajax({
+                url: 'process/borrow-book.php',
+                type: 'POST',
+                data: { 
+                    bookId: currentBookId, 
+                    userId: userId, 
+                    username: username 
+                },
+                success: function(response) {
+                    alert(response.message);
+                    location.reload(); // Reload page to update UI
+                },
+                error: function() {
+                    alert('Error processing borrow request. Please try again.');
                 }
-
-                if (userId !== user_id) {
-                    alert('Please use your ID Number.');
-                    return;
-                }
-
-                $.ajax({
-                    url: 'process/borrow-book.php',
-                    type: 'POST',
-                    data: { 
-                        bookId: currentBookId, 
-                        userId: userId, 
-                        username: username 
-                    },
-                    success: function(response) {
-                        alert(response.message);
-                        location.reload(); // Reload page to update UI
-                    },
-                    error: function() {
-                        alert('Error processing borrow request. Please try again.');
-                    }
-                });
-
-                closeModal(); // Close modal after request
             });
+
+            closeModal(); // Close modal after request
+        });
 
         let currentBookIdReturn = null; // Track the selected book ID for return
 
-            // Open modal for return confirmation
-            function handleReturn(bookId) {
-                currentBookIdReturn = bookId;
-                document.getElementById('returnModal').style.display = 'block';
+        // Open modal for return confirmation
+        function handleReturn(bookId) {
+            currentBookIdReturn = bookId;
+            document.getElementById('returnModal').style.display = 'block';
+        }
+
+        // Close the return modal
+        function closeReturnModal() {
+            document.getElementById('returnModal').style.display = 'none';
+            document.getElementById('userIdInputReturn').value = '';
+        }
+
+        // Approve return and send AJAX request
+        document.getElementById('confirmReturnBtn').addEventListener('click', function() {
+            const userId = document.getElementById('userIdInputReturn').value.trim();
+            const username = "<?= $_SESSION['username']; ?>";
+            const user_id = "<?= $_SESSION['user_id']; ?>";
+
+            if (userId === '') {
+                alert('Please enter your ID number.');
+                return;
             }
 
-            // Close the return modal
-            function closeReturnModal() {
-                document.getElementById('returnModal').style.display = 'none';
-                document.getElementById('userIdInputReturn').value = '';
+            if (userId !== user_id) {
+                alert('Please use your ID Number.');
+                return;
             }
 
-            // Approve return and send AJAX request
-            document.getElementById('confirmReturnBtn').addEventListener('click', function() {
-                const userId = document.getElementById('userIdInputReturn').value.trim();
-                const username = "<?= $_SESSION['username']; ?>";
-                const user_id = "<?= $_SESSION['user_id']; ?>";
-
-
-                if (userId === '') {
-                    alert('Please enter your ID number.');
-                    return;
+            $.ajax({
+                url: 'process/return-book.php',
+                type: 'POST',
+                data: { 
+                    bookId: currentBookIdReturn, 
+                    userId: userId, 
+                    username: username 
+                },
+                success: function(response) {
+                    alert(response.message);
+                    location.reload(); // Reload page to update UI
+                },
+                error: function() {
+                    alert('Error processing return request. Please try again.');
                 }
-
-                if (userId !== user_id) {
-                    alert('Please use your ID Number.');
-                    return;
-                }
-
-                $.ajax({
-                    url: 'process/return-book.php',
-                    type: 'POST',
-                    data: { 
-                        bookId: currentBookIdReturn, 
-                        userId: userId, 
-                        username: username 
-                    },
-                    success: function(response) {
-                        alert(response.message);
-                        location.reload(); // Reload page to update UI
-                    },
-                    error: function() {
-                        alert('Error processing return request. Please try again.');
-                    }
-                });
-
-                closeReturnModal(); // Close modal after request
             });
+
+            closeReturnModal(); // Close modal after request
+        });
     </script>
 </body>
 </html>

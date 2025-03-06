@@ -172,24 +172,7 @@
 
     </div>
 
-<!-- Modal for Approving the Notification -->
-<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="approveModalLabel">Approve Notification</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to decline request?</p>
-                <button class="btn btn-primary" id="approveBtn">Yes</button>
-                <button class="btn btn-danger" data-dismiss="modal">No</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <div class="modal fade" id="inputDataModal" tabindex="-1" aria-labelledby="inputDataModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -234,6 +217,26 @@
 
             </form>
         </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal for Approving the Notification -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="approveModalLabel">Approve Notification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to decline request?</p>
+                <button class="btn btn-primary" id="approveBtn">Yes</button>
+                <button class="btn btn-danger" data-dismiss="modal">No</button>
+            </div>
         </div>
     </div>
 </div>
@@ -499,6 +502,7 @@
             e.preventDefault(); // Prevent default form submission behavior
             
             const bookId = $('#bookId').val();
+            const notificationId = $('#notificationId').val();
             const borrowerId = $('#borrowerId').val();
             const librarianName = $('#librarianName').val();
             let returnDate = $('#returnDates').val(); // This will be set dynamically
@@ -507,7 +511,7 @@
             $.ajax({
                 url: 'transactions/borrow-book.php',
                 type: 'POST',
-                data: { bookId, idNumber: borrowerId, librarianName, returnDate: returnDate },
+                data: { bookId, notificationId, idNumber: borrowerId, librarianName, returnDate: returnDate },
                 success: function (response) {
                     alert(response); // Display success message
                     $('#inputDataModal').modal('hide'); // Close the input modal
@@ -525,13 +529,14 @@
         $('#inputReturnForm').on('submit', function (e) {
             e.preventDefault();
 
+            const notificationId = $('#notificationId').val();
             const bookId = $('#bookId').val();
             const returnerId = $('#returnerId').val();
 
             $.ajax({
                 url: 'transactions/return-book.php',
                 type: 'POST',
-                data: { bookId, idNumber: returnerId },
+                data: {notificationId, bookId, idNumber: returnerId },
                 success: function (response) {
                     alert(response);
                     $('#inputReturnModal').modal('hide');
@@ -559,11 +564,36 @@
         });
 
         // When the Yes button in approveModal is clicked
-    document.querySelector("#approveBtn").addEventListener("click", function () {
-            $("#approveModal").modal("hide"); // Hide approveModal
-            $("#inputDataModal").modal("hide"); // Hide inputDataModal
+        document.querySelector("#approveBtn").addEventListener("click", function () {
+                $("#approveModal").modal("hide"); // Hide approveModal
+                $("#inputDataModal").modal("hide"); // Hide inputDataModal
+            });
         });
-    });
+
+        // When the Yes button in approveModal is clicked (for Decline)
+        document.querySelector("#approveBtn").addEventListener("click", function () {
+            // Send the "Decline" update to the backend
+            $.ajax({
+                url: 'process/decline-notification.php', // PHP script to decline the notification
+                type: 'POST',
+                data: { notificationId: currentNotificationId },
+                success: function (response) {
+                    // Handle response from the server (e.g., success or error message)
+                    alert(response);
+                    
+                    // Close the modals
+                    $("#approveModal").modal("hide");
+                    $("#inputDataModal").modal("hide");
+
+                    // Optionally, reload the page or fetch the notifications again
+                    location.reload();
+                },
+                error: function () {
+                    alert('Error declining the notification. Please try again.');
+                }
+            });
+        });
+
 
 
 
