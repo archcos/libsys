@@ -107,11 +107,15 @@ $authorsResult = $conn->query($authorsQuery);
 ?>
 
 <body>
-<div class="container">
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Manage Reference Slips</h6>
+    </div>
+    <div class="card-body">
         <h1>Manage Reference Slips</h1>
         <button class="btn btn-primary" onclick="showAddReferenceModal()">Add New Reference Slip</button>
-        <div style="margin-top: 20px;">  
-</div>
+        <div style="margin-top: 20px;"> 
+        </div>
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -151,15 +155,15 @@ $authorsResult = $conn->query($authorsQuery);
                                         <button class='btn btn-primary' onclick='editReferenceSlip(" . $row['referenceId'] . ")'>Edit</button>
                                         <button class='btn delete-btn' data-reference-id='" . $row['referenceId'] . "'>Delete</button>
                                     </div>
-                            </td>";
+                                </td>";
                             echo "</tr>"; 
                         }
                     }
                 ?>
             </tbody>
-
         </table>
     </div>
+</div>
 
     <!-- Add Reference Slip Modal -->
     <div id="addReferenceModal" style="display: none; position: fixed; z-index: 1000; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">

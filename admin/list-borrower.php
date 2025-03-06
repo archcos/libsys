@@ -99,10 +99,14 @@ if ($borrowerType) {
     </style>
 </head>
 <body>
-    <div class="container">
-            <?php if ($borrowerType): ?>
-                <h2>Borrower List: <?php echo htmlspecialchars($borrowerType); ?></h2>
-            <?php endif; ?>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Borrower List</h6>
+    </div>
+    <div class="card-body">
+        <?php if ($borrowerType): ?>
+            <h2>Borrower List: <?php echo htmlspecialchars($borrowerType); ?></h2>
+        <?php endif; ?>
         <button class="btn btn-primary" onclick="openGenerateList()">Generate List</button>
         <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#addBorrowerModal">Add New Borrower</button>
         <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#borrowerModal">Edit Borrower</button>
@@ -118,8 +122,7 @@ if ($borrowerType) {
                     <th>Gender</th>
                     <th>Email Address</th>
                     <th>Remarks</th>
-                    <!-- <th>Actions</th> -->
-                </tr>
+                    </tr>
             </thead>
             <tbody>
                 <?php
@@ -131,7 +134,7 @@ if ($borrowerType) {
                                     <a href='pdf/generate-pdf.php?idNumber=" . $row['idNumber'] . "'>
                                         <button class='print-btn'>Print</button>
                                     </a>
-                                  </td>";
+                                </td>";
                             echo "<td>" . $row['libraryId'] . "</td>";
                             echo "<td>" . $row['idNumber'] . "</td>";
                             echo "<td>" . htmlspecialchars($row['surName']) . "</td>";
@@ -159,6 +162,7 @@ if ($borrowerType) {
             </tbody>
         </table>
     </div>
+</div>
 
         <!-- Modal - Add Borrower -->
         <div class="modal fade" id="addBorrowerModal" tabindex="-1" role="dialog" aria-labelledby="addBorrowerModalLabel" aria-hidden="true">

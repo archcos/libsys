@@ -53,43 +53,49 @@ $result = $conn->query($query);
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Manage Authors</h1>
-        <button class="btn btn-primary" onclick="showAddAuthorModal()">Add New Author</button>
-        <div style="margin-top: 20px;">  
-</div>
-        <table id="dataTable" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Author ID</th>
-                    <th>Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $fullName = htmlspecialchars($row['firstName'] . ' ' . $row['lastName']);
-                        echo "<tr>";
-                        echo "<td>" . $row['authorId'] . "</td>";
-                        echo "<td>
-                                <a href='list-books.php?authorId=" . $row['authorId'] . "'>
-                                    " . $fullName . "
-                                </a>
-                            </td>";
-                        echo "<td>
-                                <button class='btn edit-btn' data-author-id='" . $row['authorId'] . "' data-first-name='" . htmlspecialchars($row['firstName']) . "' data-last-name='" . htmlspecialchars($row['lastName']) . "'>Edit</button>
-                                <button class='btn delete-btn' data-author-id='" . $row['authorId'] . "'>Delete</button>
-                            </td>";
-                        echo "</tr>";
-                    }
-                }
-            ?>
-
-            </tbody>
-        </table>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Manage Authors</h6>
     </div>
+    <div class="card-body">
+        <div class="container">
+            <h1>Manage Authors</h1>
+            <button class="btn btn-primary" onclick="showAddAuthorModal()">Add New Author</button>
+            <div style="margin-top: 20px;"> 
+            </div>
+            <table id="dataTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Author ID</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $fullName = htmlspecialchars($row['firstName'] . ' ' . $row['lastName']);
+                                echo "<tr>";
+                                echo "<td>" . $row['authorId'] . "</td>";
+                                echo "<td>
+                                        <a href='list-books.php?authorId=" . $row['authorId'] . "'>
+                                            " . $fullName . "
+                                        </a>
+                                    </td>";
+                                echo "<td>
+                                        <button class='btn edit-btn' data-author-id='" . $row['authorId'] . "' data-first-name='" . htmlspecialchars($row['firstName']) . "' data-last-name='" . htmlspecialchars($row['lastName']) . "'>Edit</button>
+                                        <button class='btn delete-btn' data-author-id='" . $row['authorId'] . "'>Delete</button>
+                                    </td>";
+                                echo "</tr>";
+                            }
+                        }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
     <!-- Add Author Modal -->
     <div id="addAuthorModal" style="display: none; position: fixed; z-index: 1000; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">

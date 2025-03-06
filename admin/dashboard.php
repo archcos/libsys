@@ -178,26 +178,33 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
                     </form>
                 </p>
 
-                <h1>Books Availability Overview</h1>
+                
                 <!-- Rectangular boxes for stats -->
-                <div class="stats-container">
-                    <div class="stat-box total-borrowers">
-                        <h4>Total Borrowers</h4>
-                        <p><?php echo $totalBorrowers; ?></p>
-                    </div>
-                    <div class="stat-box total-books">
-                        <h4>Total Books</h4>
-                        <p><?php echo $totalQuantity; ?></p>
-                    </div>
-                    <div class="stat-box available-books">
-                        <h4>Available Books</h4>
-                        <p><?php echo $totalQuantity - $totalNotReturned; ?></p>
-                    </div>
-                    <div class="stat-box borrowed-books">
-                        <h4>Borrowed Books</h4>
-                        <p><?php echo $totalNotReturned; ?></p>
-                    </div>
-                </div>
+                <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Stats Overview</h6>
+    </div>
+    <div class="card-body">
+        <div class="stats-container">
+            <div class="stat-box total-borrowers">
+                <h4>Total Borrowers</h4>
+                <p><?php echo $totalBorrowers; ?></p>
+            </div>
+            <div class="stat-box total-books">
+                <h4>Total Books</h4>
+                <p><?php echo $totalQuantity; ?></p>
+            </div>
+            <div class="stat-box available-books">
+                <h4>Available Books</h4>
+                <p><?php echo $totalQuantity - $totalNotReturned; ?></p>
+            </div>
+            <div class="stat-box borrowed-books">
+                <h4>Borrowed Books</h4>
+                <p><?php echo $totalNotReturned; ?></p>
+            </div>
+        </div>
+    </div>
+</div>
 
                 <p>
                     <form method="POST" action="">
@@ -212,8 +219,14 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
                 </p>
 
         <!-- Borrowed Books per Month Chart -->
-        <h5>Borrowed Books per Month for <?php echo $selectedYear; ?></h5>
+        <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Borrowed Books per Month for <?php echo $selectedYear; ?></h6>
+    </div>
+    <div class="card-body">
         <canvas id="monthlyBorrowedChart"></canvas>
+    </div>
+</div>
             </div>
         </div>
        

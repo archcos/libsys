@@ -85,19 +85,24 @@ $result = $conn->query($query);
             </div>
         <?php endif; ?>
 
+        <div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Borrowed/Returned Books</h6>
+    </div>
+    <div class="card-body">
         <h1>Borrowed/Returned Books</h1>
         <p>Below is the list of all returned books in the library.</p>
         <p>
-        <form method="POST" action="process/send-email.php">
-            <button type="submit" name="send_notifications" class="btn btn-primary">Send Return Reminders</button>
-        </form>
+            <form method="POST" action="process/send-email.php">
+                <button type="submit" name="send_notifications" class="btn btn-primary">Send Return Reminders</button>
+            </form>
         </p>
 
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>Date Slip</th> <!-- Added a new column for actions -->
-                    <th>Book Card</th> <!-- Added a new column for actions -->
+                    <th>Date Slip</th>
+                    <th>Book Card</th>
                     <th>ID Number</th>
                     <th>Borrowed Date</th>
                     <th>Return Date</th>
@@ -114,29 +119,28 @@ $result = $conn->query($query);
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                             $borrowedDate = new DateTime($row['borrowedDate']);
-                            $formattedborrowedDate = $borrowedDate->format('F j, Y, g:i A'); // Format: 12-hour time with AM/PM
+                            $formattedborrowedDate = $borrowedDate->format('F j, Y, g:i A');
                             $returnDate = new DateTime($row['returnDate']);
-                            $formattedreturnDate = $returnDate->format('F j, Y'); // Format: December 19, 2024
-                            
+                            $formattedreturnDate = $returnDate->format('F j, Y');
+
                             echo "<tr>";
-                            echo "<td><a href='pdf/generate-slip.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Slip</a></td>"; // Print Button with borrowId
-                            echo "<td><a href='pdf/generate-card.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Card</a></td>"; // Print Button with borrowId
-                            echo "<td>" . $row['borrowerId'] . "</td>"; // Borrower ID
-                            echo "<td>" . $formattedborrowedDate . "</td>"; // Borrowed Date
-                            echo "<td>" . $formattedreturnDate . "</td>"; // Return Date
-                            echo "<td>" . $row['firstName'] . " " . $row['surName'] . "</td>"; // Borrower Name
-                            echo "<td>" . $row['bookTitle'] . "</td>"; // Book Title
-                            echo "<td>" . $row['bookAuthor'] . "</td>"; // Author
-                            echo "<td>" . $row['bookCategory'] . "</td>"; // Category
-                            echo "<td>" . ($row['returned'] == "Yes" ? 'Yes' : 'No') . "</td>"; // Returned
+                            echo "<td><a href='pdf/generate-slip.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Slip</a></td>";
+                            echo "<td><a href='pdf/generate-card.php?borrowId=" . $row['borrowId'] . "' class='btn btn-info'>Print Card</a></td>";
+                            echo "<td>" . $row['borrowerId'] . "</td>";
+                            echo "<td>" . $formattedborrowedDate . "</td>";
+                            echo "<td>" . $formattedreturnDate . "</td>";
+                            echo "<td>" . $row['firstName'] . " " . $row['surName'] . "</td>";
+                            echo "<td>" . $row['bookTitle'] . "</td>";
+                            echo "<td>" . $row['bookAuthor'] . "</td>";
+                            echo "<td>" . $row['bookCategory'] . "</td>";
+                            echo "<td>" . ($row['returned'] == "Yes" ? 'Yes' : 'No') . "</td>";
                             echo "<td>";
-                            // Add the delete button in the last column
                             if ($row['returned'] == "No") {
                                 echo "<span style='color: red;'>Cannot Delete - Hasn't Returned</span>";
                             } else {
                                 echo "<button class='delete-btn' data-borrower-id='" . $row['borrowId'] . "'>Delete</button>";
                             }
-                            echo "</td>";                           
+                            echo "</td>";
                             echo "</tr>";
                         }
                     }
@@ -144,6 +148,7 @@ $result = $conn->query($query);
             </tbody>
         </table>
     </div>
+</div>
 
     <!-- jQuery -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->

@@ -50,11 +50,15 @@ $result = $conn->query($query);
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Course List</h6>
+    </div>
+    <div class="card-body">
         <h1>Course List</h1>
         <button class="btn btn-primary" onclick="openAddModal()">Add New Course</button>
         <div style="margin-top: 20px;">
-    </div>
+        </div>
 
         <table id="dataTable" class="display" style="width:100%">
             <thead>
@@ -76,7 +80,7 @@ $result = $conn->query($query);
                         echo "<td>
                                 <button class='btn btn-primary' onclick='openEditModal(" . $row['courseId'] . ", \"" . addslashes($row['courseName']) . "\", \"" . $row['level'] . "\")'>Edit</button>
                                 <button class='btn delete-btn' onclick='deleteCourse(" . $row['courseId'] . ")'>Delete</button>
-                              </td>";
+                            </td>";
                         echo "</tr>";
                     }
                 }
@@ -84,6 +88,7 @@ $result = $conn->query($query);
             </tbody>
         </table>
     </div>
+</div>
 
     <!-- Add/Edit Modal -->
     <div id="courseModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; padding:20px; border-radius:10px; box-shadow:0px 0px 10px rgba(0,0,0,0.3);">

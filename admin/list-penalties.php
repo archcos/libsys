@@ -92,48 +92,55 @@ if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
     <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Penalties List</h2>
-        <table id="dataTable" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Penalty ID</th>
-                    <th>Borrower ID</th>
-                    <th>Borrower Name</th>
-                    <th>Book Title</th>
-                    <th>Penalty</th>
-                    <th>Cost</th>
-                    <th>Paid Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                // Check if any results were returned
-                if ($result->num_rows > 0) {
-                    // Loop through each row and display the penalty details
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row['penaltyId'] . "</td>";
-                        echo "<td>" . $row['borrowerId'] . "</td>";
-                        echo "<td>" . $row['borrowerName'] . "</td>";
-                        echo "<td>" . $row['title'] . "</td>";  // Displaying book title
-                        echo "<td>" . $row['penalty'] . "</td>";
-                        echo "<td>" . number_format($row['cost'], 2) . "</td>";
-                        echo "<td><select class='form-control paidStatus' data-penalty-id='" . $row['penaltyId'] . "'>
-                                <option value='Yes' " . ($row['paid'] == 'Yes' ? 'selected' : '') . ">Paid</option>
-                                <option value='No' " . ($row['paid'] == 'No' ? 'selected' : '') . ">Unpaid</option>
-                              </select></td>";
-                        echo "<td><a href='list-penalties.php?delete_id=" . $row['penaltyId'] . "' class='btn btn-danger' onclick='return confirm(\"Are you sure you want to delete this penalty?\")'>Delete</a></td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='8' class='text-center'>No penalties found</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Penalties List</h6>
     </div>
+    <div class="card-body">
+        <div class="container mt-5">
+            <h2 class="mb-4">Penalties List</h2>
+            <table id="dataTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Penalty ID</th>
+                        <th>Borrower ID</th>
+                        <th>Borrower Name</th>
+                        <th>Book Title</th>
+                        <th>Penalty</th>
+                        <th>Cost</th>
+                        <th>Paid Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Check if any results were returned
+                    if ($result->num_rows > 0) {
+                        // Loop through each row and display the penalty details
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['penaltyId'] . "</td>";
+                            echo "<td>" . $row['borrowerId'] . "</td>";
+                            echo "<td>" . $row['borrowerName'] . "</td>";
+                            echo "<td>" . $row['title'] . "</td>"; // Displaying book title
+                            echo "<td>" . $row['penalty'] . "</td>";
+                            echo "<td>" . number_format($row['cost'], 2) . "</td>";
+                            echo "<td><select class='form-control paidStatus' data-penalty-id='" . $row['penaltyId'] . "'>
+                                            <option value='Yes' " . ($row['paid'] == 'Yes' ? 'selected' : '') . ">Paid</option>
+                                            <option value='No' " . ($row['paid'] == 'No' ? 'selected' : '') . ">Unpaid</option>
+                                        </select></td>";
+                            echo "<td><a href='list-penalties.php?delete_id=" . $row['penaltyId'] . "' class='btn btn-danger' onclick='return confirm(\"Are you sure you want to delete this penalty?\")'>Delete</a></td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='8' class='text-center'>No penalties found</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
     <!-- jQuery, DataTables and Bootstrap JS -->
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>

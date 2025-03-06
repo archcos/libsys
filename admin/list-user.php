@@ -50,47 +50,51 @@ $result = $conn->query($query);
     </style>
 </head>
 <body>
-    <div class="container">
-        <h3>Manage Administrators</h3>
-        <button class="btn btn-primary" onclick="showAddUserModal()">Add New Admin</button>
-        <div style="margin-top: 20px;">  
-</div>
-        <table id="dataTable" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Account Type</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Last Login</th>
-                    <th>Date Created</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['username']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['accountType']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['firstName']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['lastName']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['lastLogin']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['dateCreated']) . "</td>";
-                        echo "<td>
-                                <button class='btn btn-primary' data-user-id='" . $row['userId'] . "' onclick='editUser(" . $row['userId'] . ")'>Edit</button>
-                                <button class='btn delete-btn' data-user-id='" . $row['userId'] . "' onclick='deleteUser(" . $row['userId'] . ")'>Delete</button>
-                            </td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='6' class='text-center'>No users found</td></tr>";
-                }
-            ?>
-            </tbody>
-        </table>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Manage Administrators</h6>
     </div>
+    <div class="card-body">
+        <button class="btn btn-primary" onclick="showAddUserModal()">Add New Admin</button>
+        <div style="margin-top: 20px;"> 
+            <table id="dataTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Account Type</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Last Login</th>
+                        <th>Date Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . htmlspecialchars($row['username']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['accountType']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['firstName']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['lastName']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['lastLogin']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['dateCreated']) . "</td>";
+                                echo "<td>
+                                        <button class='btn btn-primary' data-user-id='" . $row['userId'] . "' onclick='editUser(" . $row['userId'] . ")'>Edit</button>
+                                        <button class='btn delete-btn' data-user-id='" . $row['userId'] . "' onclick='deleteUser(" . $row['userId'] . ")'>Delete</button>
+                                    </td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='6' class='text-center'>No users found</td></tr>";
+                        }
+                    ?>
+                </tbody>
+            </table>
+        </div>    
+    </div>
+</div>
 
     <!-- Add User Modal -->
     <div id="addUserModal" style="display: none; position: fixed; z-index: 1000; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">

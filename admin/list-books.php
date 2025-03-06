@@ -123,8 +123,14 @@ $result = $stmt->get_result();
     </style>
 </head>
 <body>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Books List</h6>
+    </div>
+    <div class="card-body">
+        <div class="container">
     <div class="container">
-        <h1>Books List</h1>
+       
         <button class="btn btn-primary" onclick="window.location.href='add-book.php'">Add New Book</button>
         <div style="margin-top: 20px;">  
 </div>
@@ -209,6 +215,8 @@ $result = $stmt->get_result();
             </tbody>
         </table>
     </div>
+    </div>
+</div>
 
     <!-- jQuery -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->

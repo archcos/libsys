@@ -34,62 +34,62 @@ $result = $stmt->get_result();
     
 </head>
 <body>
-    <div class="container">
-        <h1>
-            <?php echo $receiptFilter === 'Yes' ? 'Receipt Log' : 'Non-Receipt Log'; ?>
-        </h1>
-
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary"><?php echo $receiptFilter === 'Yes' ? 'Receipt Log' : 'Non-Receipt Log'; ?></h6>
+    </div>
+    <div class="card-body">
+        <h1><?php echo $receiptFilter === 'Yes' ? 'Receipt Log' : 'Non-Receipt Log'; ?></h1>
         <button id="fetchReceiptData" class="btn btn-primary">Print Receipt Data</button>
-<div style="margin-top: 20px;">  
-</div>
+        <div style="margin-top: 20px;"> 
+        </div>
 
         <table id="dataTable" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>ID Number</th>
-                <th>Borrower Type</th>
-                <th>Library ID</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Email Address</th>
-                <th>Remarks</th>
-                <?php if ($receiptFilter !== 'Yes'): ?>
-                    <th>Receipt</th> <!-- Only show when receipt is NOT "Yes" -->
-                <?php endif; ?>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['idNumber']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['borrowerType']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['libraryId']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['surName']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['firstName']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['middleName']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['emailAddress']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['remarks']) . "</td>";
-                    
-                    if ($receiptFilter !== 'Yes') {
-                        echo "<td>
-                                <select class='receipt-dropdown' data-id='" . $row['idNumber'] . "'>
-                                    <option value='Yes'" . ($row['receipt'] === 'Yes' ? ' selected' : '') . ">Yes</option>
-                                    <option value='No'" . ($row['receipt'] === 'No' ? ' selected' : '') . ">No</option>
-                                </select>
-                            </td>";
+            <thead>
+                <tr>
+                    <th>ID Number</th>
+                    <th>Borrower Type</th>
+                    <th>Library ID</th>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Email Address</th>
+                    <th>Remarks</th>
+                    <?php if ($receiptFilter !== 'Yes'): ?>
+                        <th>Receipt</th> <?php endif; ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($row['idNumber']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['borrowerType']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['libraryId']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['surName']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['firstName']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['middleName']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['emailAddress']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['remarks']) . "</td>";
+
+                        if ($receiptFilter !== 'Yes') {
+                            echo "<td>
+                                    <select class='receipt-dropdown' data-id='" . $row['idNumber'] . "'>
+                                        <option value='Yes'" . ($row['receipt'] === 'Yes' ? ' selected' : '') . ">Yes</option>
+                                        <option value='No'" . ($row['receipt'] === 'No' ? ' selected' : '') . ">No</option>
+                                    </select>
+                                </td>";
+                        }
+
+                        echo "</tr>";
                     }
-
-                    echo "</tr>";
                 }
-            }
-            ?>
-        </tbody>
-
+                ?>
+            </tbody>
         </table>
     </div>
+</div>
 
     <!-- jQuery -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->

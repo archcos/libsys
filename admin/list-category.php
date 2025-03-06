@@ -76,42 +76,49 @@ $result = $conn->query($query);
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Manage Categories</h1>
-        <button class="btn btn-primary" onclick="showModal('addCategoryModal')">Add New Category</button>
-        <div style="margin-top: 20px;">  
-</div>
-        <table id="dataTable" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Category ID</th>
-                    <th>Category Name</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-                // Display categories with clickable links
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . $row['categoryId'] . "</td>";
-                        echo "<td>
-                                <a href='list-books.php?categoryId=" . $row['categoryId'] . "'>
-                                    " . htmlspecialchars($row['categoryName']) . "
-                                </a>
-                            </td>";
-                        echo "<td>
-                                <button class='btn edit-btn' data-category-id='" . $row['categoryId'] . "' data-category-name='" . htmlspecialchars($row['categoryName']) . "'>Edit</button>
-                                <button class='btn delete-btn' data-category-id='" . $row['categoryId'] . "'>Delete</button>
-                            </td>";
-                        echo "</tr>";
-                    }
-                }
-                ?>
-            </tbody>
-        </table>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Manage Categories</h6>
     </div>
+    <div class="card-body">
+        <div class="container">
+            <h1>Manage Categories</h1>
+            <button class="btn btn-primary" onclick="showModal('addCategoryModal')">Add New Category</button>
+            <div style="margin-top: 20px;"> 
+            </div>
+            <table id="dataTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Category ID</th>
+                        <th>Category Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        // Display categories with clickable links
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . $row['categoryId'] . "</td>";
+                                echo "<td>
+                                        <a href='list-books.php?categoryId=" . $row['categoryId'] . "'>
+                                            " . htmlspecialchars($row['categoryName']) . "
+                                        </a>
+                                    </td>";
+                                echo "<td>
+                                        <button class='btn edit-btn' data-category-id='" . $row['categoryId'] . "' data-category-name='" . htmlspecialchars($row['categoryName']) . "'>Edit</button>
+                                        <button class='btn delete-btn' data-category-id='" . $row['categoryId'] . "'>Delete</button>
+                                    </td>";
+                                echo "</tr>";
+                            }
+                        }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
     <!-- Add Category Modal -->
     <div id="addCategoryModal" class="modal">
