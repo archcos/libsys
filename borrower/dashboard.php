@@ -181,6 +181,30 @@ $result = $stmt->get_result();
         </table>
     </div>
 
+        <!-- Borrow Modal -->
+        <div id="borrowModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+        <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
+            <h2>Confirm Borrow</h2>
+            <p>Please enter your ID number for confirmation:</p>
+            <input type="text" id="userIdInput" placeholder="Enter ID number" style="width:80%; padding:5px; margin:10px 0;">
+            <br>
+            <button id="confirmBorrowBtn" style="background:blue; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Approve</button>
+            <button onclick="closeModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Return Modal -->
+    <div id="returnModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+        <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
+            <h2>Confirm Return</h2>
+            <p>Please enter your ID number for confirmation:</p>
+            <input type="text" id="userIdInputReturn" placeholder="Enter ID number" style="width:80%; padding:5px; margin:10px 0;">
+            <br>
+            <button id="confirmReturnBtn" style="background:green; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Approve</button>
+            <button onclick="closeReturnModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- DataTables JS -->
