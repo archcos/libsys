@@ -1,9 +1,6 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
-        <div class="sidebar-brand-icon">
-            <img src="assets/img/ustp.png" alt="Logo" width="38" height="38">
-        </div>
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">  
         <div class="sidebar-brand-text mx-3">USTP Balubal</div>
     </a>
 

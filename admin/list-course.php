@@ -55,7 +55,7 @@ $result = $conn->query($query);
         <h6 class="m-0 font-weight-bold text-primary">Course List</h6>
     </div>
     <div class="card-body">
-        <h1>Course List</h1>
+        
         <button class="btn btn-primary" onclick="openAddModal()">Add New Course</button>
         <div style="margin-top: 20px;">
         </div>
