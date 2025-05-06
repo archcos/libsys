@@ -144,6 +144,19 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
     .borrowed-books {
         border: 2px solid #F44336; /* Red */
     }
+    .card-left {
+
+        width: 80vh;
+
+    }
+    .tiknik {
+
+        padding-left: 10px;
+       
+
+    }
+ 
+   
 
 </style>
 
@@ -165,25 +178,99 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
     </div>
 <?php endif; ?>
 
-<main id="content" role="main" class="main">
+<!-- <main id="content" role="main" class="main"> -->
     <!-- Content -->
-    <div class="content container-fluid">
-        <div class="row justify-content-sm-center text-center py-10">
-            <div class="col-sm-7 col-md-5">
-                <p>
-                    <form method="POST" action="process/send-email.php">
-                        <button type="submit" name="send_notifications" class="remind-btn">
-                            <i class="fas fa-bell"></i> Send Email
-                        </button>
-                    </form>
-                </p>
+
 
                 
-                <!-- Rectangular boxes for stats -->
-                <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Stats Overview</h6>
-    </div>
+                
+
+    <div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            Total Borrowers</div>
+                                                <p><?php echo $totalBorrowers; ?></p>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-user fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            Total Books</div>
+                                            <p><?php echo $totalQuantity; ?></p>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-book fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Available Books -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Available Books
+                                            </div>
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col-auto">
+                                                <p><?php echo $totalQuantity - $totalNotReturned; ?></p>
+                                                </div>
+                                                <div class="col">
+                                                    
+                                                        <div class="progress-bar bg-info" role="progressbar"
+                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-book-open fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Borrowed Books -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            Borrowed Books</div>
+                                            <p><?php echo $totalNotReturned; ?></p>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-hand-holding fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+       
+                    
+
+     <!--                
     <div class="card-body">
         <div class="stats-container">
             <div class="stat-box total-borrowers">
@@ -204,7 +291,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
             </div>
         </div>
     </div>
-</div>
+</div> -->    <div class="tiknik">
 
                 <p>
                     <form method="POST" action="">
@@ -219,19 +306,29 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
                 </p>
 
         <!-- Borrowed Books per Month Chart -->
-        <div class="card shadow mb-4">
+     
+        <div class="card-left shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Borrowed Books per Month for <?php echo $selectedYear; ?></h6>
     </div>
+
     <div class="card-body">
         <canvas id="monthlyBorrowedChart"></canvas>
     </div>
+
+    
+    <!-- <div class="card-right">
+      
+        <div> -->
 </div>
             </div>
         </div>
        
-
+        </div>
     </div>
+
+
+    
     <!-- End Content -->
 </main>
 
@@ -252,10 +349,10 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
             }]
         },
         options: {
-            responsive: true,
+            responsive:true,
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: false
                 }
             }
         }

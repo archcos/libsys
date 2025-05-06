@@ -1,8 +1,9 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
-        
-        <div class="sidebar-brand-text mx-3">USTP - BALUBAL LIBRARY</div>
-    </a>
+<a class="sidebar-brand d-flex bg-white align-items-center justify-content-center" href="dashboard.php">
+    <!-- Replace this with your logo image -->
+    <img src="assets/img/ustp.png" alt="Library Logo" style="height: 65px;">
+</a>
+
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
@@ -105,18 +106,8 @@
 
     <hr class="sidebar-divider">
 
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
-
-    <li class="nav-item mt-auto">
-        <form action="process/logout.php" method="POST" class="p-0 text-center">
-            <button type="submit" class="btn btn-block text-white">
-                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-white"></i>
-                Logout
-            </button>
-        </form>
-    </li>
+   
+    
 </ul>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

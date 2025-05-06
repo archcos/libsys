@@ -52,20 +52,20 @@ $result = $conn->query($query);
 <body>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Course List</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Program List</h6>
     </div>
     <div class="card-body">
         
-        <button class="btn btn-primary" onclick="openAddModal()">Add New Course</button>
+        <button class="btn btn-primary" onclick="openAddModal()">Add New Program</button>
         <div style="margin-top: 20px;">
         </div>
 
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
-                    <th>Course ID</th>
+                    <th>Program ID</th>
                     <th>Level</th>
-                    <th>Course Name</th>
+                    <th>Program Name</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -92,7 +92,7 @@ $result = $conn->query($query);
 
     <!-- Add/Edit Modal -->
     <div id="courseModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background-color:white; padding:20px; border-radius:10px; box-shadow:0px 0px 10px rgba(0,0,0,0.3);">
-        <h2 id="modalTitle">Add Course</h2>
+        <h2 id="modalTitle">Add Program</h2>
         <form id="courseForm">
             <input type="hidden" id="courseId">
             <label for="level">Level:</label><br>
@@ -101,7 +101,7 @@ $result = $conn->query($query);
                 <option value="Postgraduate">Postgraduate</option>
                 <option value="Doctoral">Doctoral</option>
             </select><br><br>
-            <label for="courseName">Course Name:</label><br>
+            <label for="courseName">Program Name:</label><br>
             <input type="text" id="courseName" name="courseName" required><br><br>
             <button type="submit" class="btn add-btn">Save</button>
             <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
@@ -121,7 +121,7 @@ $result = $conn->query($query);
             $('#courseId').val('');
             $('#courseName').val('');
             $('#level').val('Undergraduate');
-            $('#modalTitle').text('Add Course');
+            $('#modalTitle').text('Add Program');
             $('#courseModal').show();
         }
 
@@ -130,7 +130,7 @@ $result = $conn->query($query);
             $('#courseId').val(courseId);
             $('#courseName').val(courseName);
             $('#level').val(level);
-            $('#modalTitle').text('Edit Course');
+            $('#modalTitle').text('Edit Program');
             $('#courseModal').show();
         }
 
