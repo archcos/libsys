@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $year = isset($_POST['year']) ? $conn->real_escape_string($_POST['year']) : null;
     $gender = $conn->real_escape_string($_POST['gender']);
     $birthDate = $conn->real_escape_string($_POST['birthDate']);
-    $remarks = $conn->real_escape_string('Deactivated');
+    $remarks = $conn->real_escape_string('Activated');
     $homeAddress = $conn->real_escape_string($_POST['homeAddress']);
     $librarian = $conn->real_escape_string($_POST['librarian']);
     $reason = $conn->real_escape_string($_POST['reason']);

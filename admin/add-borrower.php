@@ -21,6 +21,19 @@ $levelsResult = $conn->query($levelsQuery);
 // Capture the borrowerType from the query parameter
 $borrowerType = isset($_GET['borrowerType']) ? $_GET['borrowerType'] : 'Student'; // Default to Student
 $status = isset($_GET['status']) ? $_GET['status'] : '';
+
+$userId = $_SESSION['user_id'];
+
+$query = "SELECT firstName, lastName FROM tbluser WHERE userId = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+$librarianName = "";
+if ($row = $result->fetch_assoc()) {
+    $librarianName = $row['firstName'] . ' ' . $row['lastName'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -155,7 +168,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
         </div>
     <?php endif; ?>
 
-    <form method="POST" action="process/adding-borrower.php">
+    <form method="POST" action="process/adding-borrower.php" id="borrowerForm">
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
         <div class="form-group">
             <label for="idNumber">Borrower ID No:</label>
@@ -212,7 +225,8 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
         </div>
         <div class="form-group">
             <label for="birthDate">Birth Date:</label>
-            <input type="date" id="birthDate" name="birthDate" required>
+            <input type="date" id="birthDate" name="birthDate" required oninput="checkAge()">
+            <small id="ageWarning" style="color: red; display: none;">User must be at least 16 years old.</small>
         </div>
         <div class="form-group">
             <label for="homeAddress">Home Address:</label>
@@ -220,9 +234,10 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
         </div>
         <div class="form-group">
             <label for="librarian">Librarian/Staff In-Charge:</label>
-            <input type="text" id="librarian" name="librarian" required>
+            <input type="text" id="librarian" name="librarian" value="<?php echo htmlspecialchars($librarianName); ?>" required>
         </div>
-        <p> If student/staff isn't able to get the Borrower's Card upon registration, please specify reason, else input "N/A". </p>
+
+        <p>If student/staff isn't able to get the Borrower's Card upon registration, please specify reason, else input "N/A".</p>
         <div class="form-group">
             <label for="reason">Reason:</label>
             <input type="text" id="reason" name="reason" required>
@@ -231,6 +246,34 @@ $status = isset($_GET['status']) ? $_GET['status'] : '';
     </form>
 </body>
 </html>
+
+<script>
+function checkAge() {
+        const birthDate = document.getElementById('birthDate').value;
+        const ageWarning = document.getElementById('ageWarning');
+        const form = document.getElementById('borrowerForm');
+        const submitButton = form.querySelector('button[type="submit"]');
+        
+        if (birthDate) {
+            const today = new Date();
+            const birth = new Date(birthDate);
+            const age = today.getFullYear() - birth.getFullYear();
+            const month = today.getMonth() - birth.getMonth();
+            if (month < 0 || (month === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+
+            if (age < 16) {
+                ageWarning.style.display = 'inline';
+                submitButton.disabled = true;  // Disable the submit button
+            } else {
+                ageWarning.style.display = 'none';
+                submitButton.disabled = false;  // Enable the submit button
+            }
+        }
+    }
+</script>
+
 
 <?php
 $content = ob_get_clean();

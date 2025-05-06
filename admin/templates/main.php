@@ -203,9 +203,24 @@
                 <label for="author">Author</label>
                 <input type="text" class="form-control" id="author" name="author" required readonly>
             </div>
+            <?php
+
+                $userId = $_SESSION['user_id'];
+
+                $query2 = "SELECT firstName, lastName FROM tbluser WHERE userId = ?";
+                $stmt2 = $conn->prepare($query2);
+                $stmt2->bind_param("i", $userId);
+                $stmt2->execute();
+                $result2 = $stmt2->get_result();
+
+                $librarianName = "";
+                if ($row = $result2->fetch_assoc()) {
+                    $librarianName = $row['firstName'] . ' ' . $row['lastName'];
+                }
+            ?>
             <div class="form-group">
                 <label for="librarianName">Librarian Name</label>
-                <input type="text" class="form-control" id="librarianName" name="librarianName" required>
+                <input type="text" class="form-control" id="librarianName" name="librarianName" value="<?php echo htmlspecialchars($librarianName); ?>" required>
             </div>
             <div class="form-group">
                 <label for="formattedReturnDates">Return Date:</label><br>
@@ -684,6 +699,7 @@
                                             <small class='d-block text-muted'>Borrower ID: ${notification.borrowerId} | ${notification.timestamp}</small>
                                         </div>
                                     </a>
+
                                 `);
                             });
                         } else {
@@ -693,6 +709,15 @@
                                 </a>
                             `);
                         }
+
+                        dropdownMenu.append(`
+                            <div class='dropdown-divider'></div>
+                            <a class='dropdown-item text-center font-weight-bold small text-primary' href='./list-notifications.php'>
+                                See all notifications
+                            </a>
+                        `);
+
+                        
 
                         // Update the unread count
                         const unreadCount = notifications.filter(n => n.status === 'unread').length;

@@ -1,21 +1,20 @@
-    <?php
+<?php
     session_start();
 
     if (!isset($_SESSION['user_id'])) {
         header('Location: sign-in.php'); // Redirect to login if not logged in
         exit;
     }
-
-    include('db/db-connect.php'); // Database connection
-    ob_start();
+    
+    include('process/db-connect.php'); // Database connection
+    ob_start();    
 
     // Get logged-in user's ID
     $userId = $_SESSION['user_id']; 
 
     // Fetch notifications based on user_id (Only the message and timestamp)
-    $notificationQuery = "SELECT message, timestamp, status, remarks FROM tblnotifications WHERE borrowerId = ? ORDER BY timestamp DESC";
+    $notificationQuery = "SELECT message, timestamp, status, remarks FROM tblnotifications ORDER BY timestamp DESC";
     $notificationStmt = $conn->prepare($notificationQuery);
-    $notificationStmt->bind_param('i', $userId);
     $notificationStmt->execute();
     $notificationResult = $notificationStmt->get_result();
     ?>
@@ -26,6 +25,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>User Notifications</title>
+        
 
         <!-- Add some basic styles -->
         <style>
@@ -42,13 +42,15 @@
                 background-color: #f2f2f2;
             }
         </style>
+            <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+
     </head>
     <body>
         <div class="container">
             <h1>Transaction History</h1>
 
             <!-- Table to display the notifications -->
-            <table>
+            <table id="notificationsTable">
                 <thead>
                     <tr>
                         <th>Timestamp</th>
@@ -81,8 +83,21 @@
                 </tbody>
             </table>
         </div>
+
+
+        <!-- DataTables JS -->
+        <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+
     </body>
     </html>
+
+    <script>
+    $(document).ready(function () {
+        $('#notificationsTable').DataTable();
+    });
+</script>
+    
 
     <?php
     $content = ob_get_clean();

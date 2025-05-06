@@ -185,8 +185,7 @@ $result = $stmt->get_result();
         <div id="borrowModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
         <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
             <h2>Confirm Borrow</h2>
-            <p>Please enter your ID number for confirmation:</p>
-            <input type="text" id="userIdInput" placeholder="Enter ID number" style="width:80%; padding:5px; margin:10px 0;">
+            <p>You confirm that this is the book that you want to borrow</p>
             <br>
             <button id="confirmBorrowBtn" style="background:blue; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Approve</button>
             <button onclick="closeModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
@@ -197,8 +196,7 @@ $result = $stmt->get_result();
     <div id="returnModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
         <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
             <h2>Confirm Return</h2>
-            <p>Please enter your ID number for confirmation:</p>
-            <input type="text" id="userIdInputReturn" placeholder="Enter ID number" style="width:80%; padding:5px; margin:10px 0;">
+            <p>Are you sure you've returned the book?</p>
             <br>
             <button id="confirmReturnBtn" style="background:green; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Approve</button>
             <button onclick="closeReturnModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
@@ -233,19 +231,8 @@ $result = $stmt->get_result();
 
         // Approve borrow and send AJAX request
         document.getElementById('confirmBorrowBtn').addEventListener('click', function() {
-            const userId = document.getElementById('userIdInput').value.trim();
+            const userId = "<?= $_SESSION['user_id']; ?>";
             const username = "<?= $_SESSION['username']; ?>";
-            const user_id = "<?= $_SESSION['user_id']; ?>";
-
-            if (userId === '') {
-                alert('Please enter your ID number.');
-                return;
-            }
-
-            if (userId !== user_id) {
-                alert('Please use your ID Number.');
-                return;
-            }
 
             $.ajax({
                 url: 'process/borrow-book.php',
@@ -283,19 +270,8 @@ $result = $stmt->get_result();
 
         // Approve return and send AJAX request
         document.getElementById('confirmReturnBtn').addEventListener('click', function() {
-            const userId = document.getElementById('userIdInputReturn').value.trim();
+            const userId = "<?= $_SESSION['user_id']; ?>";
             const username = "<?= $_SESSION['username']; ?>";
-            const user_id = "<?= $_SESSION['user_id']; ?>";
-
-            if (userId === '') {
-                alert('Please enter your ID number.');
-                return;
-            }
-
-            if (userId !== user_id) {
-                alert('Please use your ID Number.');
-                return;
-            }
 
             $.ajax({
                 url: 'process/return-book.php',

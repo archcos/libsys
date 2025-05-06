@@ -12,7 +12,22 @@ include('../process/db-connect.php'); // Adjust path if needed
 
 // Fetch borrower details from the database
 $idNumber = isset($_GET['idNumber']) ? intval($_GET['idNumber']) : 214;
-$query = "SELECT firstName, surName, middleName, course, year, homeAddress, borrowerType, position FROM tblborrowers WHERE idNumber = ?";
+
+$query = "
+    SELECT 
+        b.firstName, 
+        b.surName, 
+        b.middleName, 
+        b.year, 
+        b.homeAddress, 
+        b.borrowerType, 
+        b.position,
+        c.courseName
+    FROM tblborrowers b
+    LEFT JOIN tblcourses c ON b.course = c.courseId
+    WHERE b.idNumber = ?
+";
+
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $idNumber);
 $stmt->execute();
@@ -20,19 +35,36 @@ $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
-    $name = $row['surName'] . ', ' . $row['firstName'] .' ' .  $row['middleName']; // Combine first and last name
-    $borrowerType = $row['borrowerType']; // Borrower type: Student, Staff, Faculty
+    $name = $row['surName'] . ', ' . $row['firstName'] . ' ' . $row['middleName'];
+    $borrowerType = $row['borrowerType'];
+
     if ($borrowerType == 'Student') {
-        // For Student, display course and year
-        $courseYear = $row['course'] . ', ' . $row['year'];
+        // Show course name and year for students
+        $courseYear = $row['courseName'] . ', ' . $row['year'];
     } else {
-        // For Staff and Faculty, display position
+        // Show position for staff or faculty
         $courseYear = $row['position'];
     }
-    $address = $row['homeAddress']; // Borrower's address
+
+    $address = $row['homeAddress'];
 } else {
     die("Borrower not found.");
 }
+
+
+$userId = $_SESSION['user_id'];
+
+$query2 = "SELECT firstName, lastName FROM tbluser WHERE userId = ?";
+$stmt2 = $conn->prepare($query2);
+$stmt2->bind_param("i", $userId);
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+
+$librarianName = "";
+if ($row = $result2->fetch_assoc()) {
+    $librarianName = $row['firstName'] . ' ' . $row['lastName'];
+}
+
 
 $logo = 'ustp.png';
 $photo = 'image.png';
@@ -131,7 +163,7 @@ $photo = 'image.png';
         type="text" 
         id="librarian" 
         placeholder="Enter Librarian's Name" 
-        value="" 
+        value="<?php echo htmlspecialchars($librarianName); ?>"  
         aria-label="Librarian's Name">
     </div>
 

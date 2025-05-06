@@ -109,7 +109,6 @@ if ($borrowerType) {
         <?php endif; ?>
         <button class="btn btn-primary" onclick="openGenerateList()">Generate List</button>
         <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#addBorrowerModal">Add New Borrower</button>
-        <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#borrowerModal">Edit Borrower</button>
         <p>Below is the list of registered borrowers.</p>
         <table id="dataTable" class="display" style="width:100%">
             <thead>
@@ -122,6 +121,7 @@ if ($borrowerType) {
                     <th>Gender</th>
                     <th>Email Address</th>
                     <th>Remarks</th>
+                    <th>Action</th>
                     </tr>
             </thead>
             <tbody>
@@ -147,13 +147,12 @@ if ($borrowerType) {
                                         <option value='Deactivated' " . ($row['remarks'] == 'Deactivated' ? 'selected' : '') . ">Deactivated</option>
                                     </select>
                                 </td>";
-                            // echo "<td>";
-                            // if ($row['hasUnreturnedBooks']) {
-                            //     echo "<span style='color: red;'>Cannot Delete - Has Unreturned Books</span>";
-                            // } else {
-                            //     echo "<button class='delete-btn' data-borrower-id='" . $row['idNumber'] . "'>Delete</button>";
-                            // }
-                            // echo "</td>";
+                            echo "<td>
+                                <a href='edit-borrower.php?idNumber=" . $row['idNumber'] . "'>
+                                    <button class='edit-btn'>Edit</button>
+                                </a>
+                              </td>";
+
                             echo "</tr>";
                         }
                     }
@@ -195,29 +194,6 @@ if ($borrowerType) {
             </div>
         </div>
     </div>
-    <!-- Modal - Edit Borrower -->
-    <div class="modal fade" id="borrowerModal" tabindex="-1" role="dialog" aria-labelledby="borrowerModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="borrowerModalLabel">Enter Borrower ID</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="idNumber">Borrower ID</label>
-                        <input type="text" class="form-control" id="idNumber" placeholder="Enter Borrower ID">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="checkidNumber">Check Borrower ID</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
     <!-- jQuery -->
@@ -242,36 +218,7 @@ if ($borrowerType) {
             }
         });
 
-        $(document).ready(function () {
-            $('#checkidNumber').on('click', function () {
-                const idNumber = $('#idNumber').val().trim();
-                if (idNumber) {
-                    $.ajax({
-                        url: 'process/edit-check.php',
-                        type: 'POST',
-                        data: { idNumber: idNumber },
-                        success: function (response) {
-                            const data = JSON.parse(response);
-                            if (data.exists) {
-                                window.location.href = `edit-borrower.php?idNumber=${idNumber}`;
-                            } else {
-                                alert('Borrower ID does not exist. Please try again.');
-                            }
-                        },
-                        error: function () {
-                            alert('An error occurred while checking the Borrower ID.');
-                        }
-                    });
-                } else {
-                    alert('Please enter a Borrower ID.');
-                }
-            });
-
-            $('#borrowerModal').on('hidden.bs.modal', function () {
-                $('#idNumber').val('');
-            });
-        });
-        
+       
         $(document).ready(function() {
             // Initialize DataTables
             $('#dataTable').DataTable();
@@ -285,32 +232,7 @@ if ($borrowerType) {
             });
            });
             
-            // Handle delete button click
-                $('.delete-btn').on('click', function() {
-                var idNumber = $(this).data('borrower-id'); // Get Borrower ID
-
-                // Show confirmation popup
-                if (confirm('Are you sure you want to delete this borrower? This action cannot be undone.')) {
-                    // Send AJAX request to delete the borrower
-                    $.ajax({
-                        url: 'process/delete-borrower.php', // Backend script to handle delete
-                        type: 'POST',
-                        data: { idNumber: idNumber },
-                        success: function(response) {
-                            if (response.includes("cannot be deleted")) {
-                                alert(response); // Show error message if borrower has unreturned books
-                            } else {
-                                alert(response); // Show success message
-                                location.reload(); // Refresh the page
-                            }
-                        },
-                        error: function() {
-                            alert('Error deleting borrower. Please try again.');
-                        }
-                    });
-                }
-            });
-
+ 
             // Handle remarks change (Activated/Deactivated)
             $('.remarks-dropdown').on('change', function() {
                 var idNumber = parseInt($(this).data('borrower-id'), 10); // Ensure it's an integer

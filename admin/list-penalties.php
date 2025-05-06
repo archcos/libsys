@@ -32,35 +32,6 @@ $query = "
 ";
 $result = $conn->query($query);
 
-if (isset($_GET['delete_id'])) {
-    $penaltyId = $_GET['delete_id'];
-
-    // Check if the penalty's 'paid' status is 'No'
-    $checkQuery = "SELECT paid FROM tblpenalties WHERE penaltyId = ?";
-    $stmt = $conn->prepare($checkQuery);
-    $stmt->bind_param("i", $penaltyId);
-    $stmt->execute();
-    $stmt->store_result();
-    $stmt->bind_result($paidStatus);
-    $stmt->fetch();
-
-    if ($paidStatus == 'No') {
-        echo "<script>alert('You cannot delete this penalty because it has not been paid.'); window.location.href = 'list-penalties.php';</script>";
-    } else {
-        // If paid status is Yes, delete the penalty entry
-        $deleteQuery = "DELETE FROM tblpenalties WHERE penaltyId = ?";
-        $stmt = $conn->prepare($deleteQuery);
-        $stmt->bind_param("i", $penaltyId);
-
-        if ($stmt->execute()) {
-            echo "<script>alert('Penalty deleted successfully.'); window.location.href = 'list-penalties.php';</script>";
-        } else {
-            echo "<script>alert('Error deleting penalty. Please try again.');</script>";
-        }
-    }
-
-    $stmt->close();
-}
 
 // Handle the change in "paid" status via AJAX
 if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
@@ -109,7 +80,6 @@ if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
                         <th>Penalty</th>
                         <th>Cost</th>
                         <th>Paid Status</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,7 +99,6 @@ if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
                                             <option value='Yes' " . ($row['paid'] == 'Yes' ? 'selected' : '') . ">Paid</option>
                                             <option value='No' " . ($row['paid'] == 'No' ? 'selected' : '') . ">Unpaid</option>
                                         </select></td>";
-                            echo "<td><a href='list-penalties.php?delete_id=" . $row['penaltyId'] . "' class='btn btn-danger' onclick='return confirm(\"Are you sure you want to delete this penalty?\")'>Delete</a></td>";
                             echo "</tr>";
                         }
                     } else {

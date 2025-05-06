@@ -42,12 +42,6 @@ $stmt = $conn->prepare($insertQuery);
 $stmt->bind_param("iiss", $bookId, $idNumber, $librarianName, $returnDate);
 $insertResult = $stmt->execute();
 
-$insertQuery = "INSERT INTO tblreturnborrow (bookId, borrowerId, borrowedDate, librarianName, returnDate, returned) 
-                VALUES (?, ?, NOW(), ?, ?, 'No')";
-$stmt = $conn->prepare($insertQuery);
-$stmt->bind_param("iiss", $bookId, $idNumber, $librarianName, $returnDate);
-$insertResult = $stmt->execute();
-
 
 if ($insertResult) {
     // Decrease quantity and update availability in tblbooks

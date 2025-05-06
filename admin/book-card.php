@@ -111,7 +111,6 @@ $result = $conn->query($query);
                     <th>Author</th>
                     <th>Category</th>
                     <th>Returned</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -134,13 +133,6 @@ $result = $conn->query($query);
                             echo "<td>" . $row['bookAuthor'] . "</td>";
                             echo "<td>" . $row['bookCategory'] . "</td>";
                             echo "<td>" . ($row['returned'] == "Yes" ? 'Yes' : 'No') . "</td>";
-                            echo "<td>";
-                            if ($row['returned'] == "No") {
-                                echo "<span style='color: red;'>Cannot Delete - Hasn't Returned</span>";
-                            } else {
-                                echo "<button class='delete-btn' data-borrower-id='" . $row['borrowId'] . "'>Delete</button>";
-                            }
-                            echo "</td>";
                             echo "</tr>";
                         }
                     }
