@@ -107,7 +107,7 @@ if ($borrowerType) {
         <?php if ($borrowerType): ?>
             <h2>Borrower List: <?php echo htmlspecialchars($borrowerType); ?></h2>
         <?php endif; ?>
-        <button class="btn btn-primary" onclick="openGenerateList()">Generate List</button>
+        <button class="btn btn-success" onclick="openGenerateList()">Generate List</button>
         <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#addBorrowerModal">Add New Borrower</button>
         <p>Below is the list of registered borrowers.</p>
         <table id="dataTable" class="display" style="width:100%">
@@ -132,7 +132,7 @@ if ($borrowerType) {
                             echo "<tr>";
                             echo "<td>
                                     <a href='pdf/generate-pdf.php?idNumber=" . $row['idNumber'] . "'>
-                                        <button class='print-btn'>Print</button>
+                                        <button class='btn btn-success btn-sm'>Borrowers Card</button>
                                     </a>
                                 </td>";
                             echo "<td>" . $row['libraryId'] . "</td>";
@@ -149,7 +149,7 @@ if ($borrowerType) {
                                 </td>";
                             echo "<td>
                                 <a href='edit-borrower.php?idNumber=" . $row['idNumber'] . "'>
-                                    <button class='edit-btn'>Edit</button>
+                                    <button class='btn btn-primary btn-sm'>Edit</button>
                                 </a>
                               </td>";
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 06, 2025 at 09:56 AM
+-- Generation Time: May 08, 2025 at 03:21 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,8 +38,7 @@ CREATE TABLE `tblauthor` (
 --
 
 INSERT INTO `tblauthor` (`authorId`, `firstName`, `lastName`) VALUES
-(4, 'Arjay', 'Charcos'),
-(5, 'Jay', 'Z');
+(0, 'No', 'Name (N/A)');
 
 -- --------------------------------------------------------
 
@@ -58,16 +57,9 @@ CREATE TABLE `tblbooks` (
   `accessionNum` varchar(5) NOT NULL,
   `barcodeNum` varchar(11) NOT NULL,
   `publisher` varchar(30) NOT NULL,
-  `publishedDate` date DEFAULT NULL
+  `publishedDate` date DEFAULT NULL,
+  `edition` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblbooks`
---
-
-INSERT INTO `tblbooks` (`bookId`, `title`, `dateAdded`, `quantity`, `authorId`, `categoryId`, `callNum`, `accessionNum`, `barcodeNum`, `publisher`, `publishedDate`) VALUES
-(39, 'The Books', '2024-12-05 10:07:00', 12, 4, 3, '123', '123', '123', 'Ako', '2024-12-10'),
-(41, 'The Nesst', '2024-12-06 00:30:10', 1, 5, 4, '1234', '1242', '2143', 'What', '2024-12-10');
 
 -- --------------------------------------------------------
 
@@ -98,14 +90,6 @@ CREATE TABLE `tblborrowers` (
   `librarian` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblborrowers`
---
-
-INSERT INTO `tblborrowers` (`idNumber`, `borrowerType`, `dateRegistered`, `libraryId`, `surName`, `firstName`, `middleName`, `emailAddress`, `course`, `year`, `position`, `gender`, `birthDate`, `homeAddress`, `remarks`, `receipt`, `timeReceived`, `reason`, `pickupDate`, `librarian`) VALUES
-(1, 'Faculty', '2025-03-05 00:15:44', 32, 'test', 'test', 'test', 'aw@gmail.com', 0, 0, 'Test', 'Male', '2025-03-05', 'test', 'Activated', 'Yes', '2025-03-05 01:16:46', 'test', '2025-03-05', 'test'),
-(2, 'Student', '2025-03-06 08:50:07', 33, 'Charcos', 'Arjay', 'w', 'aw@gmail.com', 4, 2, '', 'Male', '2025-03-06', 'dawda', 'Activated', 'No', NULL, 'Account Created in Borrower Page.', '2025-03-06', 'Account Created in Borrower Page.');
-
 -- --------------------------------------------------------
 
 --
@@ -116,16 +100,6 @@ CREATE TABLE `tblcategory` (
   `categoryId` int(11) NOT NULL,
   `categoryName` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblcategory`
---
-
-INSERT INTO `tblcategory` (`categoryId`, `categoryName`) VALUES
-(3, 'Sciences'),
-(4, 'Mathematics'),
-(6, 'JJ'),
-(7, 'test');
 
 -- --------------------------------------------------------
 
@@ -144,10 +118,7 @@ CREATE TABLE `tblcourses` (
 --
 
 INSERT INTO `tblcourses` (`courseId`, `level`, `courseName`) VALUES
-(0, '', 'N/A'),
-(4, 'Postgraduate', 'Information technoly'),
-(5, 'Undergraduate', 'Test'),
-(6, 'Doctoral', 'Dragon');
+(0, '', 'N/A');
 
 -- --------------------------------------------------------
 
@@ -237,7 +208,7 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userId`, `accountType`, `username`, `password`, `firstName`, `lastName`, `lastLogin`, `dateCreated`) VALUES
-(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-03-06 03:41:29', '2024-11-25 02:40:02'),
+(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-05-08 00:32:27', '2024-11-25 02:40:02'),
 (2, 'Librarian', 'test', 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4', 'Testing', 'Ko', '2024-12-03 09:01:14', '2024-12-03 09:01:14'),
 (4, 'Librarian', 'rain214', '8cb2237d0679ca88db6464eac60da96345513964', 'password', 'password', '2024-12-09 07:13:28', '2024-12-03 09:24:16'),
 (5, 'Admin', 'dwa', 'f98421770a791fdf0338f87df795cd758ad5d87b', 'dwad', 'dwad', '2024-12-09 07:15:07', '2024-12-09 07:15:07');
@@ -323,55 +294,55 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tblauthor`
 --
 ALTER TABLE `tblauthor`
-  MODIFY `authorId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `authorId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblbooks`
 --
 ALTER TABLE `tblbooks`
-  MODIFY `bookId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `bookId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblborrowers`
 --
 ALTER TABLE `tblborrowers`
-  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `libraryId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblcategory`
 --
 ALTER TABLE `tblcategory`
-  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `categoryId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblcourses`
 --
 ALTER TABLE `tblcourses`
-  MODIFY `courseId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `courseId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblnotifications`
 --
 ALTER TABLE `tblnotifications`
-  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+  MODIFY `notificationId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblpenalties`
 --
 ALTER TABLE `tblpenalties`
-  MODIFY `penaltyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `penaltyId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblreference`
 --
 ALTER TABLE `tblreference`
-  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `referenceId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblreturnborrow`
 --
 ALTER TABLE `tblreturnborrow`
-  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `borrowId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbluser`

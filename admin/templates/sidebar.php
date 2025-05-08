@@ -1,5 +1,5 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-<a class="sidebar-brand d-flex bg-white align-items-center justify-content-center" href="dashboard.php">
+<a class="sidebar-brand d-flex bg-primary align-items-center justify-content-center" href="dashboard.php">
     <!-- Replace this with your logo image -->
     <img src="assets/img/ustp.png" alt="Library Logo" style="height: 65px;">
 </a>
@@ -40,7 +40,7 @@
                 <a class="collapse-item" href="list-borrower.php?borrowerType=Student"><i class="fas fa-user-graduate"></i> Students</a>
                 <a class="collapse-item" href="list-borrower.php?borrowerType=Faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</a>
                 <a class="collapse-item" href="list-borrower.php?borrowerType=Staff"><i class="fas fa-user-tie"></i> Staff</a>
-                <a class="collapse-item" href="list-course.php"><i class="fas fa-book"></i> Course</a>
+                <a class="collapse-item" href="list-course.php"><i class="fas fa-book"></i> Program</a>
             </div>
         </div>
 

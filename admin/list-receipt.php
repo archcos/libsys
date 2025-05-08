@@ -40,7 +40,7 @@ $result = $stmt->get_result();
     </div>
     <div class="card-body">
         <h1><?php echo $receiptFilter === 'Yes' ? 'Receipt Log' : 'Non-Receipt Log'; ?></h1>
-        <button id="fetchReceiptData" class="btn btn-primary">Print Receipt Data</button>
+        <button id="fetchReceiptData" class="btn btn-success">Print Receipt Data</button>
         <div style="margin-top: 20px;"> 
         </div>
 

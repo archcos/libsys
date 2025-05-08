@@ -267,8 +267,26 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
                             </div>
                         </div>
                     </div>
-       
-                    
+                    <div class="row">
+  <!-- Left Column -->
+  <div class="col-md-4">
+        <!-- Productivity Tools -->
+    <div class="card shadow-sm mb-3">
+      <div class="card-header bg-primary text-white fw-bold"> Productivity Tools</div>
+      <div class="card-body">
+        <p><strong> Quick Notes</strong></p>
+        <textarea id="quickNotes" class="form-control mb-2" rows="4" placeholder="Write something..."></textarea>
+        <button class="btn btn-sm btn-primary mb-3" onclick="saveNote()">Save Note</button>
+
+        <p><strong> Task Checklist</strong></p>
+        <ul id="checklist" class="list-group mb-2">
+          <!-- Tasks will appear here -->
+        </ul>
+        <input type="text" id="taskInput" class="form-control mb-2" placeholder="New task">
+        <button class="btn btn-sm btn-primary" onclick="addTask()">Add Task</button>
+      </div>
+    </div>
+  </div>            
 
      <!--                
     <div class="card-body">
@@ -358,7 +376,48 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
         }
     });
 </script>
+<!-- JS for Notes and Checklist -->
+<script>
+  // Notes
+  function saveNote() {
+    const note = document.getElementById("quickNotes").value;
+    localStorage.setItem("quickNote", note);
+    alert("Note saved!");
+  }
+  document.getElementById("quickNotes").value = localStorage.getItem("quickNote") || "";
 
+  // Checklist
+  const checklist = document.getElementById("checklist");
+  const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  function renderTasks() {
+    checklist.innerHTML = "";
+    savedTasks.forEach((task, index) => {
+      const li = document.createElement("li");
+      li.className = "list-group-item d-flex justify-content-between align-items-center";
+      li.innerHTML = `<span>${task}</span> <button class="btn btn-sm btn-danger" onclick="deleteTask(${index})">Remove</button>`;
+      checklist.appendChild(li);
+    });
+  }
+
+  function addTask() {
+    const taskInput = document.getElementById("taskInput");
+    if (taskInput.value.trim() !== "") {
+      savedTasks.push(taskInput.value.trim());
+      localStorage.setItem("tasks", JSON.stringify(savedTasks));
+      taskInput.value = "";
+      renderTasks();
+    }
+  }
+
+  function deleteTask(index) {
+    savedTasks.splice(index, 1);
+    localStorage.setItem("tasks", JSON.stringify(savedTasks));
+    renderTasks();
+  }
+
+  renderTasks();
+</script>
 <?php
 // Capture the content and include it in the main template
 $content = ob_get_clean();
