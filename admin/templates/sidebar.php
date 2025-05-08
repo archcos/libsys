@@ -12,6 +12,12 @@
             <span>Dashboard</span>
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="list-notifications.php">
+            <i class="far fa-bell"></i>
+            <span>Notifications</span>
+        </a>
+    </li>
 
     <hr class="sidebar-divider">
     <div class="sidebar-heading">DPM 001</div>

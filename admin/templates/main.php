@@ -19,6 +19,12 @@
     <link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+
+
+
+
+
+
 </head>
 <style>
     #notifBell {
@@ -132,8 +138,7 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="#" id="changePasswordLink">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Change Password
+                                    
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="process/logout.php">

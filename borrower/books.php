@@ -29,6 +29,8 @@ $result = $stmt->get_result();
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link id="main-css-href" rel="stylesheet" href="assets/css/style.css" />
   <script src="https://unpkg.com/html5-qrcode/html5-qrcode.min.js"></script>
+   <!-- Material Design for Bootstrap (MDB) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">

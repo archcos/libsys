@@ -61,6 +61,8 @@ if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
     <title>Penalties List</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+     <!-- Material Design for Bootstrap (MDB) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="card shadow mb-4">

@@ -26,7 +26,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>User Notifications</title>
         
-
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+        <!-- Material Design for Bootstrap (MDB) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
         <!-- Add some basic styles -->
         <style>
             table {
@@ -43,9 +45,13 @@
             }
         </style>
             <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+            <!-- Material Design for Bootstrap (MDB) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
 
     </head>
     <body>
+    <div class="card shadow mb-4">
+    <div class="card-header py-3">
         <div class="container">
             <h1>Transaction History</h1>
 
@@ -84,7 +90,9 @@
             </table>
         </div>
 
-
+        <div style="margin-top: 20px;"> 
+        </div>
+        </div>
         <!-- DataTables JS -->
         <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 
