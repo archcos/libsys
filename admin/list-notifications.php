@@ -52,8 +52,10 @@
     <body>
     <div class="card shadow mb-4">
     <div class="card-header py-3">
+    <h5 class="m-0 font-weight-bold text-primary">Notifications</h5>
+    </div>
         <div class="container">
-            <h1>Transaction History</h1>
+            
 
             <!-- Table to display the notifications -->
             <table id="notificationsTable">

@@ -77,8 +77,35 @@ ob_start();
 $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from the URL parameter
 
 ?>
-
+<div class="col-15 mb-3">
+  <div class="card shadow-sm border-start border-4 border-primary">
+    <div class="card-body fs-5 fw-semibold text-SECONDARY">
+    <span class="wave">👋</span> Welcome, <?php echo $_SESSION['firstName'] . ' ' . $_SESSION['lastName']; ?>!
+    </div>
+  </div>
+</div>
 <style>
+
+
+
+@keyframes wave-animation {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-4deg); }
+  50% { transform: rotate(10deg); }
+  60% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.wave {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: wave-animation 2s infinite;
+}
+
+
     .remind-btn {
         display: inline-flex;
         align-items: center;
@@ -151,7 +178,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
     }
     .tiknik {
 
-        padding-left: 10px;
+        padding-left: 50px;
        
 
     }
@@ -276,14 +303,14 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
       <div class="card-body">
         <p><strong> Quick Notes</strong></p>
         <textarea id="quickNotes" class="form-control mb-2" rows="4" placeholder="Write something..."></textarea>
-        <button class="btn btn-sm btn-primary mb-3" onclick="saveNote()">Save Note</button>
+        <button class="btn btn-sm btn-success mb-3" onclick="saveNote()">Save Note</button>
 
         <p><strong> Task Checklist</strong></p>
         <ul id="checklist" class="list-group mb-2">
           <!-- Tasks will appear here -->
         </ul>
         <input type="text" id="taskInput" class="form-control mb-2" placeholder="New task">
-        <button class="btn btn-sm btn-primary" onclick="addTask()">Add Task</button>
+        <button class="btn btn-sm btn-success" onclick="addTask()">Add Task</button>
       </div>
     </div>
   </div>            
@@ -312,6 +339,10 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
 </div> -->    <div class="tiknik">
 
                 <p>
+                <?php
+$selectedYear = isset($_POST['year']) ? $_POST['year'] : date('Y');
+$years = range(2010, 2040); // Change this range as you like
+?>
                     <form method="POST" action="">
                         <select name="year" onchange="this.form.submit()">
                             <?php foreach ($years as $year) : ?>
@@ -353,28 +384,33 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
    
-    var ctx = document.getElementById('monthlyBorrowedChart').getContext('2d');
-    var monthlyBorrowedChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], // Months
-            datasets: [{
-                label: 'Borrowed Books',
-                data: <?php echo json_encode($monthlyData); ?>, // Data for borrowed books per month
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive:true,
-            scales: {
-                y: {
-                    beginAtZero: false
+   var ctx = document.getElementById('monthlyBorrowedChart').getContext('2d');
+var monthlyBorrowedChart = new Chart(ctx, {
+    type: 'bar',  // Type of chart (Bar chart in this case)
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], // Months
+        datasets: [{
+            label: 'Borrowed Books',
+            data: <?php echo json_encode($monthlyData); ?>, // Data for borrowed books per month
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: false,  // Prevents starting from 0 on the Y-axis
+                min: 0,  // Start from 0 on the Y-axis
+                ticks: {
+                    stepSize: 1  // Ensures tick marks are placed at regular intervals of 1
                 }
             }
         }
-    });
+    }
+});
+
 </script>
 <!-- JS for Notes and Checklist -->
 <script>
