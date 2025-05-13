@@ -45,14 +45,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $authorNames[] = $row['fullName'];
                 }
             }
-            $combinedAuthor = implode(', ', $authorNames);
-
+        
+            $authorCount = count($authorNames);
+        
+            if ($authorCount === 2) {
+                $combinedAuthor = $authorNames[0] . ' & ' . $authorNames[1];
+            } else {
+                $lastAuthor = array_pop($authorNames);
+                var_dump($lastAuthor);
+                $combinedAuthor = implode(', ', $authorNames) . ' & ' . $lastAuthor;
+                var_dump($combinedAuthor);
+            }
+        
             // Save combined author to tblauthor
             $stmtAuthorInsert = $conn->prepare("INSERT INTO tblauthor (firstName, lastName) VALUES (?, '')");
             $stmtAuthorInsert->bind_param("s", $combinedAuthor);
             $stmtAuthorInsert->execute();
             $finalAuthorId = $stmtAuthorInsert->insert_id;
             $stmtAuthorInsert->close();
+   
         } else {
             $finalAuthorId = intval($authorIds[0]);
         }

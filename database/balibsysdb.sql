@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 08, 2025 at 03:21 AM
+-- Generation Time: May 13, 2025 at 09:11 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,16 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `tblauthor` (
   `authorId` int(11) NOT NULL,
-  `firstName` varchar(30) NOT NULL,
+  `firstName` varchar(256) NOT NULL,
   `lastName` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblauthor`
---
-
-INSERT INTO `tblauthor` (`authorId`, `firstName`, `lastName`) VALUES
-(0, 'No', 'Name (N/A)');
 
 -- --------------------------------------------------------
 
@@ -98,7 +91,7 @@ CREATE TABLE `tblborrowers` (
 
 CREATE TABLE `tblcategory` (
   `categoryId` int(11) NOT NULL,
-  `categoryName` varchar(30) NOT NULL
+  `categoryName` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -110,7 +103,7 @@ CREATE TABLE `tblcategory` (
 CREATE TABLE `tblcourses` (
   `courseId` int(11) NOT NULL,
   `level` enum('Undergraduate','Postgraduate','Doctoral','') NOT NULL,
-  `courseName` varchar(20) NOT NULL
+  `courseName` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -208,10 +201,7 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`userId`, `accountType`, `username`, `password`, `firstName`, `lastName`, `lastLogin`, `dateCreated`) VALUES
-(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-05-08 00:32:27', '2024-11-25 02:40:02'),
-(2, 'Librarian', 'test', 'e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4', 'Testing', 'Ko', '2024-12-03 09:01:14', '2024-12-03 09:01:14'),
-(4, 'Librarian', 'rain214', '8cb2237d0679ca88db6464eac60da96345513964', 'password', 'password', '2024-12-09 07:13:28', '2024-12-03 09:24:16'),
-(5, 'Admin', 'dwa', 'f98421770a791fdf0338f87df795cd758ad5d87b', 'dwad', 'dwad', '2024-12-09 07:15:07', '2024-12-09 07:15:07');
+(1, 'Admin', 'rain', 'fbec17cb2fcbbd1c659b252230b48826fc563788', 'Hottest', 'Person', '2025-05-13 03:20:05', '2024-11-25 02:40:02');
 
 --
 -- Indexes for dumped tables
