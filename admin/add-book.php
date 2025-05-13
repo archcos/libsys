@@ -190,7 +190,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             
             <div class="form-group">
-                <label for="author">Author:</label>
+                <label for="author">Author:
+                    <a href="list-author.php" target="_blank" style="font-size: 0.9em; margin-left: 10px;">+ Add Authors</a>
+                </label>
                 <div class="dropdown">
                     <button type="button" onclick="toggleDropdown()" class="btn btn-light border" style="width: 100%;">Select Author(s)</button>
                     <div id="checkboxDropdown" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
@@ -207,7 +209,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="category">Category:</label>
+                <label for="category">Category:
+                    <a href="list-category.php" target="_blank" style="font-size: 0.9em; margin-left: 10px;">+ Add Categories</a>
+                </label>
                 <div class="dropdown">
                     <button type="button" onclick="toggleDropdown2()" class="btn btn-light border" style="width: 100%;">Select Category(ies)</button>
                     <div id="checkboxDropdown2" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
