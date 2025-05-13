@@ -59,8 +59,6 @@ if (isset($_GET['status'])) {
     <title>Edit Borrower</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Material Design for Bootstrap (MDB) -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
     <style>
         button {
                 display: block;
@@ -80,8 +78,7 @@ if (isset($_GET['status'])) {
     </style>
 </head>
 <body>
-<div class="col-md-15">
-<div class="card shadow mb-4">
+
 <div class="container mt-5">
     <h1>Edit Borrower Information</h1>
 
@@ -132,7 +129,7 @@ if (isset($_GET['status'])) {
 
         <div class="form-group" id="courseField">
             <label for="course">Course</label>
-            <input type="text" class="form-control" id="course" name="course" value="<?php echo $borrower['course']; ?>">
+            <input type="text" class="form-control" id="course" name="course" value="<?php echo $borrower['courseName']; ?>">
         </div>
 
         <div class="form-group" id="yearField">
@@ -175,9 +172,6 @@ if (isset($_GET['status'])) {
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </div>
     </form>
-    <div style="margin-top: 20px;"> 
-    </div>
-</div>
 </div>
 
 <!-- Add Bootstrap JS and jQuery if needed -->
