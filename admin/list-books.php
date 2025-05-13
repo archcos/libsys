@@ -18,7 +18,7 @@ $query = "
     SELECT 
         b.bookId, b.title, b.quantity, 
         CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
-        c.categoryName, b.publisher, b.publishedDate,
+        c.categoryName, b.publisher, b.publishedDate, YEAR(b.publishedDate) AS publishedYear,
         CASE 
             WHEN EXISTS (
                 SELECT 1 
@@ -181,6 +181,7 @@ $result = $stmt->get_result();
                 <tr>
                     <th>Book ID</th>
                     <th>Title</th>
+                    <th>APA Format</th>
                     <th>Author</th>
                     <th>Category</th>
                     <th>Stocks</th>
@@ -196,6 +197,7 @@ $result = $stmt->get_result();
                             echo "<tr>";
                             echo "<td>" . $row['bookId'] . "</td>";
                             echo "<td>" . htmlspecialchars($row['title']) . "</td>";
+                            echo "<td>" . " (" . htmlspecialchars($row['authorName']) . " , " .  htmlspecialchars($row['publishedYear']) . ")" . "</td>";
                             echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
                             echo "<td>" . $row['quantity'] . "</td>";

@@ -7,7 +7,7 @@ ob_start();
 // Fetch data from tblbooks with author, category names, and borrow status
 $query = "SELECT b.bookId, b.title, b.quantity, b.publisher, b.publishedDate,
                  CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
-                 c.categoryName
+                 c.categoryName, YEAR(b.publishedDate) AS publishedYear
           FROM tblbooks b
           JOIN tblauthor a ON b.authorId = a.authorId
           JOIN tblcategory c ON b.categoryId = c.categoryId";
@@ -224,6 +224,7 @@ $result = $stmt->get_result();
                     <th>Book ID</th>
                     <th>Title</th>
                     <th>Author</th>
+                    <th>APA</th>
                     <th>Category</th>
                     <th>Publisher</th>
                     <th>Published Date</th>
@@ -249,6 +250,7 @@ $result = $stmt->get_result();
                         echo "<td>" . $row['bookId'] . "</td>";
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
+                        echo "<td>" . " (" . htmlspecialchars($row['authorName']) . " , " .  htmlspecialchars($row['publishedYear']) . ")" . "</td>";
                         echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['publisher']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>";
