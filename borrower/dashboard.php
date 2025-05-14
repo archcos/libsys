@@ -199,9 +199,9 @@ $result = $stmt->get_result();
     <div id="returnModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
         <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
             <h2>Confirm Return</h2>
-            <p>Are you sure you've returned the book?</p>
+            <p>Press confirm to return the book</p>
             <br>
-            <button id="confirmReturnBtn" style="background:green; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Approve</button>
+            <button id="confirmReturnBtn" style="background:green; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Confirm</button>
             <button onclick="closeReturnModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
         </div>
     </div>
