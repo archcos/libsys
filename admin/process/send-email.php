@@ -40,6 +40,7 @@ function appendQueryParam($url, $param, $value) {
 $redirectUrl = $_SERVER['HTTP_REFERER'] ?? '../dashboard.php';
 
 // Fetch data for books due in 2 days or less and not returned
+// Remove (AND DATEDIFF(rb.returnDate, ?) <= 2;) and ($stmt->bind_param('s', $todayFormatted);) if any date ma send ang email
 $sql = "
     SELECT rb.borrowerId, rb.bookId, rb.returnDate, b.emailAddress, b.firstname
     FROM tblreturnborrow rb

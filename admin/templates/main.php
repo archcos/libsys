@@ -232,7 +232,7 @@
                 <input type="text" id="formattedReturnDates" readonly class="form-group"><br>
                 <input type="date" id="returnDates" name="returnDates" readonly required class="form-group" style="display: none;"><br>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Accept</button>
             <button class="btn btn-danger" data-dismiss="modal">Decline</button>
 
             </form>

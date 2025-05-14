@@ -186,7 +186,7 @@ $result = $stmt->get_result();
                     <th>Category</th>
                     <th>Stocks</th>
                     <th>Publisher</th>
-                    <th>Published Date</th>
+                    <th>Copyright Year</th>
                     <th>Actions</th>
                 </tr>
             </thead>

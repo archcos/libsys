@@ -227,7 +227,7 @@ $result = $stmt->get_result();
                     <th>APA</th>
                     <th>Category</th>
                     <th>Publisher</th>
-                    <th>Published Date</th>
+                    <th>Copyright Year</th>
                 </tr>
             </thead>
             <tbody id="bookList">

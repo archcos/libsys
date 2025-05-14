@@ -77,7 +77,7 @@ $result = $stmt->get_result();
                     <th>Author</th>
                     <th>Category</th>
                     <th>Publisher</th>
-                    <th>Published Date</th>
+                    <th>Copyright Year</th>
                     <th>Borrowed Date</th>
                     <th>Return Date</th>
                     <th>Returned</th>

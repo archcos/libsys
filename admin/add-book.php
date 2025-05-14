@@ -45,25 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $authorNames[] = $row['fullName'];
                 }
             }
-        
-            $authorCount = count($authorNames);
-        
-            if ($authorCount === 2) {
-                $combinedAuthor = $authorNames[0] . ' & ' . $authorNames[1];
-            } else {
-                $lastAuthor = array_pop($authorNames);
-                var_dump($lastAuthor);
-                $combinedAuthor = implode(', ', $authorNames) . ' & ' . $lastAuthor;
-                var_dump($combinedAuthor);
-            }
-        
+            $combinedAuthor = implode(', ', $authorNames);
+
             // Save combined author to tblauthor
             $stmtAuthorInsert = $conn->prepare("INSERT INTO tblauthor (firstName, lastName) VALUES (?, '')");
             $stmtAuthorInsert->bind_param("s", $combinedAuthor);
             $stmtAuthorInsert->execute();
             $finalAuthorId = $stmtAuthorInsert->insert_id;
             $stmtAuthorInsert->close();
-   
         } else {
             $finalAuthorId = intval($authorIds[0]);
         }
@@ -201,9 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             
             <div class="form-group">
-                <label for="author">Author:
-                    <a href="list-author.php" target="_blank" style="font-size: 0.9em; margin-left: 10px;">+ Add Authors</a>
-                </label>
+                <label for="author">Author:</label>
                 <div class="dropdown">
                     <button type="button" onclick="toggleDropdown()" class="btn btn-light border" style="width: 100%;">Select Author(s)</button>
                     <div id="checkboxDropdown" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
@@ -220,9 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="category">Category:
-                    <a href="list-category.php" target="_blank" style="font-size: 0.9em; margin-left: 10px;">+ Add Categories</a>
-                </label>
+                <label for="category">Category:</label>
                 <div class="dropdown">
                     <button type="button" onclick="toggleDropdown2()" class="btn btn-light border" style="width: 100%;">Select Category(ies)</button>
                     <div id="checkboxDropdown2" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
@@ -255,12 +240,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" id="publisher" name="publisher" placeholder="Enter Publisher" required>
             </div>
             <div class="form-group">
-                <label for="publishedDate">Published Date:</label>
+                <label for="publishedDate">Copyright Year:</label>
                 <input type="date" id="publishedDate" name="publishedDate" placeholder="Enter Published Date" required>
             </div>
             <!-- Quantity Field -->
             <div class="form-group">
-                <label for="quantity">Quantity:</label>
+                <label for="quantity">Volume:</label>
                 <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
             </div>
 
