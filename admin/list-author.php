@@ -105,7 +105,7 @@ $result = $conn->query($query);
             <h3>Add Author</h3>
             <form id="addAuthorForm">
                 <label for="firstName">First Name:</label><br>
-                <input type="text" id="firstName" name="firstName" required><br><br>
+                <input type="text" id="firstName" name="firstName"><br><br>
                 <label for="lastName">Last Name:</label><br>
                 <input type="text" id="lastName" name="lastName" required><br><br>
                 <button type="submit" class="btn btn-primary">Add</button>
@@ -122,7 +122,7 @@ $result = $conn->query($query);
             <form id="editAuthorForm">
                 <input type="hidden" id="editAuthorId" name="authorId">
                 <label for="editFirstName">First Name:</label><br>
-                <input type="text" id="editFirstName" name="firstName" required><br><br>
+                <input type="text" id="editFirstName" name="firstName"><br><br>
                 <label for="editLastName">Last Name:</label><br>
                 <input type="text" id="editLastName" name="lastName" required><br><br>
                 <button type="submit" class="btn btn-primary">Update</button>

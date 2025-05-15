@@ -297,20 +297,15 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
                     <div class="row">
   <!-- Left Column -->
   <div class="col-md-4">
-        <!-- Productivity Tools -->
+    <!-- Borrower Types Distribution -->
     <div class="card shadow-sm mb-3">
-      <div class="card-header bg-primary text-white fw-bold"> Productivity Tools</div>
+      <div class="card-header bg-primary text-white fw-bold">
+        <span>Borrower Distribution</span>
+      </div>
       <div class="card-body">
-        <p><strong> Quick Notes</strong></p>
-        <textarea id="quickNotes" class="form-control mb-2" rows="4" placeholder="Write something..."></textarea>
-        <button class="btn btn-sm btn-success mb-3" onclick="saveNote()">Save Note</button>
-
-        <p><strong> Task Checklist</strong></p>
-        <ul id="checklist" class="list-group mb-2">
-          <!-- Tasks will appear here -->
-        </ul>
-        <input type="text" id="taskInput" class="form-control mb-2" placeholder="New task">
-        <button class="btn btn-sm btn-success" onclick="addTask()">Add Task</button>
+        <div style="height: 300px;">
+          <canvas id="borrowerTypesChart"></canvas>
+        </div>
       </div>
     </div>
   </div>            
@@ -453,6 +448,71 @@ var monthlyBorrowedChart = new Chart(ctx, {
   }
 
   renderTasks();
+</script>
+<script>
+// Add Borrower Types Pie Chart
+async function initializeBorrowerTypesChart() {
+    try {
+        const response = await fetch('process/get-borrower-types.php');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        
+        const pieCtx = document.getElementById('borrowerTypesChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.values,
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.8)',   // Blue for Students
+                        'rgba(255, 206, 86, 0.8)',   // Yellow for Faculty
+                        'rgba(75, 192, 192, 0.8)',   // Green for Staff
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching borrower types data:', error);
+    }
+}
+
+// Initialize the pie chart when the page loads
+window.addEventListener('load', initializeBorrowerTypesChart);
 </script>
 <?php
 // Capture the content and include it in the main template

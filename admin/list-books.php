@@ -20,6 +20,7 @@ $query = "
         COALESCE(CONCAT(a.firstName, ' ', a.lastName), 'No Author') AS authorName, 
         COALESCE(c.categoryName, 'No Subject') AS categoryName, 
         b.publisher, b.publishedDate, YEAR(b.publishedDate) AS publishedYear,
+        b.edition,
         CASE 
             WHEN EXISTS (
                 SELECT 1 
@@ -72,8 +73,10 @@ $result = $stmt->get_result();
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-     <!-- Material Design for Bootstrap (MDB) -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
+    <!-- Material Design for Bootstrap (MDB) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .add-btn {
             background-color: blue;
@@ -123,6 +126,79 @@ $result = $stmt->get_result();
             text-decoration: underline;
         }
         
+        /* Book Modal Styles */
+        .book-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .book-modal-content {
+            position: relative;
+            background: white;
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .book-cover {
+            background: linear-gradient(45deg, #1a237e, #0d47a1);
+            padding: 30px;
+            border-radius: 5px;
+            color: white;
+            margin-bottom: 30px;
+        }
+        .book-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 25px;
+        }
+        .book-detail-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #dc3545;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .book-status {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 1em;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .status-available {
+            background-color: #28a745;
+            color: white;
+        }
+        .status-borrowed {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-group {
+            display: flex;
+            gap: 5px;
+        }
     </style>
 </head>
 <body>
@@ -187,6 +263,7 @@ $result = $stmt->get_result();
                     <th>Subject</th>
                     <th>Stocks</th>
                     <th>Publisher</th>
+                    <th>Edition</th>
                     <th>Copyright</th>
                     <th>Update</th>
                 </tr>
@@ -200,32 +277,81 @@ $result = $stmt->get_result();
                             echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                             echo "<td>";
                             if ($row['authorName'] == 'No Author') {
-                                echo htmlspecialchars($row['title']) . ". (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['publisher']);
+                                echo "<em>" . htmlspecialchars($row['title']) . "</em>. (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['publisher']);
                             } else {
-                                echo htmlspecialchars($row['authorName']) . " (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['title']) . ". " . htmlspecialchars($row['publisher']);
+                                echo htmlspecialchars($row['authorName']) . " (" . htmlspecialchars($row['publishedYear']) . "). <em>" . htmlspecialchars($row['title']) . "</em>. " . htmlspecialchars($row['publisher']);
                             }
                             echo "</td>";
                             echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
                             echo "<td>" . $row['quantity'] . "</td>";
                             echo "<td>" . htmlspecialchars($row['publisher']) . "</td>"; 
+                            echo "<td>" . htmlspecialchars($row['edition'] ? $row['edition'] : 'N/A') . "</td>";
                             echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>"; 
-                            echo "<td>";
+                            echo "<td class='btn-group'>";
+                            echo "<button class='btn btn-info btn-sm' onclick='showBookModal(" . json_encode($row) . ")'>View</button>";
                             if ($row['isBorrowed']) {
                                 echo "<span style='color: red;'>Borrowed</span>";
                             } else {
-                                echo "<a href='edit-book.php?bookId=" . $row['bookId'] . "' class='btn btn-primary'>Edit</a>";
-                                
+                                echo "<a href='edit-book.php?bookId=" . $row['bookId'] . "' class='btn btn-primary btn-sm'>Edit</a>";
                             }
                             echo "</td>";
                             echo "</tr>";
                         }
                     }                    
-
                 ?>
             </tbody>
         </table>
     </div>
+    </div>
+</div>
+
+<!-- Book Modal -->
+<div id="bookModal" class="book-modal">
+    <div class="book-modal-content">
+        <span class="close-modal" onclick="closeBookModal()">&times;</span>
+        <div class="book-cover">
+            <h2 id="modalTitle" style="font-size: 2.5em;"></h2>
+            <p id="modalAuthor" class="mb-2" style="font-size: 1.5em;"></p>
+            <div id="modalStatus" class="book-status"></div>
+        </div>
+        <div class="book-details">
+            <div class="book-detail-item">
+                <i class="fas fa-info-circle"></i>
+                <strong>Book ID:</strong>
+                <span id="modalBookId"></span>
+            </div>
+            <div class="book-detail-item">
+                <i class="fas fa-layer-group"></i>
+                <strong>Subject:</strong>
+                <span id="modalCategory"></span>
+            </div>
+            <div class="book-detail-item">
+                <i class="fas fa-building"></i>
+                <strong>Publisher:</strong>
+                <span id="modalPublisher"></span>
+            </div>
+            <div class="book-detail-item">
+                <i class="fas fa-calendar"></i>
+                <strong>Published Date:</strong>
+                <span id="modalPublishedDate"></span>
+            </div>
+            <div class="book-detail-item">
+                <i class="fas fa-book"></i>
+                <strong>Available Copies:</strong>
+                <span id="modalQuantity"></span>
+            </div>
+            <div class="book-detail-item">
+                <i class="fas fa-bookmark"></i>
+                <strong>Edition:</strong>
+                <span id="modalEdition"></span>
+            </div>
+            <div class="book-detail-item">
+                <i class="fas fa-quote-right"></i>
+                <strong>APA Citation:</strong>
+                <span id="modalAPA"></span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -237,43 +363,49 @@ $result = $stmt->get_result();
     <script>
         $(document).ready(function() {
             $('#dataTable').DataTable();
-            $(document).ready(function() {
-            $('#openModalBtn').on('click', function() {
-                $('#approveModal').modal('show');
-            });
-
-            $('#approveBtn').on('click', function() {
-                $('#approveModal').modal('hide');
-            });
-           });
-            // Delete book functionality
-            $('.delete-btn').on('click', function() {
-            const bookId = $(this).data('book-id');
-            const row = $(this).closest('tr');
-            const isBorrowed = row.find('td:contains("Borrowed")').length > 0;
-
-            if (isBorrowed) {
-                alert('This book is currently borrowed.');
-                return;
-            }
-
-            if (confirm('Are you sure you want to delete this book?')) {
-                $.ajax({
-                    url: 'process/delete-book.php',
-                    type: 'POST',
-                    data: { bookId: bookId },
-                    success: function(response) {
-                      
-                        location.reload();
-                    },
-                    error: function() {
-                        alert('Error deleting book. Please try again.');
-                    }
-                });
-            }
         });
 
-        });
+        function showBookModal(bookData) {
+            const modal = document.getElementById('bookModal');
+            document.getElementById('modalTitle').textContent = bookData.title;
+            document.getElementById('modalAuthor').textContent = `by ${bookData.authorName}`;
+            document.getElementById('modalBookId').textContent = bookData.bookId;
+            document.getElementById('modalCategory').textContent = bookData.categoryName;
+            document.getElementById('modalPublisher').textContent = bookData.publisher;
+            document.getElementById('modalPublishedDate').textContent = bookData.publishedDate;
+            document.getElementById('modalQuantity').textContent = bookData.quantity;
+            document.getElementById('modalEdition').textContent = bookData.edition || 'N/A';
+            
+            // Set APA citation with italic title
+            const apaCitation = bookData.authorName === 'No Author' 
+                ? `<em>${bookData.title}</em>. (${bookData.publishedYear}). ${bookData.publisher}`
+                : `${bookData.authorName} (${bookData.publishedYear}). <em>${bookData.title}</em>. ${bookData.publisher}`;
+            document.getElementById('modalAPA').innerHTML = apaCitation;
+
+            // Set status
+            const statusElement = document.getElementById('modalStatus');
+            if (bookData.isBorrowed) {
+                statusElement.textContent = 'Currently Borrowed';
+                statusElement.className = 'book-status status-borrowed';
+            } else {
+                statusElement.textContent = 'Available';
+                statusElement.className = 'book-status status-available';
+            }
+
+            modal.style.display = 'block';
+        }
+
+        function closeBookModal() {
+            document.getElementById('bookModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>
