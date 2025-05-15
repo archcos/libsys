@@ -17,8 +17,9 @@ $authorId = isset($_GET['authorId']) ? intval($_GET['authorId']) : null;
 $query = "
     SELECT 
         b.bookId, b.title, b.quantity, 
-        CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
-        c.categoryName, b.publisher, b.publishedDate, YEAR(b.publishedDate) AS publishedYear,
+        COALESCE(CONCAT(a.firstName, ' ', a.lastName), 'No Author') AS authorName, 
+        COALESCE(c.categoryName, 'No Subject') AS categoryName, 
+        b.publisher, b.publishedDate, YEAR(b.publishedDate) AS publishedYear,
         CASE 
             WHEN EXISTS (
                 SELECT 1 
@@ -28,8 +29,8 @@ $query = "
             ELSE 0
         END AS isBorrowed
     FROM tblbooks b
-    JOIN tblauthor a ON b.authorId = a.authorId
-    JOIN tblcategory c ON b.categoryId = c.categoryId";
+    LEFT JOIN tblauthor a ON b.authorId = a.authorId
+    LEFT JOIN tblcategory c ON b.categoryId = c.categoryId";
 
 
 // Apply filters dynamically
@@ -197,7 +198,13 @@ $result = $stmt->get_result();
                             echo "<tr>";
                             echo "<td>" . $row['bookId'] . "</td>";
                             echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['authorName']) . " (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['title']) . ". " . htmlspecialchars($row['publisher']) . "</td>";
+                            echo "<td>";
+                            if ($row['authorName'] == 'No Author') {
+                                echo htmlspecialchars($row['title']) . ". (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['publisher']);
+                            } else {
+                                echo htmlspecialchars($row['authorName']) . " (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['title']) . ". " . htmlspecialchars($row['publisher']);
+                            }
+                            echo "</td>";
                             echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
                             echo "<td>" . $row['quantity'] . "</td>";

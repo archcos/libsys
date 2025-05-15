@@ -31,54 +31,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $publisher = trim($_POST['publisher']);
     $publishedDate = trim($_POST['publishedDate']);
 
-    if (empty($title) || empty($authorIds) || empty($categoryIds)) {
-        $error = "All fields are required!";
+    if (empty($title)) {
+        $error = "Title is required!";
     } else {
         $dateAdded = date('Y-m-d');
+        $finalAuthorId = null;
+        $finalCategoryId = null;
 
-        // Handle Authors
-        if (count($authorIds) > 1) {
-            $authorNames = [];
-            foreach ($authorIds as $aid) {
-                $res = $conn->query("SELECT CONCAT(firstName, ' ', lastName) as fullName FROM tblauthor WHERE authorId = $aid");
-                if ($row = $res->fetch_assoc()) {
-                    $authorNames[] = $row['fullName'];
+        // Handle Authors if selected
+        if (!empty($authorIds)) {
+            if (count($authorIds) > 1) {
+                $authorNames = [];
+                foreach ($authorIds as $aid) {
+                    $res = $conn->query("SELECT CONCAT(firstName, ' ', lastName) as fullName FROM tblauthor WHERE authorId = $aid");
+                    if ($row = $res->fetch_assoc()) {
+                        $authorNames[] = $row['fullName'];
+                    }
                 }
-            }
-            $combinedAuthor = implode(', ', $authorNames);
+                $combinedAuthor = implode(', ', $authorNames);
 
-            // Save combined author to tblauthor
-            $stmtAuthorInsert = $conn->prepare("INSERT INTO tblauthor (firstName, lastName) VALUES (?, '')");
-            $stmtAuthorInsert->bind_param("s", $combinedAuthor);
-            $stmtAuthorInsert->execute();
-            $finalAuthorId = $stmtAuthorInsert->insert_id;
-            $stmtAuthorInsert->close();
-        } else {
-            $finalAuthorId = intval($authorIds[0]);
+                // Save combined author to tblauthor
+                $stmtAuthorInsert = $conn->prepare("INSERT INTO tblauthor (firstName, lastName) VALUES (?, '')");
+                $stmtAuthorInsert->bind_param("s", $combinedAuthor);
+                $stmtAuthorInsert->execute();
+                $finalAuthorId = $stmtAuthorInsert->insert_id;
+                $stmtAuthorInsert->close();
+            } else if (count($authorIds) == 1) {
+                $finalAuthorId = intval($authorIds[0]);
+            }
         }
 
-        // Handle Categories
-        if (count($categoryIds) > 1) {
-            $categoryNames = [];
-            foreach ($categoryIds as $cid) {
-                $res = $conn->query("SELECT categoryName FROM tblcategory WHERE categoryId = $cid");
-                if ($row = $res->fetch_assoc()) {
-                    $categoryNames[] = $row['categoryName'];
+        // Handle Categories if selected
+        if (!empty($categoryIds)) {
+            if (count($categoryIds) > 1) {
+                $categoryNames = [];
+                foreach ($categoryIds as $cid) {
+                    $res = $conn->query("SELECT categoryName FROM tblcategory WHERE categoryId = $cid");
+                    if ($row = $res->fetch_assoc()) {
+                        $categoryNames[] = $row['categoryName'];
+                    }
                 }
-            }
-            $combinedCategory = implode(', ', $categoryNames);
+                $combinedCategory = implode(', ', $categoryNames);
 
-            // Save combined category to tblcategory
-            $stmtCategoryInsert = $conn->prepare("INSERT INTO tblcategory (categoryName) VALUES (?)");
-            $stmtCategoryInsert->bind_param("s", $combinedCategory);
-            $stmtCategoryInsert->execute();
-            $finalCategoryId = $stmtCategoryInsert->insert_id;
-            $stmtCategoryInsert->close();
-        } else {
-            $finalCategoryId = intval($categoryIds[0]);
+                // Save combined category to tblcategory
+                $stmtCategoryInsert = $conn->prepare("INSERT INTO tblcategory (categoryName) VALUES (?)");
+                $stmtCategoryInsert->bind_param("s", $combinedCategory);
+                $stmtCategoryInsert->execute();
+                $finalCategoryId = $stmtCategoryInsert->insert_id;
+                $stmtCategoryInsert->close();
+            } else if (count($categoryIds) == 1) {
+                $finalCategoryId = intval($categoryIds[0]);
+            }
         }
 
-        // Insert book with finalAuthorId and finalCategoryId
+        // Insert book with optional authorId and categoryId
         $query = "INSERT INTO tblbooks (title, edition, authorId, categoryId, dateAdded, quantity, callNum, accessionNum, barcodeNum, publisher, publishedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ssiisisssss", $title, $edition, $finalAuthorId, $finalCategoryId, $dateAdded, $quantity, $callNum, $accessionNum, $barcodeNum, $publisher, $publishedDate);
@@ -207,7 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="category">Category:</label>
+                <label for="category">Subject:</label>
                 <div class="dropdown">
                     <button type="button" onclick="toggleDropdown2()" class="btn btn-light border" style="width: 100%;">Select Category(ies)</button>
                     <div id="checkboxDropdown2" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
