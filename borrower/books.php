@@ -212,11 +212,11 @@ $result = $stmt->get_result();
         .book-modal-content {
             position: relative;
             background: white;
-            margin: 5% auto;
+            margin: 2% auto;
             padding: 0;
-            width: 70%;
-            max-width: 800px;
-            border-radius: 15px;
+            width: 55%;
+            max-width: 600px;
+            border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             animation: modalFade 0.3s ease-in-out;
         }
@@ -224,15 +224,8 @@ $result = $stmt->get_result();
         .book-cover {
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
-            padding: 30px;
-            border-radius: 15px 15px 0 0;
-        }
-
-        .book-cover p {
-            color: white;
-            opacity: 0.9;
-            text-align: left;
-            margin-left: 0;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
         }
 
         .book-cover h2 {
@@ -240,21 +233,31 @@ $result = $stmt->get_result();
             margin: 0;
             font-weight: bold;
             text-align: left;
+            font-size: 2em;
+        }
+
+        .book-cover p {
+            color: white;
+            opacity: 0.9;
+            text-align: left;
+            margin-left: 0;
+            font-size: 1.2em;
+            margin-top: 5px;
         }
 
         .book-details {
-            padding: 30px;
+            padding: 20px;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
-            margin-top: 25px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
         }
 
         .book-detail-item {
-            padding: 15px;
+            padding: 12px;
             background: #f8f9fa;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 4px;
+            font-size: 14px;
         }
 
         .close-modal {
@@ -273,11 +276,11 @@ $result = $stmt->get_result();
 
         .book-status {
             display: inline-block;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 1em;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
             font-weight: bold;
-            margin-top: 15px;
+            margin-top: 12px;
         }
 
         .status-available {

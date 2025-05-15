@@ -42,9 +42,9 @@ $result = $conn->query($query);
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Material Design for Bootstrap -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
     <style>
-        .print-btn {
+         .print-btn {
             background-color: green;
             color: white;
             padding: 8px 15px;
@@ -224,10 +224,10 @@ $authorsResult = $conn->query($authorsQuery);
                 <div class="form-group">
                     <label for="type">Type:</label>
                     <select class="form-select" id="type" name="type" onchange="toggleOtherType()" required>
-                        <option value="Book">Book</option>
-                        <option value="Periodicals">Periodicals</option>
-                        <option value="Thesis/Dissertation">Thesis/Dissertation</option>
-                        <option value="Others">Others</option>
+                    <option value="Book">Book</option>
+                    <option value="Periodicals">Periodicals</option>
+                    <option value="Thesis/Dissertation">Thesis/Dissertation</option>
+                    <option value="Others">Others</option>
                     </select>
                 </div>
                 
@@ -239,17 +239,17 @@ $authorsResult = $conn->query($authorsQuery);
                 <div class="form-group">
                     <label for="author">Author:</label>
                     <select class="form-select" id="author" name="author" onchange="fetchBooksByAuthor()" required>
-                        <option value="">Select an Author</option>
-                        <?php while ($author = $authorsResult->fetch_assoc()): ?>
-                            <option value="<?= $author['authorId']; ?>"><?= htmlspecialchars($author['authorName']); ?></option>
-                        <?php endwhile; ?>
+                    <option value="">Select an Author</option>
+                    <?php while ($author = $authorsResult->fetch_assoc()): ?>
+                        <option value="<?= $author['authorId']; ?>"><?= htmlspecialchars($author['authorName']); ?></option>
+                    <?php endwhile; ?>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="title">Title:</label>
                     <select class="form-select" id="title" name="title" onchange="fetchBookDetails()" required>
-                        <option value="">Select a Title</option>
+                    <option value="">Select a Title</option>
                     </select>
                 </div>
 
@@ -274,7 +274,7 @@ $authorsResult = $conn->query($authorsQuery);
                 </div>
                 
                 <div class="btn-group">
-                    <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">Add</button>
                     <button type="button" onclick="closeModal('addReferenceModal')" class="btn btn-danger">Cancel</button>
                 </div>
             </form>

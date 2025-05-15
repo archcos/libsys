@@ -36,6 +36,7 @@ $categoriesResult = $conn->query("SELECT * FROM tblcategory");
 // Update book details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
+    $edition = trim($_POST['edition']);
     $authorId = trim($_POST['author']);
     $categoryId = trim($_POST['category']);
     $quantity = trim($_POST['quantity']);
@@ -45,15 +46,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $publisher = trim($_POST['publisher']);
     $publishedDate = trim($_POST['publishedDate']);
 
-    // Validate input
-    if (empty($title) || empty($authorId) || empty($categoryId)) {
-        $error = "All fields are required!";
+    // Validate input - only required fields
+    if (empty($title)) {
+        $error = "Title is required!";
+    } else if (empty($accessionNum)) {
+        $error = "Accession Number is required!";
+    } else if (empty($publisher)) {
+        $error = "Publisher is required!";
+    } else if (empty($publishedDate)) {
+        $error = "Copyright Year is required!";
+    } else if (empty($quantity)) {
+        $error = "Volume is required!";
     } else {
         $updateQuery = "UPDATE tblbooks 
-                        SET title = ?, authorId = ?, categoryId = ?, quantity = ?, callNum = ?, accessionNum = ?, barcodeNum = ?, publisher = ?, publishedDate = ?
-                        WHERE bookId = ?";
+                    SET title = ?, edition = ?, authorId = ?, categoryId = ?, quantity = ?, callNum = ?, accessionNum = ?, barcodeNum = ?, publisher = ?, publishedDate = ?
+                    WHERE bookId = ?";
         $stmt = $conn->prepare($updateQuery);
-        $stmt->bind_param("siissssssi", $title, $authorId, $categoryId, $quantity, $callNum, $accessionNum, $barcodeNum, $publisher, $publishedDate, $bookId);
+        $stmt->bind_param("ssiissssssi", $title, $edition, $authorId, $categoryId, $quantity, $callNum, $accessionNum, $barcodeNum, $publisher, $publishedDate, $bookId);
 
         if ($stmt->execute()) {
             $success = "Book updated successfully!";
@@ -136,8 +145,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="author">Author:</label>
-                <select id="author" name="author" required>
+                <label for="edition">Edition:</label>
+                <input type="text" id="edition" name="edition" value="<?php echo htmlspecialchars($book['edition']); ?>" placeholder="Enter Edition (Optional)">
+            </div>
+
+            <div class="form-group">
+                <label for="author">Author (Optional):</label>
+                <select id="author" name="author">
+                    <option value="">Select Author</option>
                     <?php while ($author = $authorsResult->fetch_assoc()): ?>
                         <option value="<?php echo $author['authorId']; ?>" <?php echo ($author['authorId'] == $book['authorId']) ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($author['firstName'] . ' ' . $author['lastName']); ?>
@@ -147,8 +162,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="category">Subject:</label>
-                <select id="category" name="category" required>
+                <label for="category">Subject (Optional):</label>
+                <select id="category" name="category">
+                    <option value="">Select Subject</option>
                     <?php while ($category = $categoriesResult->fetch_assoc()): ?>
                         <option value="<?php echo $category['categoryId']; ?>" <?php echo ($category['categoryId'] == $book['categoryId']) ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($category['categoryName']); ?>
@@ -163,8 +179,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="callNum">Call Number:</label>
-                <input type="text" id="callNum" name="callNum" value="<?php echo htmlspecialchars($book['callNum']); ?>" required>
+                <label for="callNum">Call Number (Optional):</label>
+                <input type="text" id="callNum" name="callNum" value="<?php echo htmlspecialchars($book['callNum']); ?>">
             </div>
 
             <div class="form-group">
@@ -173,8 +189,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="barcodeNum">Barcode Number:</label>
-                <input type="text" id="barcodeNum" name="barcodeNum" value="<?php echo htmlspecialchars($book['barcodeNum']); ?>" required>
+                <label for="barcodeNum">Barcode Number (Optional):</label>
+                <input type="text" id="barcodeNum" name="barcodeNum" value="<?php echo htmlspecialchars($book['barcodeNum']); ?>">
             </div>
 
             <div class="form-group">
@@ -183,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="publishedDate">Copyright:</label>
+                <label for="publishedDate">Copyright Year:</label>
                 <input type="date" id="publishedDate" name="publishedDate" value="<?php echo htmlspecialchars($book['publishedDate']); ?>" required>
             </div>
 

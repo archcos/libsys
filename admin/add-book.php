@@ -33,6 +33,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($title)) {
         $error = "Title is required!";
+    } else if (empty($accessionNum)) {
+        $error = "Accession Number is required!";
+    } else if (empty($publisher)) {
+        $error = "Publisher is required!";
+    } else if (empty($publishedDate)) {
+        $error = "Copyright Year is required!";
+    } else if (empty($quantity)) {
+        $error = "Volume is required!";
     } else {
         $dateAdded = date('Y-m-d');
         $finalAuthorId = null;
@@ -192,12 +200,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-group">
                 <label for="edition">Edition:</label>
-                <input type="text" id="edition" name="edition" placeholder="Enter Edition">
+                <input type="text" id="edition" name="edition" placeholder="Enter Edition (Optional)">
             </div>
             
             <div class="form-group">
-                <label for="author">Author:</label>
-                <div class="dropdown">
+                <label for="author">Author (Optional):</label>
+                <div class="dropdown mb-2">
                     <button type="button" onclick="toggleDropdown()" class="btn btn-light border" style="width: 100%;">Select Author(s)</button>
                     <div id="checkboxDropdown" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
                         <?php while ($author = $authorsResult->fetch_assoc()): ?>
@@ -210,11 +218,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endwhile; ?>
                     </div>
                 </div>
+                <!-- New Author Input Fields -->
+                <div class="mb-2">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="toggleNewAuthorFields()">+ Add New Author</button>
+                </div>
+                <div id="newAuthorFields" style="display: none;">
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" id="newAuthorFirstName" placeholder="First Name">
+                        <input type="text" class="form-control" id="newAuthorLastName" placeholder="Last Name (Required)">
+                        <button type="button" class="btn btn-success" onclick="addNewAuthor()">Add</button>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="category">Subject:</label>
-                <div class="dropdown">
+                <label for="category">Subject (Optional):</label>
+                <div class="dropdown mb-2">
                     <button type="button" onclick="toggleDropdown2()" class="btn btn-light border" style="width: 100%;">Select Category(ies)</button>
                     <div id="checkboxDropdown2" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
                         <?php while ($category = $categoriesResult->fetch_assoc()): ?>
@@ -227,19 +246,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endwhile; ?>
                     </div>
                 </div>
+                <!-- New Subject Input Field -->
+                <div class="mb-2">
+                    <button type="button" class="btn btn-sm btn-primary" onclick="toggleNewSubjectField()">+ Add New Subject</button>
+                </div>
+                <div id="newSubjectField" style="display: none;">
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" id="newSubjectName" placeholder="Subject Name">
+                        <button type="button" class="btn btn-success" onclick="addNewSubject()">Add</button>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="callNum">Call Number:</label>
-                <input type="text" id="callNum" name="callNum" placeholder="Enter Call Number" required>
+                <label for="callNum">Call Number (Optional):</label>
+                <input type="text" id="callNum" name="callNum" placeholder="Enter Call Number">
             </div>
             <div class="form-group">
                 <label for="accessionNum">Accession Number:</label>
                 <input type="text" id="accessionNum" name="accessionNum" placeholder="Enter Accession Number" required>
             </div>
             <div class="form-group">
-                <label for="barcodeNum">Barcode Number:</label>
-                <input type="text" id="barcodeNum" name="barcodeNum" placeholder="Enter Barcode Number" required>
+                <label for="barcodeNum">Barcode Number (Optional):</label>
+                <input type="text" id="barcodeNum" name="barcodeNum" placeholder="Enter Barcode Number">
             </div>
             <div class="form-group">
                 <label for="publisher">Publisher:</label>
@@ -249,12 +278,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="publishedDate">Copyright Year:</label>
                 <input type="date" id="publishedDate" name="publishedDate" placeholder="Enter Published Date" required>
             </div>
-            <!-- Quantity Field -->
             <div class="form-group">
                 <label for="quantity">Volume:</label>
                 <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
             </div>
-
 
             <button type="submit" class="btn btn-primary">Add Book</button>
         </form>
@@ -287,6 +314,107 @@ document.addEventListener('click', function(event) {
         dropdown.style.display = "none";
     }
 });
+
+        function toggleNewAuthorFields() {
+            const fields = document.getElementById('newAuthorFields');
+            fields.style.display = fields.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleNewSubjectField() {
+            const field = document.getElementById('newSubjectField');
+            field.style.display = field.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addNewAuthor() {
+            const firstName = document.getElementById('newAuthorFirstName').value.trim();
+            const lastName = document.getElementById('newAuthorLastName').value.trim();
+
+            if (!lastName) {
+                alert('Last Name is required!');
+                return;
+            }
+
+            // Send AJAX request to add new author
+            $.ajax({
+                url: 'process/add-author-ajax.php',
+                type: 'POST',
+                data: {
+                    firstName: firstName,
+                    lastName: lastName
+                },
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.success) {
+                        // Add new checkbox to the dropdown
+                        const dropdown = document.getElementById('checkboxDropdown');
+                        const div = document.createElement('div');
+                        div.className = 'form-check';
+                        div.innerHTML = `
+                            <input class="form-check-input" type="checkbox" name="authors[]" value="${result.authorId}" id="author_${result.authorId}" checked>
+                            <label class="form-check-label" for="author_${result.authorId}">
+                                ${firstName} ${lastName}
+                            </label>
+                        `;
+                        dropdown.appendChild(div);
+
+                        // Clear input fields
+                        document.getElementById('newAuthorFirstName').value = '';
+                        document.getElementById('newAuthorLastName').value = '';
+                        toggleNewAuthorFields();
+                        alert('Author added successfully!');
+                    } else {
+                        alert('Error adding author: ' + result.message);
+                    }
+                },
+                error: function() {
+                    alert('Error adding author. Please try again.');
+                }
+            });
+        }
+
+        function addNewSubject() {
+            const subjectName = document.getElementById('newSubjectName').value.trim();
+
+            if (!subjectName) {
+                alert('Subject name is required!');
+                return;
+            }
+
+            // Send AJAX request to add new subject
+            $.ajax({
+                url: 'process/add-subject-ajax.php',
+                type: 'POST',
+                data: {
+                    categoryName: subjectName
+                },
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.success) {
+                        // Add new checkbox to the dropdown
+                        const dropdown = document.getElementById('checkboxDropdown2');
+                        const div = document.createElement('div');
+                        div.className = 'form-check';
+                        div.innerHTML = `
+                            <input class="form-check-input" type="checkbox" name="categories[]" value="${result.categoryId}" checked>
+                            <label class="form-check-label" for="category_${result.categoryId}">
+                                ${subjectName}
+                            </label>
+                        `;
+                        dropdown.appendChild(div);
+
+                        // Clear input field
+                        document.getElementById('newSubjectName').value = '';
+                        toggleNewSubjectField();
+                        alert('Subject added successfully!');
+                    } else {
+                        alert('Error adding subject: ' + result.message);
+                    }
+                },
+                error: function() {
+                    alert('Error adding subject. Please try again.');
+                }
+            });
+        }
 </script>
 <?php
 // Capture the content and include it in the main template

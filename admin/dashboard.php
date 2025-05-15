@@ -345,7 +345,7 @@ $years = range(2010, 2040); // Change this range as you like
                                     <?php echo $year; ?>
                                 </option>
                             <?php endforeach; ?>
-                        </select>
+                        </select>   
                     </form>
                 </p>
 
