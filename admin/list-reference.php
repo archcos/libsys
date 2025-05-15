@@ -35,11 +35,16 @@ $result = $conn->query($query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Reference Slips</title>
+    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-     <!-- Material Design for Bootstrap (MDB) -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Material Design for Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
     <style>
-         .print-btn {
+        .print-btn {
             background-color: green;
             color: white;
             padding: 8px 15px;
@@ -85,19 +90,48 @@ $result = $conn->query($query);
         .modal {
             display: none;
             position: fixed;
-            background: rgba(0, 0, 0, 0.5);
-            top: 0;
+            z-index: 1000;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
         }
         .modal-content {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-height: 600px;
+            overflow-y: auto;
         }
-        .modal-content form {
-            margin: 0;
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .form-control, .form-select {
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
         }
     </style>
 </head>
@@ -126,7 +160,7 @@ $authorsResult = $conn->query($authorsQuery);
                     <th>Borrower Name</th>
                     <th>Author</th>
                     <th>Title</th>
-                    <th>Category</th>
+                    <th>Subject</th>
                     <th>Type</th>
                     <th>Call Number</th>
                     <th>SubLocation</th>
@@ -168,64 +202,99 @@ $authorsResult = $conn->query($authorsQuery);
 </div>
 
     <!-- Add Reference Slip Modal -->
-    <div id="addReferenceModal" style="display: none; position: fixed; z-index: 1000; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; justify-content: center; align-items: center;">
-        <div style="background: white; padding: 20px; border-radius: 10px; width: 300px;">
-            <h3>Add Reference Slip</h3>
+    <div id="addReferenceModal" class="modal">
+        <div class="modal-content">
+            <h3 class="mb-4">Add Reference Slip</h3>
             <form id="addReferenceForm">
-                <label for="borrowerIds">Borrower ID:</label><br>
-                <input type="number" id="borrowerIds" name="borrowerIds" required><br><br>
-                
-                <label for="type">Type:</label><br>
-                <select id="type" name="type" onchange="toggleOtherType()" required>
-                    <option value="Book">Book</option>
-                    <option value="Periodicals">Periodicals</option>
-                    <option value="Thesis/Dissertation">Thesis/Dissertation</option>
-                    <option value="Others">Others</option>
-                </select><br><br>
-                
-                <div id="otherTypeContainer" style="display: none;">
-                    <label for="otherType">Specify Type:</label><br>
-                    <input type="text" id="otherType" name="otherType"><br><br>
+                <div class="form-group">
+                    <label for="borrowerIds">Borrower:</label>
+                    <select class="form-select" id="borrowerIds" name="borrowerIds" required>
+                        <option value="">Select Borrower</option>
+                        <?php
+                        $borrowersQuery = "SELECT idNumber, firstName, surName FROM tblborrowers ORDER BY surName, firstName";
+                        $borrowersResult = $conn->query($borrowersQuery);
+                        while ($borrower = $borrowersResult->fetch_assoc()): ?>
+                            <option value="<?= $borrower['idNumber']; ?>">
+                                <?= $borrower['idNumber'] . ' - ' . $borrower['surName'] . ', ' . $borrower['firstName']; ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
                 </div>
                 
-                <label for="author">Author:</label><br>
-                <select id="author" name="author" onchange="fetchBooksByAuthor()" required>
-                    <option value="">Select an Author</option>
-                    <?php while ($author = $authorsResult->fetch_assoc()): ?>
-                        <option value="<?= $author['authorId']; ?>"><?= htmlspecialchars($author['authorName']); ?></option>
-                    <?php endwhile; ?>
-                </select><br><br>
+                <div class="form-group">
+                    <label for="type">Type:</label>
+                    <select class="form-select" id="type" name="type" onchange="toggleOtherType()" required>
+                        <option value="Book">Book</option>
+                        <option value="Periodicals">Periodicals</option>
+                        <option value="Thesis/Dissertation">Thesis/Dissertation</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="otherTypeContainer" style="display: none;">
+                    <label for="otherType">Specify Type:</label>
+                    <input type="text" class="form-control" id="otherType" name="otherType">
+                </div>
+                
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <select class="form-select" id="author" name="author" onchange="fetchBooksByAuthor()" required>
+                        <option value="">Select an Author</option>
+                        <?php while ($author = $authorsResult->fetch_assoc()): ?>
+                            <option value="<?= $author['authorId']; ?>"><?= htmlspecialchars($author['authorName']); ?></option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
 
-                <label for="title">Title:</label><br>
-                <select id="title" name="title" onchange="fetchCategoryByBook()" required>
-                    <option value="">Select a Title</option>
-                </select><br><br>
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <select class="form-select" id="title" name="title" onchange="fetchBookDetails()" required>
+                        <option value="">Select a Title</option>
+                    </select>
+                </div>
 
-                <label for="category">Category:</label><br>
-                <input type="text" id="category" name="category" readonly><br><br>
+                <div class="form-group">
+                    <label for="category">Subject:</label>
+                    <input type="text" class="form-control" id="category" name="category" readonly>
+                </div>
 
-                <label for="callNumber">Call Number:</label><br>
-                <input type="text" id="callNumber" name="callNumber" required><br><br>
+                <div class="form-group">
+                    <label for="callNumber">Call Number:</label>
+                    <input type="text" class="form-control" id="callNumber" name="callNumber" readonly>
+                </div>
 
-                <label for="subLocation">SubLocation:</label><br>
-                <input type="text" id="subLocation" name="subLocation" required><br><br>
+                <div class="form-group">
+                    <label for="subLocation">SubLocation:</label>
+                    <input type="text" class="form-control" id="subLocation" name="subLocation" required>
+                </div>
 
-                <label for="date">Date:</label><br>
-                <input type="date" id="date" name="date" required><br><br>
-                <button type="submit" class="btn btn-primary">Add</button>
-                <button type="button" onclick="closeModal('addReferenceModal')" class="btn cancel-btn">Cancel</button>
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" class="form-control" id="date" name="date" required>
+                </div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="button" onclick="closeModal('addReferenceModal')" class="btn btn-danger">Cancel</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- MDB JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
     <script>
 
         function fetchBooksByAuthor() {
             let authorId = document.getElementById("author").value;
             let titleSelect = document.getElementById("title");
-            titleSelect.innerHTML = '<option value="">Select a Title</option>'; // Reset title dropdown
+            titleSelect.innerHTML = '<option value="">Select a Title</option>';
 
             if (authorId) {
                 $.ajax({
@@ -245,19 +314,22 @@ $authorsResult = $conn->query($authorsQuery);
             }
         }
 
-        function fetchCategoryByBook() {
+        function fetchBookDetails() {
             let bookId = document.getElementById("title").value;
             let categoryInput = document.getElementById("category");
-            categoryInput.value = ""; // Reset category input
+            let callNumberInput = document.getElementById("callNumber");
+            categoryInput.value = "";
+            callNumberInput.value = "";
 
             if (bookId) {
                 $.ajax({
-                    url: 'process/get-category.php',
+                    url: 'process/get-book-details.php',
                     type: 'POST',
                     data: { bookId: bookId },
                     dataType: 'json',
                     success: function (data) {
                         categoryInput.value = data.category;
+                        callNumberInput.value = data.callNumber;
                     }
                 });
             }

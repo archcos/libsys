@@ -84,7 +84,7 @@ $result = $conn->query($query);
     </div>
     <div class="card-body">
         <div class="container">
-            <h1>Manage Categories</h1>
+            <h1>Manage Subjects</h1>
             <button class="btn btn-primary" onclick="showModal('addCategoryModal')">Add New Subject</button>
             <div style="margin-top: 20px;"> 
             </div>
