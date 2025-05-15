@@ -5,12 +5,20 @@ include('db/db-connect.php'); // Adjust the path to your actual connection file
 ob_start();
 
 // Fetch data from tblbooks with author, category names, and borrow status
-$query = "SELECT b.bookId, b.title, b.quantity, b.publisher, b.publishedDate,
-                 CONCAT(a.firstName, ' ', a.lastName) AS authorName, 
-                 c.categoryName, YEAR(b.publishedDate) AS publishedYear
+$query = "SELECT b.bookId, b.title, b.quantity, b.publisher, b.publishedDate, b.edition,
+                 COALESCE(CONCAT(a.firstName, ' ', a.lastName), 'No Author') AS authorName, 
+                 COALESCE(c.categoryName, 'Uncategorized') AS categoryName, 
+                 YEAR(b.publishedDate) AS publishedYear,
+                 COALESCE((
+                    SELECT returned 
+                    FROM tblreturnborrow 
+                    WHERE bookId = b.bookId 
+                    ORDER BY borrowId DESC 
+                    LIMIT 1
+                 ), 'Yes') as returnedStatus
           FROM tblbooks b
-          JOIN tblauthor a ON b.authorId = a.authorId
-          JOIN tblcategory c ON b.categoryId = c.categoryId";
+          LEFT JOIN tblauthor a ON b.authorId = a.authorId
+          LEFT JOIN tblcategory c ON b.categoryId = c.categoryId";
 
 $stmt = $conn->prepare($query);
 $stmt->execute();
@@ -36,21 +44,55 @@ $result = $stmt->get_result();
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <style>
         body {
-    font-family: 'Roboto', sans-serif;
-    background: url('assets/img/lib.png') no-repeat center center fixed;
-    background-size: cover;
-    margin: 0;
-    padding: 0;
-    color: #333;
-}
+            font-family: 'Roboto', sans-serif;
+            background: url('assets/img/lib.png') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            min-width: 320px;
+        }
 
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        td {
+            background-color: #fff;
+        }
 
         .header {
             display: flex;
-            justify-content: center; /* Center the header content */
+            justify-content: center;
             align-items: center;
             padding: 20px;
-            position: relative; /* Allows positioning of the buttons */
+            position: relative;
             color: white;
         }
 
@@ -76,14 +118,10 @@ $result = $stmt->get_result();
             transition: background-color 0.3s ease;
         }
 
-        .header .btn-back:hover {
-            background-color: #5a6268;
-        }
-
         .header .btn-login {
-            position: absolute; /* Position the login button independently */
-            right: 20px; /* Align it to the right side */
-            top: 50%; /* Center vertically within the header */
+            position: absolute;
+            right: 20px;
+            top: 50%;
             transform: translateY(-50%);
             padding: 8px 16px;
             background-color: #007bff;
@@ -93,33 +131,7 @@ $result = $stmt->get_result();
             cursor: pointer;
             font-weight: bold;
             text-decoration: none;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .header .btn-login:hover {
-            background-color: rgb(6, 57, 112);
-            color: white;
-        }
-
-        .container {
-            width: 90%;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: black;
-            font-size: 2rem;
-        }
-
-        p {
-            text-align: center;
-            font-size: 1.1rem;
-            color: #555;
+            transition: background-color 0.3s ease;
         }
 
         .search-container {
@@ -136,32 +148,6 @@ $result = $stmt->get_result();
             border-radius: 5px;
             border: 2px solid #007bff;
             outline: none;
-            transition: border 0.3s;
-        }
-
-        .search-container input:focus {
-            border-color: #0056b3;
-        }
-
-        table {
-            width: 100%;
-            margin-top: 30px;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-
-        td {
-            background-color: #fff;
         }
 
         .btn-action {
@@ -174,10 +160,6 @@ $result = $stmt->get_result();
             transition: background-color 0.3s ease;
         }
 
-        .btn-action:hover {
-            background-color: #0056b3;
-        }
-
         .btn-nostock {
             padding: 8px 16px;
             background-color: #6c757d;
@@ -187,16 +169,17 @@ $result = $stmt->get_result();
             cursor: not-allowed;
         }
 
-        @media (max-width: 768px) {
-            table {
-                font-size: 0.9rem;
-            }
-
-            .search-container input {
-                width: 100%;
-            }
+        .btn-view {
+            padding: 4px 8px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
         }
-        
+
         /* Book Modal Styles */
         .book-modal {
             display: none;
@@ -262,10 +245,10 @@ $result = $stmt->get_result();
 
         .close-modal {
             position: absolute;
-            right: 20px;
-            top: 20px;
+            right: 15px;
+            top: 15px;
             color: white;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -298,19 +281,74 @@ $result = $stmt->get_result();
             to {opacity: 1; transform: translateY(0);}
         }
 
-        .btn-view {
-            padding: 4px 8px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-left: 5px;
+        /* Responsive styles */
+        @media screen and (max-width: 1200px) {
+            .container {
+                width: 98%;
+            }
         }
 
-        .btn-view:hover {
-            background-color: #0056b3;
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .book-modal-content {
+                width: 90%;
+                margin: 5% auto;
+            }
+
+            .book-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .book-details {
+                grid-template-columns: 1fr;
+            }
+
+            .header .btn-back,
+            .header .btn-login {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+
+            .search-container input {
+                width: 95%;
+            }
+        }
+
+        .btn-refresh {
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-refresh:hover {
+            background-color: #218838;
+        }
+
+        .btn-refresh i {
+            margin-right: 5px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .search-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .btn-refresh {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
@@ -323,11 +361,14 @@ $result = $stmt->get_result();
             <a href="login.php" class="btn-login">Login</a>
         </div>
 
-        <p>Explore the list of books available for borrowing in the library. Search, select, and borrow your favorite books.</p>
+        <p style="text-align: center;">Explore the list of books available for borrowing in the library. Search, select, and borrow your favorite books.</p>
 
         <!-- Search Box -->
         <div class="search-container">
             <input type="text" id="searchBox" placeholder="Search books by title, author, or category..." onkeyup="searchBooks()">
+            <button id="refreshButton" class="btn-refresh" onclick="refreshTable()">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
         </div>
 
         <!-- Books Table -->
@@ -339,6 +380,7 @@ $result = $stmt->get_result();
                     <th>Book ID</th>
                     <th>Title</th>
                     <th>Author</th>
+                    <th>Edition</th>
                     <th>APA</th>
                     <th>Category</th>
                     <th>Publisher</th>
@@ -365,6 +407,7 @@ $result = $stmt->get_result();
                         echo "<td>" . $row['bookId'] . "</td>";
                         echo "<td><em>" . htmlspecialchars($row['title']) . "</em> <button class='btn-view' onclick='showBookModal(" . json_encode($row) . ")'><i class='fas fa-eye'></i></button></td>";
                         echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
+                        echo "<td>" . (empty($row['edition']) ? 'N/A' : htmlspecialchars($row['edition'])) . "</td>";
                         echo "<td>";
                         if ($row['authorName'] == 'No Author') {
                             echo "<em>" . htmlspecialchars($row['title']) . "</em>. (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['publisher']);
@@ -409,6 +452,10 @@ $result = $stmt->get_result();
             for (let i = 0; i < rows.length; i++) {
                 rows[i].style.display = rows[i].innerText.toLowerCase().includes(query) ? '' : 'none';
             }
+        }
+
+        function refreshTable() {
+            location.reload();
         }
     </script>
 

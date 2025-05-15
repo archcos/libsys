@@ -241,18 +241,20 @@ if ($filter_type == 'monthly') {
                         }
 
                         $balances = array();
+                        $book_quantities = array(); // Store the original book quantities
+                        
                         while ($row = mysqli_fetch_assoc($result)) {
                             $book_title = $row['details'];
                             
-                            // Initialize balance if not yet set
+                            // Initialize balance and book quantity if not yet set
                             if (!isset($balances[$book_title])) {
                                 $balances[$book_title] = $row['balance'];
+                                // Store the original book quantity
+                                $book_quantities[$book_title] = $row['balance'];
                             } else {
-                                // Subtract borrow quantity
-                                $balances[$book_title] -= $row['borrow_qty'];
-                                
-                                // Add return quantity
-                                $balances[$book_title] += $row['return_qty'];
+                                // Calculate new balance but don't exceed original quantity
+                                $new_balance = $balances[$book_title] - $row['borrow_qty'] + $row['return_qty'];
+                                $balances[$book_title] = max(0, min($new_balance, $book_quantities[$book_title]));
                             }
                             
                             echo "<tr>";

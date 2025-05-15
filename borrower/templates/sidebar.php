@@ -40,16 +40,6 @@
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
-
-    <!-- Logout Button -->
-    <li class="nav-item mt-auto">
-        <form action="process/logout.php" method="POST" class="p-0 text-center">
-            <button type="submit" class="btn btn-block text-white">
-                <i class="fas fa-sign-out-alt"></i> <!-- Kept 'fa-sign-out-alt' icon -->
-                Logout
-            </button>
-        </form>
-    </li>
 </ul>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

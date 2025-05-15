@@ -257,7 +257,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : ''; // Get the status from 
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                <p><?php echo $totalQuantity - $totalNotReturned; ?></p>
+                                                <p><?php echo max(0, $totalQuantity - $totalNotReturned); ?></p>
                                                 </div>
                                                 <div class="col">
                                                     
