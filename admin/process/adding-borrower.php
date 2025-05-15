@@ -1,6 +1,11 @@
 <?php
-
+session_start();
 include('db-connect.php');
+
+// Load PHPMailer
+require '../vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 // Check if the form was submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -21,8 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reason = $conn->real_escape_string($_POST['reason']);
     $specialInstructions = $conn->real_escape_string($_POST['specialInstructions']);
 
-
-
     // Check if the ID number already exists
     $query = "SELECT 1 FROM tblborrowers WHERE idNumber = '$idNumber' LIMIT 1";
     $result = $conn->query($query);
@@ -38,8 +41,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               VALUES ('$idNumber', '$surName', '$firstName', '$middleName', '$emailAddress', '$position', '$course', '$year', '$gender', '$birthDate', '$remarks', '$homeAddress', '$borrowerType', '$librarian', '$reason','$specialInstructions' )";
 
     if ($conn->query($query)) {
-        // Success, redirect back with a success message
-        header("Location: ../add-borrower.php?borrowerType=$borrowerType&status=success");
+        // Initialize PHPMailer for email notifications
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'mjaymillanar@gmail.com';
+            $mail->Password = 'glkw yaay tmuq zzmd';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+            $mail->setFrom('mjaymillanar@gmail.com', 'Library Notification');
+
+            // Set recipient email and message
+            $mail->clearAddresses();
+            $mail->addAddress($emailAddress);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'USTP Library - Registration Confirmation';
+            $mail->Body = "
+                <h1>Hello, $firstName!</h1>
+                <p>Thank you for registering at USTP Library. Your registration details:</p>
+                <ul>
+                    <li><strong>ID Number:</strong> $idNumber</li>
+                    <li><strong>Name:</strong> $firstName $middleName $surName</li>
+                    <li><strong>Borrower Type:</strong> $borrowerType</li>
+                </ul>
+                <p><strong>Important:</strong> Please visit the library to get your Borrower's Card.</p>
+                <p>Thank you!</p>
+            ";
+            $mail->AltBody = "Hello $firstName, Thank you for registering at USTP Library. Please visit the library to get your Borrower's Card and activate your account.";
+
+            $mail->send();
+            header("Location: ../add-borrower.php?borrowerType=$borrowerType&status=success");
+        } catch (Exception $e) {
+            header("Location: ../add-borrower.php?borrowerType=$borrowerType&status=error");
+        }
     } else {
         // Error inserting borrower
         header("Location: ../add-borrower.php?borrowerType=$borrowerType&status=error");
