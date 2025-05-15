@@ -183,11 +183,11 @@ $result = $stmt->get_result();
                     <th>Title</th>
                     <th>APA Format</th>
                     <th>Author</th>
-                    <th>Category</th>
+                    <th>Subject</th>
                     <th>Stocks</th>
                     <th>Publisher</th>
-                    <th>Copyright Year</th>
-                    <th>Actions</th>
+                    <th>Copyright</th>
+                    <th>Update</th>
                 </tr>
             </thead>
             <tbody>
@@ -197,7 +197,7 @@ $result = $stmt->get_result();
                             echo "<tr>";
                             echo "<td>" . $row['bookId'] . "</td>";
                             echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                            echo "<td>" . " (" . htmlspecialchars($row['authorName']) . " , " .  htmlspecialchars($row['publishedYear']) . ")" . "</td>";
+                            echo "<td>" . htmlspecialchars($row['authorName']) . " (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['title']) . ". " . htmlspecialchars($row['publisher']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
                             echo "<td>" . $row['quantity'] . "</td>";
@@ -205,10 +205,10 @@ $result = $stmt->get_result();
                             echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>"; 
                             echo "<td>";
                             if ($row['isBorrowed']) {
-                                echo "<span style='color: red;'>Borrowed - Cannot Delete</span>";
+                                echo "<span style='color: red;'>Borrowed</span>";
                             } else {
                                 echo "<a href='edit-book.php?bookId=" . $row['bookId'] . "' class='btn btn-primary'>Edit</a>";
-                                echo "<button class='delete-btn' data-book-id='" . $row['bookId'] . "'>Delete</button>";
+                                
                             }
                             echo "</td>";
                             echo "</tr>";
@@ -243,10 +243,10 @@ $result = $stmt->get_result();
             $('.delete-btn').on('click', function() {
             const bookId = $(this).data('book-id');
             const row = $(this).closest('tr');
-            const isBorrowed = row.find('td:contains("Borrowed - Cannot Delete")').length > 0;
+            const isBorrowed = row.find('td:contains("Borrowed")').length > 0;
 
             if (isBorrowed) {
-                alert('This book is currently borrowed and cannot be deleted.');
+                alert('This book is currently borrowed.');
                 return;
             }
 

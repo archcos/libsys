@@ -2,7 +2,6 @@
 // Start session to store success message
 $redirectUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '../dashboard.php';
 
-
 // Load Composer's autoloader
 require '../vendor/autoload.php'; // Ensure the path to 'vendor/autoload.php' is correct
 
@@ -16,10 +15,11 @@ include('db-connect.php');
 $today = new DateTime();
 $todayFormatted = $today->format('Y-m-d');
 
+// Function to append query parameters to URL
 function appendQueryParam($url, $param, $value) {
     $parsedUrl = parse_url($url);
     $queryParams = [];
-    
+
     if (isset($parsedUrl['query'])) {
         parse_str($parsedUrl['query'], $queryParams);
     }
@@ -36,24 +36,21 @@ function appendQueryParam($url, $param, $value) {
     return $newUrl;
 }
 
-// Get previous page or default to dashboard
-$redirectUrl = $_SERVER['HTTP_REFERER'] ?? '../dashboard.php';
-
-// Fetch data for books due in 2 days or less and not returned
-// Remove (AND DATEDIFF(rb.returnDate, ?) <= 2;) and ($stmt->bind_param('s', $todayFormatted);) if any date ma send ang email
+// SQL to fetch borrower details and their book return dates
+// remove AND DATEDIFF(rb.returnDate, ?) <= 2; and $stmt->bind_param('s', $todayFormatted); if manual send og email
 $sql = "
-    SELECT rb.borrowerId, rb.bookId, rb.returnDate, b.emailAddress, b.firstname
+    SELECT rb.borrowerId AS idNumber, rb.bookId, rb.returnDate, b.emailAddress, b.firstname
     FROM tblreturnborrow rb
     INNER JOIN tblborrowers b ON rb.borrowerId = b.idNumber
     WHERE rb.returned = 'No'
-    AND DATEDIFF(rb.returnDate, ?) <= 2;
+AND DATEDIFF(rb.returnDate, ?) <= 2;
 ";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('s', $todayFormatted);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Initialize PHPMailer
+// Initialize PHPMailer for email notifications
 $mail = new PHPMailer(true);
 $mail->isSMTP();
 $mail->Host = 'smtp.gmail.com';
@@ -66,14 +63,14 @@ $mail->setFrom('mjaymillanar@gmail.com', 'Library Notification');
 
 // Check if there are borrowers who have books due soon
 if ($result->num_rows > 0) {
-    // Loop through each borrower and send an email
     $emailsSent = 0;
     $emailsFailed = 0;
-    
+
     while ($row = $result->fetch_assoc()) {
         $email = $row['emailAddress'];
         $firstname = $row['firstname'];
         $returnDate = $row['returnDate'];
+        $idNumber = $row['idNumber']; // Access the ID number here
 
         // Set recipient email and message
         $mail->clearAddresses(); // Clear previous recipient
@@ -82,12 +79,12 @@ if ($result->num_rows > 0) {
         $mail->isHTML(true);
         $mail->Subject = 'Library Book Return Reminder';
         $mail->Body = "
-            <h1>Hello, $firstname!</h1>
+            <h1>Hello, $firstname ($idNumber)!</h1>
             <p>This is a reminder that the book you borrowed is due on <strong>$returnDate</strong>.</p>
             <p>Please return it to the library to avoid penalties.</p>
             <p>Thank you!</p>
         ";
-        $mail->AltBody = "Hello $firstname, this is a reminder that the book you borrowed is due on $returnDate. Please return it to the library.";
+        $mail->AltBody = "Hello $firstname ($idNumber), this is a reminder that the book you borrowed is due on $returnDate. Please return it to the library.";
 
         // Send the email
         if ($mail->send()) {
@@ -96,8 +93,8 @@ if ($result->num_rows > 0) {
             $emailsFailed++;
         }
     }
-    
 
+    // Check email send results
     if ($emailsSent > 0) {
         header("Location: " . appendQueryParam($redirectUrl, 'status', 'success'));
         exit();
@@ -114,7 +111,7 @@ if ($result->num_rows > 0) {
 $stmt->close();
 $conn->close();
 
-// Redirect back to the previous page (for example, `due-date.php`)
+// Redirect back to the dashboard page
 header('Location: ../dashboard.php');
 exit;
 ?>

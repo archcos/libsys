@@ -68,7 +68,7 @@
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
             <i class="fas fa-handshake"></i>
-            <span>Reference Assistance Slip</span>
+            <span>Ref. Assistance Slip</span>
         </a>
         <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
@@ -105,11 +105,27 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="list-books.php"><i class="fas fa-book"></i> Books</a>
                 <a class="collapse-item" href="list-author.php"><i class="fas fa-user-edit"></i> Author</a>
-                <a class="collapse-item" href="list-category.php"><i class="fas fa-tags"></i> Category</a>
+                <a class="collapse-item" href="list-category.php"><i class="fas fa-tags"></i> Subject</a>
             </div>
         </div>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+            <i class="fas fa-file"></i>
+            <span>Reports</span>
+        </a>
+        <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="pdf/generate-list.php"><i class="fas fa-list-ol"></i> Borrower List</a>
+                <a class="collapse-item" href="list-borrower.php"><i class="fas fa-address-card"></i> Borrower's Card</a>
+                <a class="collapse-item" href="pdf/generate-receipt.php"><i class="	fas fa-table"></i> Receipt Log</a>
+                <a class="collapse-item" href="pdf/generate-nonreceipt.php"><i class="	fas fa-table"></i> Non Receipt Log</a>
+                <a class="collapse-item" href="book-card.php"><i class="far fa-bookmark"></i> Slip and Book Card </a>
+                <a class="collapse-item" href="ledger.php"><i class="fas fa-shopping-basket"></i> Inventory Ledger </a>
+            </div>
+        </div>
+    </li>
     <hr class="sidebar-divider">
 
    

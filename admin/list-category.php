@@ -80,19 +80,19 @@ $result = $conn->query($query);
 <body>
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Manage Categories</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Manage Subjects</h6>
     </div>
     <div class="card-body">
         <div class="container">
             <h1>Manage Categories</h1>
-            <button class="btn btn-primary" onclick="showModal('addCategoryModal')">Add New Category</button>
+            <button class="btn btn-primary" onclick="showModal('addCategoryModal')">Add New Subject</button>
             <div style="margin-top: 20px;"> 
             </div>
             <table id="dataTable" class="display" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Category ID</th>
-                        <th>Category Name</th>
+                        <th>Subject ID</th>
+                        <th>Subject Name</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -125,9 +125,9 @@ $result = $conn->query($query);
     <!-- Add Category Modal -->
     <div id="addCategoryModal" class="modal">
         <div class="modal-content">
-            <h3>Add Category</h3>
+            <h3>Add Subject</h3>
             <form id="addCategoryForm">
-                <label for="categoryName">Category Name:</label><br>
+                <label for="categoryName">Subject Name:</label><br>
                 <input type="text" id="categoryName" name="categoryName" required><br><br>
                 <button type="submit" class="btn btn-primary">Add</button>
                 <button type="button" onclick="closeModal('addCategoryModal')" class="btn cancel-btn">Cancel</button>

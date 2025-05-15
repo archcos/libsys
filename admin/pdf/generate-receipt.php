@@ -17,6 +17,7 @@ $query = "
         tblborrowers.idNumber, 
         tblborrowers.timeReceived, 
         tblborrowers.dateRegistered, 
+        tblborrowers.specialInstructions,
         tblcourses.courseName
     FROM 
         tblborrowers
@@ -137,7 +138,7 @@ $photo = 'image.png';
                 <td><?php echo htmlspecialchars($record['courseName']); ?></td>
                 <td><?php echo htmlspecialchars($record['timeReceived']); ?></td>
                 <td></td> <!-- Blank -->
-                <td></td> <!-- Blank -->
+                <td><?php echo htmlspecialchars($record['specialInstructions']); ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>

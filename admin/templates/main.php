@@ -273,12 +273,27 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Is there any damage to the book?</p>
-                <select class="form-control" id="damageSeverity" name="damageSeverity">
-                    <option value="normal">Normal</option>
-                    <option value="medium">Medium</option>
-                    <option value="severe">Severe</option>
-                </select>
+                <!-- Damage Check Question -->
+                <div class="form-group">
+                    <label for="isBookDamaged">Is there a damage on the book?</label>
+                    <select class="form-control" id="isBookDamaged">
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No (If No just click No Penalty)</option>
+                    </select>
+                </div>
+
+                <!-- Damage Severity (Initially Hidden) -->
+                <div id="damageSeveritySection" style="display: none;">
+                    <p>Damage Type?</p>
+                    <select class="form-control" id="damageSeverity" name="damageSeverity">
+                        <option value="normal">Normal</option>
+                        <option value="medium">Medium</option>
+                        <option value="severe">Severe</option>
+                    </select>
+                </div>
+
+                <!-- Penalty Cost -->
                 <div class="form-group mt-3">
                     <label for="damageCost">Penalty Cost</label>
                     <input type="number" class="form-control" id="damageCost" name="damageCost" placeholder="Enter cost" min="0" value="0">
@@ -299,6 +314,22 @@
         </div>
     </div>
 </div>
+
+<!-- Script to handle damage selection -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const isBookDamaged = document.getElementById('isBookDamaged');
+        const damageSeveritySection = document.getElementById('damageSeveritySection');
+
+        isBookDamaged.addEventListener('change', function () {
+            if (this.value === 'yes') {
+                damageSeveritySection.style.display = 'block';
+            } else {
+                damageSeveritySection.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 
 

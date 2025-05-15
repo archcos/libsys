@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="category">Category:</label>
+                <label for="category">Subject:</label>
                 <select id="category" name="category" required>
                     <?php while ($category = $categoriesResult->fetch_assoc()): ?>
                         <option value="<?php echo $category['categoryId']; ?>" <?php echo ($category['categoryId'] == $book['categoryId']) ? 'selected' : ''; ?>>
@@ -158,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="quantity">Quantity:</label>
+                <label for="quantity">Volume:</label>
                 <input type="number" id="quantity" name="quantity" value="<?php echo $book['quantity']; ?>" required>
             </div>
 
@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="publishedDate">Published Date:</label>
+                <label for="publishedDate">Copyright:</label>
                 <input type="date" id="publishedDate" name="publishedDate" value="<?php echo htmlspecialchars($book['publishedDate']); ?>" required>
             </div>
 

@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $homeAddress = $conn->real_escape_string($_POST['homeAddress']);
     $librarian = $conn->real_escape_string($_POST['librarian']);
     $reason = $conn->real_escape_string($_POST['reason']);
+    $specialInstructions = $conn->real_escape_string($_POST['specialInstructions']);
 
 
 
@@ -33,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Insert new borrower into the database
-    $query = "INSERT INTO tblborrowers (idNumber, surName, firstName, middleName, emailAddress, position, course, year, gender, birthDate, remarks, homeAddress, borrowerType, librarian, reason) 
-              VALUES ('$idNumber', '$surName', '$firstName', '$middleName', '$emailAddress', '$position', '$course', '$year', '$gender', '$birthDate', '$remarks', '$homeAddress', '$borrowerType', '$librarian', '$reason')";
+    $query = "INSERT INTO tblborrowers (idNumber, surName, firstName, middleName, emailAddress, position, course, year, gender, birthDate, remarks, homeAddress, borrowerType, librarian, reason,specialInstructions) 
+              VALUES ('$idNumber', '$surName', '$firstName', '$middleName', '$emailAddress', '$position', '$course', '$year', '$gender', '$birthDate', '$remarks', '$homeAddress', '$borrowerType', '$librarian', '$reason','$specialInstructions' )";
 
     if ($conn->query($query)) {
         // Success, redirect back with a success message

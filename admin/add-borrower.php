@@ -239,10 +239,15 @@ if ($row = $result->fetch_assoc()) {
             <input type="text" id="librarian" name="librarian" value="<?php echo htmlspecialchars($librarianName); ?>" required>
         </div>
 
-        <p>If student/staff isn't able to get the Borrower's Card upon registration, please specify reason, else input "N/A".</p>
+        <p>If student/staff isn't able to get the Borrower's Card upon registration, please specify reason, else input "N/A" .</p>
         <div class="form-group">
             <label for="reason">Reason:</label>
             <input type="text" id="reason" name="reason" required>
+        </div>
+        <p>Receipt Log Special Instructions</p>
+        <div class="form-group">
+            <label for="specialInstructions">Special Instructions:</label>
+            <input type="text" id="reason" name="specialInstructions">
         </div>
         <button type="submit">Submit</button>
     </form>
