@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
     $edition = trim($_POST['edition']);
     $authorId = trim($_POST['author']);
-    $categoryId = trim($_POST['category']);
+    $categoryId = !empty($_POST['category']) ? trim($_POST['category']) : null;
     $quantity = trim($_POST['quantity']);
     $callNum = trim($_POST['callNum']);
     $accessionNum = trim($_POST['accessionNum']);
@@ -58,11 +58,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else if (empty($quantity)) {
         $error = "Volume is required!";
     } else {
-        $updateQuery = "UPDATE tblbooks 
-                    SET title = ?, edition = ?, authorId = ?, categoryId = ?, quantity = ?, callNum = ?, accessionNum = ?, barcodeNum = ?, publisher = ?, publishedDate = ?
-                    WHERE bookId = ?";
-        $stmt = $conn->prepare($updateQuery);
-        $stmt->bind_param("ssiissssssi", $title, $edition, $authorId, $categoryId, $quantity, $callNum, $accessionNum, $barcodeNum, $publisher, $publishedDate, $bookId);
+        // Prepare the SQL statement based on whether categoryId is null
+        if ($categoryId === null) {
+            $updateQuery = "UPDATE tblbooks 
+                        SET title = ?, edition = ?, authorId = ?, categoryId = NULL, quantity = ?, callNum = ?, accessionNum = ?, barcodeNum = ?, publisher = ?, publishedDate = ?
+                        WHERE bookId = ?";
+            $stmt = $conn->prepare($updateQuery);
+            $stmt->bind_param("ssissssssi", $title, $edition, $authorId, $quantity, $callNum, $accessionNum, $barcodeNum, $publisher, $publishedDate, $bookId);
+        } else {
+            $updateQuery = "UPDATE tblbooks 
+                        SET title = ?, edition = ?, authorId = ?, categoryId = ?, quantity = ?, callNum = ?, accessionNum = ?, barcodeNum = ?, publisher = ?, publishedDate = ?
+                        WHERE bookId = ?";
+            $stmt = $conn->prepare($updateQuery);
+            $stmt->bind_param("ssiissssssi", $title, $edition, $authorId, $categoryId, $quantity, $callNum, $accessionNum, $barcodeNum, $publisher, $publishedDate, $bookId);
+        }
 
         if ($stmt->execute()) {
             $success = "Book updated successfully!";
@@ -180,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-group">
                 <label for="callNum">Call Number (Optional):</label>
-                <input type="text" id="callNum" name="callNum" value="<?php echo htmlspecialchars($book['callNum']); ?>">
+                <input type="text" id="callNum" name="callNum" value="<?php echo htmlspecialchars($book['callNum']); ?>" placeholder="Enter Call Number">
             </div>
 
             <div class="form-group">
@@ -190,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-group">
                 <label for="barcodeNum">Barcode Number (Optional):</label>
-                <input type="text" id="barcodeNum" name="barcodeNum" value="<?php echo htmlspecialchars($book['barcodeNum']); ?>">
+                <input type="text" id="barcodeNum" name="barcodeNum" value="<?php echo htmlspecialchars($book['barcodeNum']); ?>" placeholder="Enter Barcode Number">
             </div>
 
             <div class="form-group">
@@ -199,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="publishedDate">Copyright Year:</label>
+                <label for="publishedDate">Copyright:</label>
                 <input type="date" id="publishedDate" name="publishedDate" value="<?php echo htmlspecialchars($book['publishedDate']); ?>" required>
             </div>
 

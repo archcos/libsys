@@ -212,7 +212,7 @@ $photo = 'image.png';
                         <div class="content">
                             <div class="details">
                                 <p><b>Name:</b> <?php echo $name ?></p>
-                                <p><b>Course&Year/Position:</b> <?php echo $courseYear ?></p>
+                                <p><b>Program&Year/Position:</b> <?php echo $courseYear ?></p>
                                 <p><b>Address:</b> <?php echo $address ?></p>
                                 <p><b>Signature:</b> ___________________________</p>
                             </div>

@@ -134,98 +134,93 @@ $result = $conn->query($query);
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script>
-
     $(document).ready(function() {
-            $('#dataTable').DataTable();
+        $('#dataTable').DataTable();
 
-            // Open edit modal and populate fields
-            $('.edit-btn').on('click', function() {
-                let authorId = $(this).data('author-id');
-                let firstName = $(this).data('first-name');
-                let lastName = $(this).data('last-name');
+        // Use event delegation for edit buttons
+        $('#dataTable').on('click', '.edit-btn', function() {
+            let authorId = $(this).data('author-id');
+            let firstName = $(this).data('first-name');
+            let lastName = $(this).data('last-name');
 
-                $('#editAuthorId').val(authorId);
-                $('#editFirstName').val(firstName);
-                $('#editLastName').val(lastName);
+            $('#editAuthorId').val(authorId);
+            $('#editFirstName').val(firstName);
+            $('#editLastName').val(lastName);
 
-                showModal('editAuthorModal');
-            });
+            showModal('editAuthorModal');
+        });
 
-            // Handle edit form submission
-            $('#editAuthorForm').on('submit', function(e) {
-                e.preventDefault();
-
+        // Use event delegation for delete buttons
+        $('#dataTable').on('click', '.delete-btn', function() {
+            const authorId = $(this).data('author-id');
+            if (confirm('Are you sure you want to delete this author?')) {
                 $.ajax({
-                    url: 'process/edit-author.php', // Backend script to handle editing
+                    url: 'process/delete-author.php',
                     type: 'POST',
-                    data: $(this).serialize(),
+                    data: { authorId },
                     success: function(response) {
                         alert(response);
-                        closeModal('editAuthorModal');
                         location.reload();
                     },
                     error: function() {
-                        alert('Error updating author. Please try again.');
+                        alert('Error deleting author. Please try again.');
                     }
                 });
-            });
-
-            $('.delete-btn').on('click', function() {
-                const authorId = $(this).data('author-id');
-                if (confirm('Are you sure you want to delete this author?')) {
-                    $.ajax({
-                        url: 'process/delete-author.php',
-                        type: 'POST',
-                        data: { authorId },
-                        success: function(response) {
-                            alert(response);
-                            location.reload();
-                        },
-                        error: function() {
-                            alert('Error deleting author. Please try again.');
-                        }
-                    });
-                }
-            });
+            }
         });
 
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-
-        function showAddAuthorModal() {
-            document.getElementById('addAuthorModal').style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        document.getElementById('addAuthorForm').addEventListener('submit', function(e) {
+        // Handle edit form submission
+        $('#editAuthorForm').on('submit', function(e) {
             e.preventDefault();
 
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-
             $.ajax({
-                url: 'process/add-author.php',
+                url: 'process/edit-author.php',
                 type: 'POST',
-                data: { firstName, lastName },
+                data: $(this).serialize(),
                 success: function(response) {
                     alert(response);
-                    closeModal('addAuthorModal');
+                    closeModal('editAuthorModal');
                     location.reload();
                 },
                 error: function() {
-                    alert('Error adding author. Please try again.');
+                    alert('Error updating author. Please try again.');
                 }
             });
         });
+    });
+
+    function showModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    function showAddAuthorModal() {
+        document.getElementById('addAuthorModal').style.display = 'flex';
+    }
+
+    document.getElementById('addAuthorForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+
+        $.ajax({
+            url: 'process/add-author.php',
+            type: 'POST',
+            data: { firstName, lastName },
+            success: function(response) {
+                alert(response);
+                closeModal('addAuthorModal');
+                location.reload();
+            },
+            error: function() {
+                alert('Error adding author. Please try again.');
+            }
+        });
+    });
     </script>
 </body>
 </html>

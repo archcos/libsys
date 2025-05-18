@@ -20,7 +20,7 @@ $query = "
         COALESCE(CONCAT(a.firstName, ' ', a.lastName), 'No Author') AS authorName, 
         COALESCE(c.categoryName, 'No Subject') AS categoryName, 
         b.publisher, b.publishedDate, YEAR(b.publishedDate) AS publishedYear,
-        b.edition,
+        b.edition, b.accessionNum, b.barcodeNum, b.callNum,
         CASE 
             WHEN EXISTS (
                 SELECT 1 
@@ -265,6 +265,9 @@ $result = $stmt->get_result();
                     <th>Publisher</th>
                     <th>Edition</th>
                     <th>Copyright</th>
+                    <th>Accession No.</th>
+                    <th>Barcode No.</th>
+                    <th>Call No.</th>
                     <th>Update</th>
                 </tr>
             </thead>
@@ -288,6 +291,9 @@ $result = $stmt->get_result();
                             echo "<td>" . htmlspecialchars($row['publisher']) . "</td>"; 
                             echo "<td>" . htmlspecialchars($row['edition'] ? $row['edition'] : 'N/A') . "</td>";
                             echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>"; 
+                            echo "<td>" . htmlspecialchars($row['accessionNum']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['barcodeNum'] ? $row['barcodeNum'] : 'N/A') . "</td>";
+                            echo "<td>" . htmlspecialchars($row['callNum'] ? $row['callNum'] : 'N/A') . "</td>";
                             echo "<td class='btn-group'>";
                             echo "<button class='btn btn-info btn-sm' onclick='showBookModal(" . json_encode($row) . ")'>View</button>";
                             if ($row['isBorrowed']) {
@@ -351,6 +357,21 @@ $result = $stmt->get_result();
                 <strong>APA Citation:</strong>
                 <span id="modalAPA"></span>
             </div>
+            <div class="book-detail-item">
+                <i class="fas fa-hashtag"></i>
+                <strong>Accession Number:</strong>
+                <span id="modalAccessionNum"></span>
+            </div>
+            <div class="book-detail-item">
+                <i class="fas fa-barcode"></i>
+                <strong>Barcode Number:</strong>
+                <span id="modalBarcodeNum"></span>
+            </div>
+            <div class="book-detail-item">
+                <i class="fas fa-tag"></i>
+                <strong>Call Number:</strong>
+                <span id="modalCallNum"></span>
+            </div>
         </div>
     </div>
 </div>
@@ -375,6 +396,9 @@ $result = $stmt->get_result();
             document.getElementById('modalPublishedDate').textContent = bookData.publishedDate;
             document.getElementById('modalQuantity').textContent = bookData.quantity;
             document.getElementById('modalEdition').textContent = bookData.edition || 'N/A';
+            document.getElementById('modalAccessionNum').textContent = bookData.accessionNum;
+            document.getElementById('modalBarcodeNum').textContent = bookData.barcodeNum || 'N/A';
+            document.getElementById('modalCallNum').textContent = bookData.callNum || 'N/A';
             
             // Set APA citation with italic title
             const apaCitation = bookData.authorName === 'No Author' 

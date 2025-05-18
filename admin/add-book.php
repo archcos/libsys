@@ -275,7 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" id="publisher" name="publisher" placeholder="Enter Publisher" required>
             </div>
             <div class="form-group">
-                <label for="publishedDate">Copyright Year:</label>
+                <label for="publishedDate">Copyright:</label>
                 <input type="date" id="publishedDate" name="publishedDate" placeholder="Enter Published Date" required>
             </div>
             <div class="form-group">
