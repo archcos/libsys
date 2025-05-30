@@ -12,6 +12,7 @@ ob_start();
 // Get filter parameters
 $categoryId = isset($_GET['categoryId']) ? intval($_GET['categoryId']) : null;
 $authorId = isset($_GET['authorId']) ? intval($_GET['authorId']) : null;
+$status = isset($_GET['status']) ? $_GET['status'] : null;
 
 // Prepare base query
 $query = "
@@ -20,7 +21,7 @@ $query = "
         COALESCE(CONCAT(a.firstName, ' ', a.lastName), 'No Author') AS authorName, 
         COALESCE(c.categoryName, 'No Subject') AS categoryName, 
         b.publisher, b.publishedDate, YEAR(b.publishedDate) AS publishedYear,
-        b.edition, b.accessionNum, b.barcodeNum, b.callNum,
+        b.edition, b.accessionNum, b.barcodeNum, b.callNum, b.status,
         CASE 
             WHEN EXISTS (
                 SELECT 1 
@@ -51,12 +52,22 @@ if ($authorId) {
     $types .= 'i';
 }
 
+if ($status) {
+    $conditions[] = "b.status = ?";
+    $params[] = $status;
+    $types .= 's';
+}
+
 if (!empty($conditions)) {
     $query .= " WHERE " . implode(' AND ', $conditions);
 }
 
 // Prepare and execute query
 $stmt = $conn->prepare($query);
+if ($stmt === false) {
+    die("Error preparing query: " . $conn->error);
+}
+
 if (!empty($params)) {
     $stmt->bind_param($types, ...$params);
 }
@@ -207,16 +218,29 @@ $result = $stmt->get_result();
         <h6 class="m-0 font-weight-bold text-primary">Books List</h6>
     </div>
     <div class="card-body">
-        <div class="container">
-    <div class="container">
-       
         <button class="btn btn-primary" onclick="window.location.href='add-book.php'">Add New Book</button>
-        <div style="margin-top: 20px;">  
-</div>
+        <div style="margin-top: 20px;">
+            <!-- Status Filter -->
+            <div class="filters">
+                <form method="GET" class="d-inline-block">
+                    <select name="status" class="form-control d-inline-block" style="width: auto;" onchange="this.form.submit()">
+                        <option value="">All Status</option>
+                        <option value="Active" <?php echo $status === 'Active' ? 'selected' : ''; ?>>Active</option>
+                        <option value="Inactive" <?php echo $status === 'Inactive' ? 'selected' : ''; ?>>Inactive</option>
+                    </select>
+                    <?php if ($categoryId): ?>
+                        <input type="hidden" name="categoryId" value="<?php echo $categoryId; ?>">
+                    <?php endif; ?>
+                    <?php if ($authorId): ?>
+                        <input type="hidden" name="authorId" value="<?php echo $authorId; ?>">
+                    <?php endif; ?>
+                </form>
+            </div>
+        </div>
         <!-- Display Active Filters -->
         <div class="filters">
             <?php if ($categoryId): ?>
-                <h3>Showing Books in Category: 
+                <h3>Showing Books in Category:
                     <span style="color: green;">
                         <?php
                         $categoryQuery = "SELECT categoryName FROM tblcategory WHERE categoryId = ?";
@@ -233,7 +257,7 @@ $result = $stmt->get_result();
             <?php endif; ?>
 
             <?php if ($authorId): ?>
-                <h3>Showing Books by Author: 
+                <h3>Showing Books by Author:
                     <span style="color: blue;">
                         <?php
                         $authorQuery = "SELECT CONCAT(firstName, ' ', lastName) AS authorName FROM tblauthor WHERE authorId = ?";
@@ -252,63 +276,65 @@ $result = $stmt->get_result();
             <?php if (!$categoryId && !$authorId): ?>
             <?php endif; ?>
         </div>
-
-        <table id="dataTable" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Book ID</th>
-                    <th>Title</th>
-                    <th>APA Format</th>
-                    <th>Author</th>
-                    <th>Subject</th>
-                    <th>Stocks</th>
-                    <th>Publisher</th>
-                    <th>Edition</th>
-                    <th>Copyright</th>
-                    <th>Accession No.</th>
-                    <th>Barcode No.</th>
-                    <th>Call No.</th>
-                    <th>Update</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo "<tr>";
-                            echo "<td>" . $row['bookId'] . "</td>";
-                            echo "<td>" . htmlspecialchars($row['title']) . "</td>";
-                            echo "<td>";
-                            if ($row['authorName'] == 'No Author') {
-                                echo "<em>" . htmlspecialchars($row['title']) . "</em>. (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['publisher']);
-                            } else {
-                                echo htmlspecialchars($row['authorName']) . " (" . htmlspecialchars($row['publishedYear']) . "). <em>" . htmlspecialchars($row['title']) . "</em>. " . htmlspecialchars($row['publisher']);
+        <div class="table-responsive">
+            <table id="dataTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Book ID</th>
+                        <th>Title</th>
+                        <th>APA Format</th>
+                        <th>Author</th>
+                        <th>Subject</th>
+                        <th>Stocks</th>
+                        <th>Publisher</th>
+                        <th>Edition</th>
+                        <th>Copyright</th>
+                        <th>Accession No.</th>
+                        <th>Barcode No.</th>
+                        <th>Call No.</th>
+                        <th>Status</th>
+                        <th>Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . $row['bookId'] . "</td>";
+                                echo "<td>" . htmlspecialchars($row['title']) . "</td>";
+                                echo "<td>";
+                                if ($row['authorName'] == 'No Author') {
+                                    echo "<em>" . htmlspecialchars($row['title']) . "</em>. (" . htmlspecialchars($row['publishedYear']) . "). " . htmlspecialchars($row['publisher']);
+                                } else {
+                                    echo htmlspecialchars($row['authorName']) . " (" . htmlspecialchars($row['publishedYear']) . "). <em>" . htmlspecialchars($row['title']) . "</em>. " . htmlspecialchars($row['publisher']);
+                                }
+                                echo "</td>";
+                                echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
+                                echo "<td>" . $row['quantity'] . "</td>";
+                                echo "<td>" . htmlspecialchars($row['publisher']) . "</td>"; 
+                                echo "<td>" . htmlspecialchars($row['edition'] ? $row['edition'] : 'N/A') . "</td>";
+                                echo "<td>" . htmlspecialchars(substr($row['publishedDate'], 0, 4)) . "</td>"; 
+                                echo "<td>" . htmlspecialchars($row['accessionNum']) . "</td>";
+                                echo "<td>" . htmlspecialchars($row['barcodeNum'] ? $row['barcodeNum'] : 'N/A') . "</td>";
+                                echo "<td>" . htmlspecialchars($row['callNum'] ? $row['callNum'] : 'N/A') . "</td>";
+                                echo "<td><span class='badge " . ($row['status'] === 'Active' ? 'bg-success' : 'bg-danger') . "'>" . htmlspecialchars($row['status']) . "</span></td>";
+                                echo "<td class='btn-group'>";
+                                echo "<button class='btn btn-info btn-sm' onclick='showBookModal(" . json_encode($row) . ")'>View</button>";
+                                if ($row['isBorrowed']) {
+                                    echo "<span style='color: red;'>Borrowed</span>";
+                                } else {
+                                    echo "<a href='edit-book.php?bookId=" . $row['bookId'] . "' class='btn btn-primary btn-sm'>Edit</a>";
+                                }
+                                echo "</td>";
+                                echo "</tr>";
                             }
-                            echo "</td>";
-                            echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
-                            echo "<td>" . $row['quantity'] . "</td>";
-                            echo "<td>" . htmlspecialchars($row['publisher']) . "</td>"; 
-                            echo "<td>" . htmlspecialchars($row['edition'] ? $row['edition'] : 'N/A') . "</td>";
-                            echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>"; 
-                            echo "<td>" . htmlspecialchars($row['accessionNum']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['barcodeNum'] ? $row['barcodeNum'] : 'N/A') . "</td>";
-                            echo "<td>" . htmlspecialchars($row['callNum'] ? $row['callNum'] : 'N/A') . "</td>";
-                            echo "<td class='btn-group'>";
-                            echo "<button class='btn btn-info btn-sm' onclick='showBookModal(" . json_encode($row) . ")'>View</button>";
-                            if ($row['isBorrowed']) {
-                                echo "<span style='color: red;'>Borrowed</span>";
-                            } else {
-                                echo "<a href='edit-book.php?bookId=" . $row['bookId'] . "' class='btn btn-primary btn-sm'>Edit</a>";
-                            }
-                            echo "</td>";
-                            echo "</tr>";
-                        }
-                    }                    
-                ?>
-            </tbody>
-        </table>
-    </div>
+                        }                    
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -319,7 +345,7 @@ $result = $stmt->get_result();
         <div class="book-cover">
             <h2 id="modalTitle" style="font-size: 2.5em;"></h2>
             <p id="modalAuthor" class="mb-2" style="font-size: 1.5em;"></p>
-            <div id="modalStatus" class="book-status"></div>
+            <div id="modalStatusBadge" class="book-status"></div>
         </div>
         <div class="book-details">
             <div class="book-detail-item">
@@ -339,7 +365,7 @@ $result = $stmt->get_result();
             </div>
             <div class="book-detail-item">
                 <i class="fas fa-calendar"></i>
-                <strong>Published Date:</strong>
+                <strong>Copyright:</strong>
                 <span id="modalPublishedDate"></span>
             </div>
             <div class="book-detail-item">
@@ -358,19 +384,9 @@ $result = $stmt->get_result();
                 <span id="modalAPA"></span>
             </div>
             <div class="book-detail-item">
-                <i class="fas fa-hashtag"></i>
-                <strong>Accession Number:</strong>
-                <span id="modalAccessionNum"></span>
-            </div>
-            <div class="book-detail-item">
-                <i class="fas fa-barcode"></i>
-                <strong>Barcode Number:</strong>
-                <span id="modalBarcodeNum"></span>
-            </div>
-            <div class="book-detail-item">
-                <i class="fas fa-tag"></i>
-                <strong>Call Number:</strong>
-                <span id="modalCallNum"></span>
+                <i class="fas fa-toggle-on"></i>
+                <strong>Status:</strong>
+                <span id="modalStatusText"></span>
             </div>
         </div>
     </div>
@@ -393,12 +409,9 @@ $result = $stmt->get_result();
             document.getElementById('modalBookId').textContent = bookData.bookId;
             document.getElementById('modalCategory').textContent = bookData.categoryName;
             document.getElementById('modalPublisher').textContent = bookData.publisher;
-            document.getElementById('modalPublishedDate').textContent = bookData.publishedDate;
+            document.getElementById('modalPublishedDate').textContent = (bookData.publishedDate ? bookData.publishedDate.substring(0, 4) : '');
             document.getElementById('modalQuantity').textContent = bookData.quantity;
             document.getElementById('modalEdition').textContent = bookData.edition || 'N/A';
-            document.getElementById('modalAccessionNum').textContent = bookData.accessionNum;
-            document.getElementById('modalBarcodeNum').textContent = bookData.barcodeNum || 'N/A';
-            document.getElementById('modalCallNum').textContent = bookData.callNum || 'N/A';
             
             // Set APA citation with italic title
             const apaCitation = bookData.authorName === 'No Author' 
@@ -407,13 +420,16 @@ $result = $stmt->get_result();
             document.getElementById('modalAPA').innerHTML = apaCitation;
 
             // Set status
-            const statusElement = document.getElementById('modalStatus');
-            if (bookData.isBorrowed) {
-                statusElement.textContent = 'Currently Borrowed';
-                statusElement.className = 'book-status status-borrowed';
-            } else {
-                statusElement.textContent = 'Available';
+            const statusElement = document.getElementById('modalStatusBadge');
+            const statusTextElement = document.getElementById('modalStatusText');
+            if (bookData.status === 'Active') {
+                statusElement.textContent = 'Active';
                 statusElement.className = 'book-status status-available';
+                statusTextElement.textContent = 'Active';
+            } else {
+                statusElement.textContent = 'Inactive';
+                statusElement.className = 'book-status status-borrowed';
+                statusTextElement.textContent = 'Inactive';
             }
 
             modal.style.display = 'block';

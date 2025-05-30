@@ -98,6 +98,16 @@ if ($borrowerType) {
             color: white;
             border: none;
         }
+        .remarks-dropdown.activated {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+            border: 1px solid #c3e6cb !important;
+        }
+        .remarks-dropdown.deactivated {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+            border: 1px solid #f5c6cb !important;
+        }
     </style>
 </head>
 <body>
@@ -144,7 +154,7 @@ if ($borrowerType) {
                             echo "<td>" . $row['gender'] . "</td>";
                             echo "<td>" . htmlspecialchars($row['emailAddress']) . "</td>";
                             echo "<td>
-                                    <select class='remarks-dropdown' data-borrower-id='" . $row['idNumber'] . "'>
+                                    <select class='remarks-dropdown " . ($row['remarks'] == 'Activated' ? 'activated' : 'deactivated') . "' data-borrower-id='" . $row['idNumber'] . "'>
                                         <option value='Activated' " . ($row['remarks'] == 'Activated' ? 'selected' : '') . ">Activated</option>
                                         <option value='Deactivated' " . ($row['remarks'] == 'Deactivated' ? 'selected' : '') . ">Deactivated</option>
                                     </select>
@@ -236,7 +246,18 @@ if ($borrowerType) {
             
  
             // Handle remarks change (Activated/Deactivated)
+            function updateRemarksColor(select) {
+                if (select.value === 'Activated') {
+                    $(select).removeClass('deactivated').addClass('activated');
+                } else {
+                    $(select).removeClass('activated').addClass('deactivated');
+                }
+            }
+            $('.remarks-dropdown').each(function() {
+                updateRemarksColor(this);
+            });
             $('.remarks-dropdown').on('change', function() {
+                updateRemarksColor(this);
                 var idNumber = parseInt($(this).data('borrower-id'), 10); // Ensure it's an integer
                 var remarksValue = $(this).val(); // Convert to integer (1 for Activated, 0 for Deactivated)
 

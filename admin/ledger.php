@@ -141,7 +141,8 @@ if ($filter_type == 'monthly') {
                             <th>DETAILS</th>
                             <th>BORROW QTY.</th>
                             <th>RETURN QTY.</th>
-                            <th>BALANCE</th>
+                            <th>Available Books</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -245,6 +246,17 @@ if ($filter_type == 'monthly') {
                         
                         while ($row = mysqli_fetch_assoc($result)) {
                             $book_title = $row['details'];
+                            // Get the bookId for this book title
+                            $bookIdQuery = "SELECT bookId FROM tblbooks WHERE title = ? LIMIT 1";
+                            $bookIdStmt = $conn->prepare($bookIdQuery);
+                            $bookIdStmt->bind_param("s", $book_title);
+                            $bookIdStmt->execute();
+                            $bookIdResult = $bookIdStmt->get_result();
+                            $bookId = null;
+                            if ($bookIdRow = $bookIdResult->fetch_assoc()) {
+                                $bookId = $bookIdRow['bookId'];
+                            }
+                            $bookIdStmt->close();
                             
                             // Initialize balance and book quantity if not yet set
                             if (!isset($balances[$book_title])) {
@@ -265,6 +277,21 @@ if ($filter_type == 'monthly') {
                             echo "<td>" . $row['borrow_qty'] . "</td>";
                             echo "<td>" . $row['return_qty'] . "</td>";
                             echo "<td>" . $balances[$book_title] . "</td>";
+                            // Add Remarks column
+                            $remarks = '';
+                            if ($row['return_qty'] > 0 && $row['idNumber'] && $bookId) {
+                                // Fetch remarks from tblpenalties for this borrower and bookId
+                                $remarksQuery = "SELECT penalty FROM tblpenalties WHERE borrowerId = ? AND bookId = ? ORDER BY penaltyId DESC LIMIT 1";
+                                $remarksStmt = $conn->prepare($remarksQuery);
+                                $remarksStmt->bind_param("ii", $row['idNumber'], $bookId);
+                                $remarksStmt->execute();
+                                $remarksResult = $remarksStmt->get_result();
+                                if ($remarksRow = $remarksResult->fetch_assoc()) {
+                                    $remarks = htmlspecialchars($remarksRow['penalty']);
+                                }
+                                $remarksStmt->close();
+                            }
+                            echo "<td>" . $remarks . "</td>";
                             echo "</tr>";
                         }
                         ?>
@@ -366,9 +393,8 @@ if ($filter_type == 'monthly') {
                             mysqli_data_seek($borrowers_result, 0);
                             while($borrower = mysqli_fetch_assoc($borrowers_result)): 
                             ?>
-                                <option value="<?php echo $borrower['idNumber']; ?>" 
-                                        data-id="<?php echo $borrower['idNumber']; ?>"
-                                        <?php echo $selected_borrower == $borrower['idNumber'] ? 'selected' : ''; ?>>
+                                <option value="<?php echo $borrower['idNumber']; ?>" data-id="<?php echo $borrower['idNumber']; ?>"
+                                    <?php echo $selected_borrower == $borrower['idNumber'] ? 'selected' : ''; ?>>
                                     <?php echo $borrower['full_name']; ?>
                                 </option>
                             <?php endwhile; ?>
@@ -467,26 +493,39 @@ $(document).ready(function() {
     $('#ledgerTable').DataTable({
         "order": [[0, "desc"]]
     });
-
-    // Initialize Select2 for better dropdown experience
+    // Initialize Select2 for Book and Borrower Name
     $('#book_id, #borrower_id').select2({
         placeholder: "Select an option",
         allowClear: true,
         dropdownParent: $('#additionalFiltersModal')
     });
-
+    // Book search box logic
+    $('#search_book_title').on('input', function() {
+        var searchVal = $(this).val().toLowerCase();
+        var found = false;
+        $('#book_id option').each(function() {
+            var text = $(this).text().toLowerCase();
+            if (searchVal && text.indexOf(searchVal) !== -1) {
+                $('#book_id').val($(this).val()).trigger('change');
+                found = true;
+                return false; // break loop
+            }
+        });
+        if (!found && !searchVal) {
+            $('#book_id').val('').trigger('change');
+        }
+    });
+    // Restore previous JS logic for syncing fields
     // Set initial borrower ID if a borrower is selected
     var selectedBorrower = $('#borrower_id').val();
     if (selectedBorrower) {
         updateBorrowerId(selectedBorrower);
     }
-
     // Set initial borrower name if ID is entered
     var selectedBorrowerId = $('#borrower_idnum').val();
     if (selectedBorrowerId) {
         updateBorrowerName(selectedBorrowerId);
     }
-
     // Clear both fields when modal is closed if no selection
     $('#additionalFiltersModal').on('hidden.bs.modal', function () {
         if (!$('#borrower_id').val() && !$('#borrower_idnum').val()) {
@@ -495,7 +534,6 @@ $(document).ready(function() {
         }
     });
 });
-
 function updateDateInputs() {
     const filterType = $('#filter_type').val();
     const startContainer = $('#start_date_container');
@@ -535,22 +573,17 @@ function updateDateInputs() {
         endContainer.html(endInput);
     }
 }
-
 function printTable() {
     window.print();
 }
-
 function updateBorrowerId(selectedValue) {
     document.getElementById('borrower_idnum').value = selectedValue;
 }
-
 function updateBorrowerName(idNumber) {
     var select = document.getElementById('borrower_id');
     var options = select.options;
-    
     // Reset selection first
     select.value = '';
-    
     // Find and select the matching option
     for(var i = 0; i < options.length; i++) {
         if(options[i].value === idNumber) {

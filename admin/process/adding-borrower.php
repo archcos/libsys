@@ -61,14 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Subject = 'USTP Library - Registration Confirmation';
             $mail->Body = "
                 <h1>Hello, $firstName!</h1>
-                <p>Thank you for registering at USTP Library. Your registration details:</p>
-                <ul>
-                    <li><strong>ID Number:</strong> $idNumber</li>
-                    <li><strong>Name:</strong> $firstName $middleName $surName</li>
-                    <li><strong>Borrower Type:</strong> $borrowerType</li>
-                </ul>
-                <p><strong>Important:</strong> Please visit the library to get your Borrower's Card.</p>
-                <p>Thank you!</p>
+                <p>Thank you for registering at USTP Library. Your registration details: ID Number: $idNumber, Name: $firstName $middleName $surName, Borrower Type: $borrowerType. <strong>Important:</strong> Please visit the library to get your Borrower's Card. Thank you!</p>
             ";
             $mail->AltBody = "Hello $firstName, Thank you for registering at USTP Library. Please visit the library to get your Borrower's Card and activate your account.";
 

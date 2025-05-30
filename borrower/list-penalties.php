@@ -55,6 +55,11 @@ $penaltyResult = $penaltyStmt->get_result();
         th {
             background-color: #f2f2f2;
         }
+        td.remarks {
+            white-space: pre-line;
+            word-break: break-word;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -66,7 +71,7 @@ $penaltyResult = $penaltyStmt->get_result();
             <thead>
                 <tr>
                     <th>Book Title</th>
-                    <th>Penalty</th>
+                    <th>Remarks</th>
                     <th>Cost</th>
                     <th>Paid</th>
                 </tr>
@@ -85,7 +90,7 @@ $penaltyResult = $penaltyStmt->get_result();
 
                         echo "<tr>";
                         echo "<td>" . $bookTitle . "</td>";
-                        echo "<td>" . $penalty . "</td>";
+                        echo "<td class='remarks'>" . $penalty . "</td>";
                         echo "<td>" . $cost . "</td>";
                         echo "<td>" . $paid . "</td>";
                         echo "</tr>";

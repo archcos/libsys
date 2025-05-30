@@ -17,13 +17,14 @@ $query = "
            rs.type,
            rs.callNumber,
            rs.subLocation,
-           rs.category, 
+           c.categoryName AS category, 
            rs.date, 
-           borrower.firstName, borrower .surName
+           borrower.firstName, borrower.surName
     FROM tblreference rs
-    JOIN tblborrowers borrower ON rs.borrowerId = borrower.idNumber
-    JOIN tblauthor a ON rs.author = a.authorId
-    JOIN tblbooks b ON rs.title = b.bookId
+    LEFT JOIN tblborrowers borrower ON rs.borrowerId = borrower.idNumber
+    LEFT JOIN tblauthor a ON rs.author = a.authorId
+    LEFT JOIN tblbooks b ON rs.title = b.bookId
+    LEFT JOIN tblcategory c ON rs.category = c.categoryId
 ";
 $result = $conn->query($query);
 ?>
@@ -101,19 +102,19 @@ $result = $conn->query($query);
         }
         .modal-content {
             background: white;
-            padding: 30px;
+            padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            max-height: 600px;
-            overflow-y: auto;
+            width: 500px;
+            max-height: none;
+            overflow-y: visible;
         }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
         .form-group label {
             font-weight: 500;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.2rem;
             display: block;
         }
         .form-control, .form-select {
@@ -189,7 +190,6 @@ $authorsResult = $conn->query($authorsQuery);
                             echo "<td>
                                     <div style='display: flex; gap: 5px;'>
                                         <button class='btn btn-primary' onclick='editReferenceSlip(" . $row['referenceId'] . ")'>Edit</button>
-                                        <button class='btn delete-btn' data-reference-id='" . $row['referenceId'] . "'>Delete</button>
                                     </div>
                                 </td>";
                             echo "</tr>"; 
@@ -220,7 +220,6 @@ $authorsResult = $conn->query($authorsQuery);
                         <?php endwhile; ?>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label for="type">Type:</label>
                     <select class="form-select" id="type" name="type" onchange="toggleOtherType()" required>
@@ -230,51 +229,40 @@ $authorsResult = $conn->query($authorsQuery);
                     <option value="Others">Others</option>
                     </select>
                 </div>
-                
                 <div class="form-group" id="otherTypeContainer" style="display: none;">
                     <label for="otherType">Specify Type:</label>
                     <input type="text" class="form-control" id="otherType" name="otherType">
                 </div>
-                
-                <div class="form-group">
-                    <label for="author">Author:</label>
-                    <select class="form-select" id="author" name="author" onchange="fetchBooksByAuthor()" required>
-                    <option value="">Select an Author</option>
-                    <?php while ($author = $authorsResult->fetch_assoc()): ?>
-                        <option value="<?= $author['authorId']; ?>"><?= htmlspecialchars($author['authorName']); ?></option>
-                    <?php endwhile; ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="title">Title:</label>
-                    <select class="form-select" id="title" name="title" onchange="fetchBookDetails()" required>
-                    <option value="">Select a Title</option>
-                    </select>
-                </div>
-
                 <div class="form-group">
                     <label for="category">Subject:</label>
-                    <input type="text" class="form-control" id="category" name="category" readonly>
+                    <select class="form-select" id="category" name="category" required>
+                        <option value="">Select Subject</option>
+                    </select>
                 </div>
-
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <select class="form-select" id="title" name="title" required>
+                        <option value="">Select a Title</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <input type="text" class="form-control" id="author" name="author" readonly>
+                </div>
                 <div class="form-group">
                     <label for="callNumber">Call Number:</label>
                     <input type="text" class="form-control" id="callNumber" name="callNumber" readonly>
                 </div>
-
                 <div class="form-group">
                     <label for="subLocation">SubLocation:</label>
                     <input type="text" class="form-control" id="subLocation" name="subLocation" required>
                 </div>
-
                 <div class="form-group">
                     <label for="date">Date:</label>
                     <input type="date" class="form-control" id="date" name="date" required>
                 </div>
-                
-                <div class="btn-group">
-                <button type="submit" class="btn btn-primary">Add</button>
+                <div class="btn-group" style="margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary">Add</button>
                     <button type="button" onclick="closeModal('addReferenceModal')" class="btn btn-danger">Cancel</button>
                 </div>
             </form>
@@ -291,20 +279,38 @@ $authorsResult = $conn->query($authorsQuery);
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
     <script>
 
-        function fetchBooksByAuthor() {
-            let authorId = document.getElementById("author").value;
-            let titleSelect = document.getElementById("title");
-            titleSelect.innerHTML = '<option value="">Select a Title</option>';
+        function fetchCategories() {
+            $.ajax({
+                url: 'process/get-categories.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function(categories) {
+                    let categorySelect = document.getElementById('category');
+                    categorySelect.innerHTML = '<option value="">Select Subject</option>';
+                    categories.forEach(function(category) {
+                        let option = document.createElement('option');
+                        option.value = category.categoryId;
+                        option.textContent = category.categoryName;
+                        categorySelect.appendChild(option);
+                    });
+                }
+            });
+        }
 
-            if (authorId) {
+        function fetchBooksByCategory() {
+            let categoryId = document.getElementById('category').value;
+            let titleSelect = document.getElementById('title');
+            titleSelect.innerHTML = '<option value="">Select a Title</option>';
+            document.getElementById('author').value = '';
+            if (categoryId) {
                 $.ajax({
-                    url: 'process/get-books.php',
+                    url: 'process/get-books-by-category.php',
                     type: 'POST',
-                    data: { authorId: authorId },
+                    data: { categoryId: categoryId },
                     dataType: 'json',
-                    success: function (books) {
-                        books.forEach(book => {
-                            let option = document.createElement("option");
+                    success: function(books) {
+                        books.forEach(function(book) {
+                            let option = document.createElement('option');
                             option.value = book.bookId;
                             option.textContent = book.title;
                             titleSelect.appendChild(option);
@@ -314,22 +320,18 @@ $authorsResult = $conn->query($authorsQuery);
             }
         }
 
-        function fetchBookDetails() {
-            let bookId = document.getElementById("title").value;
-            let categoryInput = document.getElementById("category");
-            let callNumberInput = document.getElementById("callNumber");
-            categoryInput.value = "";
-            callNumberInput.value = "";
-
+        function fetchAuthorByBook() {
+            let bookId = document.getElementById('title').value;
+            let authorInput = document.getElementById('author');
+            authorInput.value = '';
             if (bookId) {
                 $.ajax({
-                    url: 'process/get-book-details.php',
+                    url: 'process/get-author-by-book.php',
                     type: 'POST',
                     data: { bookId: bookId },
                     dataType: 'json',
-                    success: function (data) {
-                        categoryInput.value = data.category;
-                        callNumberInput.value = data.callNumber;
+                    success: function(data) {
+                        authorInput.value = data.authorName;
                     }
                 });
             }
@@ -388,6 +390,9 @@ $authorsResult = $conn->query($authorsQuery);
 
         function showAddReferenceModal() {
             document.getElementById('addReferenceModal').style.display = 'flex';
+            fetchCategories();
+            document.getElementById('title').innerHTML = '<option value="">Select a Title</option>';
+            document.getElementById('author').value = '';
         }
 
         function closeModal(modalId) {
@@ -426,6 +431,11 @@ $authorsResult = $conn->query($authorsQuery);
                 }
             });
         });
+
+        // On subject/category change, fetch books
+        $('#category').on('change', fetchBooksByCategory);
+        // On title change, fetch author
+        $('#title').on('change', fetchAuthorByBook);
     </script>
 </body>
 </html>

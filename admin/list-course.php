@@ -81,7 +81,6 @@ $result = $conn->query($query);
                         echo "<td>" . htmlspecialchars($row['courseName']) . "</td>";
                         echo "<td>
                                 <button class='btn btn-primary' onclick='openEditModal(" . $row['courseId'] . ", \"" . addslashes($row['courseName']) . "\", \"" . $row['level'] . "\")'>Edit</button>
-                                <button class='btn delete-btn' onclick='deleteCourse(" . $row['courseId'] . ")'>Delete</button>
                             </td>";
                         echo "</tr>";
                     }

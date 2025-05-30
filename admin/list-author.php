@@ -65,7 +65,8 @@ $result = $conn->query($query);
             <button class="btn btn-primary" onclick="showAddAuthorModal()">Add New Author</button>
             <div style="margin-top: 20px;"> 
             </div>
-            <table id="dataTable" class="display" style="width:100%">
+            <div class="table-responsive">
+            <table id="dataTable" class="display table" style="width:100%">
                 <thead>
                     <tr>
                         <th>Author ID</th>
@@ -87,7 +88,6 @@ $result = $conn->query($query);
                                     </td>";
                                 echo "<td>
                                         <button class='btn edit-btn' data-author-id='" . $row['authorId'] . "' data-first-name='" . htmlspecialchars($row['firstName']) . "' data-last-name='" . htmlspecialchars($row['lastName']) . "'>Edit</button>
-                                        <button class='btn delete-btn' data-author-id='" . $row['authorId'] . "'>Delete</button>
                                     </td>";
                                 echo "</tr>";
                             }
@@ -95,6 +95,7 @@ $result = $conn->query($query);
                     ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>

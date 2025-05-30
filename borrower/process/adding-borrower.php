@@ -61,16 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Subject = 'USTP Library - Registration Confirmation';
             $mail->Body = "
                 <h1>Hello, $firstName!</h1>
-                <p>Thank you for registering at USTP Library. Your registration details:</p>
-                <ul>
-                    <li><strong>ID Number:</strong> $idNumber</li>
-                    <li><strong>Name:</strong> $firstName $middleName $surName</li>
-                    <li><strong>Borrower Type:</strong> $borrowerType</li>
-                </ul>
-                <p><strong>Important:</strong> Please visit the library to get your Borrower's Card and to activate your account. Your account is currently inactive until verified by a librarian.</p>
-                <p>Thank you!</p>
+                <p>Thank you for registering at USTP Library. Your registration details: ID Number: $idNumber, Name: $firstName $middleName $surName, Borrower Type: $borrowerType. <strong>Important:</strong> Please visit the library to get your Borrower's Card. Thank you!</p>
+                <hr>
+                <p style='font-size:12px;color:#888;'>
+                    <strong>Data Privacy Disclaimer:</strong> This email and any information contained herein are intended solely for the registered recipient. By using the USTP Library System, you acknowledge and accept our data privacy policy. Your personal data is processed in accordance with applicable laws and is used only for library-related transactions. If you received this email in error, please notify us and delete it immediately.
+                </p>
             ";
-            $mail->AltBody = "Hello $firstName, Thank you for registering at USTP Library. Please visit the library to get your Borrower's Card and to activate your account. Your account is currently inactive until verified by a librarian.";
+            $mail->AltBody = "Hello $firstName, Thank you for registering at USTP Library. Your registration details: ID Number: $idNumber, Name: $firstName $middleName $surName, Borrower Type: $borrowerType. Important: Please visit the library to get your Borrower's Card. Thank you!\n\nData Privacy Disclaimer: This email and any information contained herein are intended solely for the registered recipient. By using the USTP Library System, you acknowledge and accept our data privacy policy. Your personal data is processed in accordance with applicable laws and is used only for library-related transactions. If you received this email in error, please notify us and delete it immediately.";
 
             $mail->send();
             // Success, redirect to login page

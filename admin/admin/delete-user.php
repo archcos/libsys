@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userId = $_POST['userId'];
 
     if (empty($userId)) {
-        echo json_encode(['success' => false, 'message' => 'User ID is required.']);
+        echo 'User ID is required.';
         exit();
     }
 
@@ -16,12 +16,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param('i', $userId);
         $stmt->execute();
 
-        echo json_encode(['success' => true, 'message' => 'User deleted successfully']);
+        echo 'User deleted successfully';
         $stmt->close();
     } catch (Exception $e) {
         // Handle errors
         error_log('Error in delete-user.php: ' . $e->getMessage());
-        echo json_encode(['success' => false, 'message' => 'An error occurred. Please try again.']);
+        echo 'An error occurred. Please try again.';
     }
 }
 ?>

@@ -162,9 +162,10 @@ $photo = 'image.png';
         <input 
         type="text" 
         id="librarian" 
-        placeholder="Enter Librarian's Name" 
+        placeholder="Librarian's Name" 
         value="<?php echo htmlspecialchars($librarianName); ?>"  
-        aria-label="Librarian's Name">
+        aria-label="Librarian's Name" 
+        readonly>
     </div>
 
     <div class="button-group">
@@ -206,7 +207,7 @@ $photo = 'image.png';
                                 <h2>UNIVERSITY OF SCIENCE & TECHNOLOGY OF SOUTHERN PHILIPPINES</h2>
                                 <h3>Balubal, Cagayan De Oro City</h3>
                                 <h4>LIBRARY DEPARTMENT</h4>
-                                <h5>Library Borrower’s Card/Circulation Section</h5>
+                                <h5>Library Borrower's Card/Circulation Section</h5>
                             </div>
                         </div>
                         <div class="content">

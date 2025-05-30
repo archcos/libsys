@@ -51,7 +51,8 @@ CREATE TABLE `tblbooks` (
   `barcodeNum` varchar(11) NOT NULL,
   `publisher` varchar(30) NOT NULL,
   `publishedDate` date DEFAULT NULL,
-  `edition` varchar(20) NOT NULL
+  `edition` varchar(20) NOT NULL,
+  `status` enum('Active','Inactive') NOT NULL DEFAULT 'Active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

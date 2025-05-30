@@ -79,7 +79,7 @@ if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
                         <th>Borrower ID</th>
                         <th>Borrower Name</th>
                         <th>Book Title</th>
-                        <th>Penalty</th>
+                        <th>Remarks</th>
                         <th>Cost</th>
                         <th>Paid Status</th>
                     </tr>

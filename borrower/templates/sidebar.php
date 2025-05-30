@@ -1,34 +1,36 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">  
-        <div class="sidebar-brand-text mx-3">USTP Balubal</div>
-    </a>
+<a class="sidebar-brand d-flex bg-primary align-items-center justify-content-center" href="dashboard.php">
+    <!-- Replace this with your logo image -->
+    <img src="assets/img/ustplogo.png" alt="Library Logo" style="height: 65px;">
+</a>
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
         <a class="nav-link" href="dashboard.php">
-            <i class="fas fa-house-user"></i> <!-- Changed to 'fa-house-user' -->
+            <i class="fas fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
     </li>
 
+    <!-- Nav Item - Books List -->
+    
+
     <!-- Divider -->
     <hr class="sidebar-divider">
-
-
 
     <!-- Nav Item - My Transactions Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            <i class="fas fa-exchange-alt"></i> <!-- Changed to 'fa-exchange-alt' -->
+            <i class="fas fa-exchange-alt"></i>
             <span>My Transactions</span>
         </a>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="list-transactions.php"><i class="fas fa-clipboard-list"></i> Transactions</a> <!-- Changed to 'fa-clipboard-list' -->
-                <a class="collapse-item" href="list-books.php?returned=No"><i class="fas fa-book-open"></i> Borrowed Books</a> <!-- Changed to 'fa-book-open' -->
-                <a class="collapse-item" href="list-books.php?returned=Yes"><i class="fas fa-archive"></i> Returned Books</a> <!-- Changed to 'fa-archive' -->
-                <a class="collapse-item" href="list-penalties.php"><i class="fas fa-archive"></i> Penalties</a> <!-- Changed to 'fa-archive' -->
+                <a class="collapse-item" href="list-transactions.php"><i class="fas fa-clipboard-list"></i> Transactions</a>
+                <a class="collapse-item" href="list-books.php?returned=No"><i class="fas fa-book-open"></i> Borrowed Books</a>
+                <a class="collapse-item" href="list-books.php?returned=Yes"><i class="fas fa-archive"></i> Returned Books</a>
+                <a class="collapse-item" href="list-penalties.php"><i class="fas fa-exclamation-triangle"></i> Penalties</a>
             </div>
         </div>
     </li>

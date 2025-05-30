@@ -12,12 +12,31 @@ ob_start();
 // Get the receipt filter from the query string (default to "Yes")
 $receiptFilter = isset($_GET['receipt']) ? $_GET['receipt'] : 'Yes';
 
-// Fetch data based on the receipt filter
+// Get filter parameters
+$borrowerType = isset($_GET['borrowerType']) ? $_GET['borrowerType'] : '';
+$remarks = isset($_GET['remarks']) ? $_GET['remarks'] : '';
+
+// Build the query with filters
 $query = "SELECT idNumber, borrowerType, libraryId, surName, firstName, middleName, emailAddress, remarks, receipt 
           FROM tblborrowers 
           WHERE receipt = ?";
+$params = [$receiptFilter];
+$types = "s";
+
+if (!empty($borrowerType)) {
+    $query .= " AND borrowerType = ?";
+    $params[] = $borrowerType;
+    $types .= "s";
+}
+
+if (!empty($remarks)) {
+    $query .= " AND remarks = ?";
+    $params[] = $remarks;
+    $types .= "s";
+}
+
 $stmt = $conn->prepare($query);
-$stmt->bind_param("s", $receiptFilter);
+$stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -42,11 +61,50 @@ $result = $stmt->get_result();
     </div>
     <div class="card-body">
         <h1><?php echo $receiptFilter === 'Yes' ? 'Receipt Log' : 'Non-Receipt Log'; ?></h1>
+        
+        <!-- Filter Form -->
+        <form method="GET" class="mb-4">
+            <input type="hidden" name="receipt" value="<?php echo $receiptFilter; ?>">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="borrowerType">Borrower Type:</label>
+                        <select name="borrowerType" id="borrowerType" class="form-control">
+                            <option value="">All</option>
+                            <option value="Student" <?php echo $borrowerType === 'Student' ? 'selected' : ''; ?>>Student</option>
+                            <option value="Faculty" <?php echo $borrowerType === 'Faculty' ? 'selected' : ''; ?>>Faculty</option>
+                            <option value="Staff" <?php echo $borrowerType === 'Staff' ? 'selected' : ''; ?>>Staff</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="remarks">Status:</label>
+                        <select name="remarks" id="remarks" class="form-control">
+                            <option value="">All</option>
+                            <option value="Activated" <?php echo $remarks === 'Activated' ? 'selected' : ''; ?>>Activated</option>
+                            <option value="Deactivated" <?php echo $remarks === 'Deactivated' ? 'selected' : ''; ?>>Deactivated</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <div>
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                            <a href="?receipt=<?php echo $receiptFilter; ?>" class="btn btn-secondary">Clear Filters</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
         <button id="fetchReceiptData" class="btn btn-success">Print Receipt Data</button>
         <div style="margin-top: 20px;"> 
         </div>
 
-        <table id="dataTable" class="display" style="width:100%">
+        <div class="table-responsive">
+        <table id="dataTable" class="display table" style="width:100%">
             <thead>
                 <tr>
                     <th>ID Number</th>
@@ -90,6 +148,7 @@ $result = $stmt->get_result();
                 ?>
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 
@@ -126,7 +185,16 @@ $result = $stmt->get_result();
 
         document.getElementById('fetchReceiptData').addEventListener('click', function() {
             const receiptFilter = "<?php echo $receiptFilter; ?>"; // Get PHP variable in JS
-            const targetUrl = receiptFilter === "Yes" ? 'pdf/generate-receipt.php' : 'pdf/generate-nonreceipt.php';
+            const borrowerType = "<?php echo $borrowerType; ?>";
+            const remarks = "<?php echo $remarks; ?>";
+            
+            // Build URL with filters
+            let targetUrl = receiptFilter === "Yes" ? 'pdf/generate-receipt.php' : 'pdf/generate-nonreceipt.php';
+            targetUrl += '?';
+            
+            if (borrowerType) targetUrl += 'borrowerType=' + encodeURIComponent(borrowerType) + '&';
+            if (remarks) targetUrl += 'remarks=' + encodeURIComponent(remarks);
+            
             window.location.href = targetUrl;
         });
 

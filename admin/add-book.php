@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $barcodeNum = trim($_POST['barcodeNum']);
     $publisher = trim($_POST['publisher']);
     $publishedDate = trim($_POST['publishedDate']);
+    $status = $_POST['status'];
 
     if (empty($title)) {
         $error = "Title is required!";
@@ -93,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Insert book with optional authorId and categoryId
-        $query = "INSERT INTO tblbooks (title, edition, authorId, categoryId, dateAdded, quantity, callNum, accessionNum, barcodeNum, publisher, publishedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO tblbooks (title, edition, authorId, categoryId, dateAdded, quantity, callNum, accessionNum, barcodeNum, publisher, publishedDate, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssiisisssss", $title, $edition, $finalAuthorId, $finalCategoryId, $dateAdded, $quantity, $callNum, $accessionNum, $barcodeNum, $publisher, $publishedDate);
+        $stmt->bind_param("ssiisisssssss", $title, $edition, $finalAuthorId, $finalCategoryId, $dateAdded, $quantity, $callNum, $accessionNum, $barcodeNum, $publisher, $publishedDate, $status);
 
         if ($stmt->execute()) {
             $success = "Book added successfully!";
@@ -119,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css" rel="stylesheet">
     <style>
         .container {
-            max-width: 600px;
+            max-width: 1100px;
             margin: 50px auto;
             background: #ffffff;
             padding: 20px;
@@ -130,8 +131,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             text-align: center;
             color: #333;
         }
-        .form-group {
+        .form-row {
+            display: flex;
+            gap: 20px;
             margin-bottom: 15px;
+        }
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0;
         }
         label {
             display: block;
@@ -143,9 +152,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         input[type="date"],
         select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            min-width: 180px;
+            max-width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
         }
         .addbtn {
             padding: 10px 15px;
@@ -193,96 +205,104 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form action="" method="POST">
-            <div class="form-group">
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" placeholder="Enter book title" required>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" placeholder="Enter book title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edition">Edition:</label>
+                    <input type="text" id="edition" name="edition" placeholder="Enter Edition (Optional)">
+                </div>
+                <div class="form-group">
+                    <label for="callNum">Call Number (Optional):</label>
+                    <input type="text" id="callNum" name="callNum" placeholder="Enter Call Number">
+                </div>
+                <div class="form-group">
+                    <label for="accessionNum">Accession Number:</label>
+                    <input type="text" id="accessionNum" name="accessionNum" placeholder="Enter Accession Number" required>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="edition">Edition:</label>
-                <input type="text" id="edition" name="edition" placeholder="Enter Edition (Optional)">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="barcodeNum">Barcode Number (Optional):</label>
+                    <input type="text" id="barcodeNum" name="barcodeNum" placeholder="Enter Barcode Number">
+                </div>
+                <div class="form-group">
+                    <label for="publisher">Publisher:</label>
+                    <input type="text" id="publisher" name="publisher" placeholder="Enter Publisher" required>
+                </div>
+                <div class="form-group">
+                    <label for="publishedDate">Copyright :</label>
+                    <input type="date" class="form-control" id="publishedDate" name="publishedDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Volume:</label>
+                    <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="author">Author (Optional):</label>
-                <div class="dropdown mb-2">
-                    <button type="button" onclick="toggleDropdown()" class="btn btn-light border" style="width: 100%;">Select Author(s)</button>
-                    <div id="checkboxDropdown" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
-                        <?php while ($author = $authorsResult->fetch_assoc()): ?>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="authors[]" value="<?php echo $author['authorId']; ?>" id="author_<?php echo $author['authorId']; ?>">
-                                <label class="form-check-label" for="author_<?php echo $author['authorId']; ?>">
-                                    <?php echo $author['firstName'] . ' ' . $author['lastName']; ?>
-                                </label>
-                            </div>
-                        <?php endwhile; ?>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select class="form-control" id="status" name="status" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 2;">
+                    <label for="author">Author (Optional):</label>
+                    <div class="dropdown mb-2">
+                        <button type="button" onclick="toggleDropdown()" class="btn btn-light border" style="width: 100%;">Select Author(s)</button>
+                        <div id="checkboxDropdown" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
+                            <?php while ($author = $authorsResult->fetch_assoc()): ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="authors[]" value="<?php echo $author['authorId']; ?>" id="author_<?php echo $author['authorId']; ?>">
+                                    <label class="form-check-label" for="author_<?php echo $author['authorId']; ?>">
+                                        <?php echo $author['firstName'] . ' ' . $author['lastName']; ?>
+                                    </label>
+                                </div>
+                            <?php endwhile; ?>
+                        </div>
+                    </div>
+                    <!-- New Author Input Fields -->
+                    <div class="mb-2">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="toggleNewAuthorFields()">+ Add New Author</button>
+                    </div>
+                    <div id="newAuthorFields" style="display: none;">
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="newAuthorFirstName" placeholder="First Name">
+                            <input type="text" class="form-control" id="newAuthorLastName" placeholder="Last Name (Required)">
+                            <button type="button" class="btn btn-success" onclick="addNewAuthor()">Add</button>
+                        </div>
                     </div>
                 </div>
-                <!-- New Author Input Fields -->
-                <div class="mb-2">
-                    <button type="button" class="btn btn-sm btn-primary" onclick="toggleNewAuthorFields()">+ Add New Author</button>
-                </div>
-                <div id="newAuthorFields" style="display: none;">
-                    <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="newAuthorFirstName" placeholder="First Name">
-                        <input type="text" class="form-control" id="newAuthorLastName" placeholder="Last Name (Required)">
-                        <button type="button" class="btn btn-success" onclick="addNewAuthor()">Add</button>
+                <div class="form-group" style="flex: 2;">
+                    <label for="category">Subject (Optional):</label>
+                    <div class="dropdown mb-2">
+                        <button type="button" onclick="toggleDropdown2()" class="btn btn-light border" style="width: 100%;">Select Subject</button>
+                        <div id="checkboxDropdown2" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
+                            <?php while ($category = $categoriesResult->fetch_assoc()): ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="categories[]" value="<?php echo $category['categoryId']; ?>">
+                                    <label class="form-check-label" for="category_<?php echo $category['categoryId']; ?>">
+                                        <?php echo $category['categoryName']; ?>
+                                    </label>
+                                </div>
+                            <?php endwhile; ?>
+                        </div>
+                    </div>
+                    <!-- New Subject Input Field -->
+                    <div class="mb-2">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="toggleNewSubjectField()">+ Add New Subject</button>
+                    </div>
+                    <div id="newSubjectField" style="display: none;">
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="newSubjectName" placeholder="Subject Name">
+                            <button type="button" class="btn btn-success" onclick="addNewSubject()">Add</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="category">Subject (Optional):</label>
-                <div class="dropdown mb-2">
-                    <button type="button" onclick="toggleDropdown2()" class="btn btn-light border" style="width: 100%;">Select Category(ies)</button>
-                    <div id="checkboxDropdown2" class="dropdown-content border p-2" style="display: none; max-height: 200px; overflow-y: auto;">
-                        <?php while ($category = $categoriesResult->fetch_assoc()): ?>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="categories[]" value="<?php echo $category['categoryId']; ?>">
-                                <label class="form-check-label" for="category_<?php echo $category['categoryId']; ?>">
-                                    <?php echo $category['categoryName']; ?>
-                                </label>
-                            </div>
-                        <?php endwhile; ?>
-                    </div>
-                </div>
-                <!-- New Subject Input Field -->
-                <div class="mb-2">
-                    <button type="button" class="btn btn-sm btn-primary" onclick="toggleNewSubjectField()">+ Add New Subject</button>
-                </div>
-                <div id="newSubjectField" style="display: none;">
-                    <div class="input-group mb-2">
-                        <input type="text" class="form-control" id="newSubjectName" placeholder="Subject Name">
-                        <button type="button" class="btn btn-success" onclick="addNewSubject()">Add</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="callNum">Call Number (Optional):</label>
-                <input type="text" id="callNum" name="callNum" placeholder="Enter Call Number">
-            </div>
-            <div class="form-group">
-                <label for="accessionNum">Accession Number:</label>
-                <input type="text" id="accessionNum" name="accessionNum" placeholder="Enter Accession Number" required>
-            </div>
-            <div class="form-group">
-                <label for="barcodeNum">Barcode Number (Optional):</label>
-                <input type="text" id="barcodeNum" name="barcodeNum" placeholder="Enter Barcode Number">
-            </div>
-            <div class="form-group">
-                <label for="publisher">Publisher:</label>
-                <input type="text" id="publisher" name="publisher" placeholder="Enter Publisher" required>
-            </div>
-            <div class="form-group">
-                <label for="publishedDate">Copyright:</label>
-                <input type="date" id="publishedDate" name="publishedDate" placeholder="Enter Published Date" required>
-            </div>
-            <div class="form-group">
-                <label for="quantity">Volume:</label>
-                <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required>
-            </div>
-
             <button type="submit" class="btn btn-primary">Add Book</button>
         </form>
     </div>

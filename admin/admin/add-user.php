@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate input
     if (empty($username) || empty($firstName) || empty($lastName) || empty($accountType) || empty($password)) {
-        echo json_encode(['success' => false, 'message' => 'All fields are required.']);
+        echo 'All fields are required.';
         exit();
     }
 
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($usernameCount > 0) {
             // Username already exists, send a warning message
-            echo json_encode(['success' => false, 'message' => 'Username already exists. Please choose a different one.']);
+            echo 'Username already exists. Please choose a different one.';
             exit();
         }
 
@@ -36,12 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param('sssss', $username, $firstName, $lastName, $accountType, $password);
         $stmt->execute();
 
-        echo json_encode(['success' => true, 'message' => 'User added successfully']);
+        echo 'User added successfully';
         $stmt->close();
     } catch (Exception $e) {
         // Handle errors
         error_log('Error in add-user.php: ' . $e->getMessage());
-        echo json_encode(['success' => false, 'message' => 'An error occurred. Please try again.']);
+        echo 'An error occurred. Please try again.';
     }
 }
 ?>

@@ -285,12 +285,15 @@
 
                 <!-- Damage Severity (Initially Hidden) -->
                 <div id="damageSeveritySection" style="display: none;">
-                    <p>Damage Type?</p>
-                    <select class="form-control" id="damageSeverity" name="damageSeverity">
-                        <option value="normal">Normal</option>
-                        <option value="medium">Medium</option>
-                        <option value="severe">Severe</option>
-                    </select>
+                    <div class="form-group">
+                        <label for="damageSeverity">Damage Type</label>
+                        <select class="form-control" id="damageSeverity" name="damageSeverity">
+                            <option value="" disabled selected>Select damage type</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Severe">Severe</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Penalty Cost -->

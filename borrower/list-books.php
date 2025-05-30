@@ -63,6 +63,18 @@ $result = $stmt->get_result();
         .add-btn:hover {
             background-color: darkblue;
         }
+        .return-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .return-btn:disabled {
+            background-color: grey;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -72,6 +84,7 @@ $result = $stmt->get_result();
         <table id="dataTable" class="display" style="width:100%">
             <thead>
                 <tr>
+                    <th>Return</th>
                     <th>Book ID</th>
                     <th>Title</th>
                     <th>Author</th>
@@ -88,22 +101,28 @@ $result = $stmt->get_result();
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
                         $borrowedDate = new DateTime($row['borrowedDate']);
-                        $formattedborrowedDate = $borrowedDate->format('F j, Y, g:i A'); // Format: 12-hour time with AM/PM
+                        $formattedborrowedDate = $borrowedDate->format('F j, Y, g:i A');
                         $returnDate = new DateTime($row['returnDate']);
-                        $formattedreturnDate = $returnDate->format('F j, Y'); // Format: December 19, 2024
-                        
-
-                        $returnedStatus = $row['returned'] ? 'Yes' : 'No'; // Check if returned is 'Yes'
+                        $formattedreturnDate = $returnDate->format('F j, Y');
+                        $returnedStatus = ($row['returned'] === 'Yes') ? 'Yes' : 'No';
                         echo "<tr>";
+                        // Return button column
+                        echo "<td>";
+                        if ($returnedStatus === 'No') {
+                            echo "<button class='btn-action return-btn' onclick='handleReturn(" . $row['bookId'] . ")'>Return</button>";
+                        } else {
+                            echo "<button class='btn-action return-btn' disabled>Return</button>";
+                        }
+                        echo "</td>";
                         echo "<td>" . $row['bookId'] . "</td>";
                         echo "<td>" . htmlspecialchars($row['title']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['authorName']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['categoryName']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['publisher']) . "</td>"; 
+                        echo "<td>" . htmlspecialchars($row['publisher']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['publishedDate']) . "</td>";
                         echo "<td>" . htmlspecialchars($formattedborrowedDate) . "</td>";
                         echo "<td>" . htmlspecialchars($formattedreturnDate) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['returned']) . "</td>";
+                        echo "<td>" . htmlspecialchars($returnedStatus) . "</td>";
                         echo "</tr>";
                     }
                 }
@@ -124,6 +143,48 @@ $result = $stmt->get_result();
             });
         });
 
+    </script>
+
+    <!-- Return Modal -->
+    <div id="returnModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+        <div style="background:white; margin:10% auto; padding:20px; width:300px; border-radius:10px; text-align:center;">
+            <h2>Confirm Return</h2>
+            <p>Press confirm to return the book</p>
+            <br>
+            <button id="confirmReturnBtn" style="background:green; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Confirm</button>
+            <button onclick="closeReturnModal()" style="background:grey; color:white; padding:5px 15px; border:none; border-radius:5px; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+    <script>
+    let currentBookIdReturn = null;
+    function handleReturn(bookId) {
+        currentBookIdReturn = bookId;
+        document.getElementById('returnModal').style.display = 'block';
+    }
+    function closeReturnModal() {
+        document.getElementById('returnModal').style.display = 'none';
+    }
+    document.getElementById('confirmReturnBtn').addEventListener('click', function() {
+        const userId = "<?= $_SESSION['user_id']; ?>";
+        const username = "<?= $_SESSION['username']; ?>";
+        $.ajax({
+            url: 'process/return-book.php',
+            type: 'POST',
+            data: {
+                bookId: currentBookIdReturn,
+                userId: userId,
+                username: username
+            },
+            success: function(response) {
+                alert(response.message);
+                location.reload();
+            },
+            error: function() {
+                alert('Error processing return request. Please try again.');
+            }
+        });
+        closeReturnModal();
+    });
     </script>
 </body>
 </html>

@@ -61,17 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mail->Subject = 'USTP Library - Login Notification';
                     $mail->Body = "
                         <h1>Hello, {$user['firstName']}!</h1>
-                        <p>This is to notify you that your account was just used to log in to the USTP Library System.</p>
-                        <p>Login Details:</p>
-                        <ul>
-                            <li><strong>ID Number:</strong> {$user['idNumber']}</li>
-                            <li><strong>Name:</strong> {$user['firstName']} {$user['middleName']} {$user['surName']}</li>
-                            <li><strong>Time:</strong> " . date('Y-m-d H:i:s') . "</li>
-                        </ul>
-                        <p>If this wasn't you, please contact the library immediately.</p>
-                        <p>Thank you!</p>
+                        <p>This is to notify you that your account was just used to log in to the USTP Library System. Login Details: ID Number: {$user['idNumber']}, Name: {$user['firstName']} {$user['middleName']} {$user['surName']}, Time: " . date('Y-m-d H:i:s') . ". If this wasn't you, please contact the library immediately. Thank you!</p>
+                        <hr>
+                        <p style='font-size:12px;color:#888;'>
+                            <strong>Data Privacy Disclaimer:</strong> This email and any information contained herein are intended solely for the registered recipient. By using the USTP Library System, you acknowledge and accept our data privacy policy. Your personal data is processed in accordance with applicable laws and is used only for library-related transactions. If you received this email in error, please notify us and delete it immediately.
+                        </p>
                     ";
-                    $mail->AltBody = "Hello {$user['firstName']}, Your account was just used to log in to the USTP Library System. If this wasn't you, please contact the library immediately.";
+                    $mail->AltBody = "Hello {$user['firstName']}, Your account was just used to log in to the USTP Library System. If this wasn't you, please contact the library immediately.\n\nData Privacy Disclaimer: This email and any information contained herein are intended solely for the registered recipient. By using the USTP Library System, you acknowledge and accept our data privacy policy. Your personal data is processed in accordance with applicable laws and is used only for library-related transactions. If you received this email in error, please notify us and delete it immediately.";
 
                     $mail->send();
                 } catch (Exception $e) {

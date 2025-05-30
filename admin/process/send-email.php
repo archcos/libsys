@@ -83,8 +83,12 @@ if ($result->num_rows > 0) {
             <p>This is a reminder that the book you borrowed is due on <strong>$returnDate</strong>.</p>
             <p>Please return it to the library to avoid penalties.</p>
             <p>Thank you!</p>
+            <hr>
+            <p style='font-size:12px;color:#888;'>
+                <strong>Data Privacy Disclaimer:</strong> This email and any information contained herein are intended solely for the registered recipient. By using the USTP Library System, you acknowledge and accept our data privacy policy. Your personal data is processed in accordance with applicable laws and is used only for library-related transactions. If you received this email in error, please notify us and delete it immediately.
+            </p>
         ";
-        $mail->AltBody = "Hello $firstname ($idNumber), this is a reminder that the book you borrowed is due on $returnDate. Please return it to the library.";
+        $mail->AltBody = "Hello $firstname ($idNumber), This is a reminder that the book you borrowed is due on $returnDate. Please return it to the library to avoid penalties. Thank you!\n\nData Privacy Disclaimer: This email and any information contained herein are intended solely for the registered recipient. By using the USTP Library System, you acknowledge and accept our data privacy policy. Your personal data is processed in accordance with applicable laws and is used only for library-related transactions. If you received this email in error, please notify us and delete it immediately.";
 
         // Send the email
         if ($mail->send()) {

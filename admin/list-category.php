@@ -110,7 +110,6 @@ $result = $conn->query($query);
                                     </td>";
                                 echo "<td>
                                         <button class='btn edit-btn' data-category-id='" . $row['categoryId'] . "' data-category-name='" . htmlspecialchars($row['categoryName']) . "'>Edit</button>
-                                        <button class='btn delete-btn' data-category-id='" . $row['categoryId'] . "'>Delete</button>
                                     </td>";
                                 echo "</tr>";
                             }
@@ -159,10 +158,10 @@ $result = $conn->query($query);
     <!-- Edit Category Modal -->
     <div id="editCategoryModal" class="modal">
         <div class="modal-content">
-            <h3>Edit Category</h3>
+            <h3>Edit Subject</h3>
             <form id="editCategoryForm">
                 <input type="hidden" id="editCategoryId" name="categoryId">
-                <label for="editCategoryName">Category Name:</label><br>
+                <label for="editCategoryName">Subject Name:</label><br>
                 <input type="text" id="editCategoryName" name="categoryName" required><br><br>
                 <button type="submit" class="btn btn-primary">Update</button>
                 <button type="button" onclick="closeModal('editCategoryModal')" class="btn cancel-btn">Cancel</button>

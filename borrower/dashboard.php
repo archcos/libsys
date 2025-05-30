@@ -13,6 +13,27 @@ ob_start();
 // Get the current user's ID from the session
 $userId = $_SESSION['user_id'];
 
+// Get total books borrowed by this user
+$borrowedQuery = "SELECT COUNT(*) as total_borrowed FROM tblreturnborrow WHERE borrowerId = ? AND returned = 'No'";
+$borrowedStmt = $conn->prepare($borrowedQuery);
+$borrowedStmt->bind_param("i", $userId);
+$borrowedStmt->execute();
+$borrowedResult = $borrowedStmt->get_result();
+$totalBorrowed = $borrowedResult->fetch_assoc()['total_borrowed'];
+
+// Get total books returned by this user
+$returnedQuery = "SELECT COUNT(*) as total_returned FROM tblreturnborrow WHERE borrowerId = ? AND returned = 'Yes'";
+$returnedStmt = $conn->prepare($returnedQuery);
+$returnedStmt->bind_param("i", $userId);
+$returnedStmt->execute();
+$returnedResult = $returnedStmt->get_result();
+$totalReturned = $returnedResult->fetch_assoc()['total_returned'];
+
+// Get total available books in the library
+$availableQuery = "SELECT SUM(quantity) as total_available FROM tblbooks";
+$availableResult = $conn->query($availableQuery);
+$totalAvailable = $availableResult->fetch_assoc()['total_available'];
+
 // Check if the user has unpaid penalties
 $penaltyCheckQuery = "
     SELECT COUNT(*) AS unpaidPenalties
@@ -104,10 +125,14 @@ $result = $stmt->get_result();
             cursor: pointer;
         }
         .penalty-warning {
-            color: red;
+            color: white
             font-weight: bold;
             margin-bottom: 20px;
         }
+        .penalty-warning a {
+    color: yellow; /* change to your preferred color */
+    font-weight: bold;
+}
 
         /* Book Modal Styles */
         .book-modal {
@@ -264,15 +289,128 @@ $result = $stmt->get_result();
                 gap: 10px;
             }
         }
+
+        .welcome-card {
+            background: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            border-left: 4px solid;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card.borrowed { border-left-color: #2196F3; }
+        .stat-card.returned { border-left-color: #2196F3; }
+        .stat-card.available { border-left-color: #2196F3; }
+        .stat-card.penalties { border-left-color: #2196F3; }
+        .wave {
+            display: inline-block;
+            transform-origin: 70% 70%;
+            animation: wave-animation 2s infinite;
+        }
+        @keyframes wave-animation {
+            0% { transform: rotate(0deg); }
+            10% { transform: rotate(14deg); }
+            20% { transform: rotate(-8deg); }
+            30% { transform: rotate(14deg); }
+            40% { transform: rotate(-4deg); }
+            50% { transform: rotate(10deg); }
+            60% { transform: rotate(0deg); }
+            100% { transform: rotate(0deg); }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <?php if ($unpaidPenalties): ?>
+    <div class="container-fluid py-4">
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+            <h2><span class="wave">👋</span> Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h2>
+            <p>Here's your library activity overview</p>
+           
+            <?php if ($unpaidPenalties): ?>
             <div class="penalty-warning">
                 You have unpaid penalties. <a href="list-penalties.php">Click here</a> to view your penalties.
             </div>
         <?php endif; ?>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card borrowed shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Currently Borrowed Books</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalBorrowed; ?></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-book fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card returned shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Books Returned</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalReturned; ?></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card available shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Available Books</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $totalAvailable; ?></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-book-open fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card penalties shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Unpaid Penalties</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $unpaidPenalties; ?></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
         
         <div class="dashboard-header">
             <div class="title-section">
@@ -293,7 +431,7 @@ $result = $stmt->get_result();
                     <th>Title</th>
                     <th>Author</th>
                     <th>APA</th>
-                    <th>Category</th>
+                    <th>Subject</th>
                     <th>Stocks</th>
                 </tr>
             </thead>

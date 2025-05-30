@@ -48,13 +48,23 @@ if ($row = $result->fetch_assoc()) {
         /* Styling for form */
         h1 { text-align: center; margin-bottom: 20px; }
         form {
-            max-width: 600px; margin: 0 auto; padding: 20px;
+            max-width: 1000px; margin: 0 auto; padding: 20px;
             border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9;
         }
-        .form-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .form-group label { flex: 0 0 150px; font-weight: bold; }
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0;
+        }
+        .form-group label { font-weight: bold; margin-bottom: 5px; }
         .form-group input, .form-group select {
-            flex: 1; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;
+            padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;
         }
         .hidden { display: none; }
         .message {
@@ -62,10 +72,10 @@ if ($row = $result->fetch_assoc()) {
             padding: 8px;
             margin-bottom: 15px;
             border-radius: 4px;
-            font-size: 14px; /* Smaller font size */
+            font-size: 14px;
             color: white;
-            max-width: 100%; /* Constrain the width */
-            margin: 10px auto; /* Center the message */
+            max-width: 100%;
+            margin: 10px auto;
         }
         .success { background-color: #4CAF50; }
         .error { background-color: #f44336; }
@@ -74,23 +84,9 @@ if ($row = $result->fetch_assoc()) {
             background-color: #007bff; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;
         }
         button:hover { background-color: #0056b3; }
-        .modal {
-            display: none;
-            position: fixed;
-            background: rgba(0, 0, 0, 0.5);
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .modal-content form {
-            margin: 0;
-        }
+        .modal { display: none; position: fixed; background: rgba(0, 0, 0, 0.5); top: 0; left: 0; width: 100%; height: 100%; }
+        .modal-content { background: white; padding: 20px; border-radius: 10px; }
+        .modal-content form { margin: 0; }
     </style>
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script>
@@ -172,82 +168,86 @@ if ($row = $result->fetch_assoc()) {
 
     <form method="POST" action="process/adding-borrower.php" id="borrowerForm">
         <input type="hidden" id="borrowerType" name="borrowerType" value="<?= htmlspecialchars($borrowerType); ?>">
-        <div class="form-group">
-            <label for="idNumber">Borrower ID No:</label>
-            <input type="number" id="idNumber" name="idNumber" required>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="idNumber">Borrower ID No:</label>
+                <input type="number" id="idNumber" name="idNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="surName">Surname:</label>
+                <input type="text" id="surName" name="surName" required>
+            </div>
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="middleName">Middle Name:</label>
+                <input type="text" id="middleName" name="middleName">
+            </div>
         </div>
-        <div class="form-group">
-            <label for="surName">Surname:</label>
-            <input type="text" id="surName" name="surName" required>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="emailAddress">Email Address:</label>
+                <input type="text" id="emailAddress" name="emailAddress" required>
+            </div>
+            <div id="positionField" class="form-group hidden">
+                <label for="position">Position:</label>
+                <input type="text" id="position" name="position">
+            </div>
+            <div id="levelField" class="form-group">
+                <label for="level">Level:</label>
+                <select id="level" name="level">
+                    <option value="">Select a level</option>
+                    <?php while ($row = $levelsResult->fetch_assoc()): ?>
+                        <option value="<?= htmlspecialchars($row['level']); ?>">
+                            <?= htmlspecialchars($row['level']); ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div id="courseField" class="form-group">
+                <label for="course">Course:</label>
+                <select id="course" name="courseId">
+                    <option value="">Select a course</option>
+                </select>
+            </div>
+            <div id="yearField" class="form-group hidden">
+                <label for="year">Year:</label>
+                <input type="number" id="year" name="year" min="1">
+            </div>
         </div>
-        <div class="form-group">
-            <label for="firstName">First Name:</label>
-            <input type="text" id="firstName" name="firstName" required>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="birthDate">Birth Date:</label>
+                <input type="date" id="birthDate" name="birthDate" required oninput="checkAge()">
+                <small id="ageWarning" style="color: red; display: none;">User must be at least 16 years old.</small>
+            </div>
+            <div class="form-group">
+                <label for="homeAddress">Home Address:</label>
+                <input type="text" id="homeAddress" name="homeAddress" required>
+            </div>
+            <div class="form-group">
+                <label for="librarian">Librarian/Staff In-Charge:</label>
+                <input type="text" id="librarian" name="librarian" value="<?php echo htmlspecialchars($librarianName); ?>" required readonly>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="middleName">Middle Name:</label>
-            <input type="text" id="middleName" name="middleName">
-        </div>
-        <div class="form-group">
-            <label for="emailAddress">Email Address:</label>
-            <input type="text" id="emailAddress" name="emailAddress" required>
-        </div>
-        <div id="positionField" class="form-group hidden">
-            <label for="position">Position:</label>
-            <input type="text" id="position" name="position">
-        </div>
-        <div id="levelField" class="form-group">
-            <label for="level">Level:</label>
-            <select id="level" name="level">
-                <option value="">Select a level</option>
-                <?php while ($row = $levelsResult->fetch_assoc()): ?>
-                    <option value="<?= htmlspecialchars($row['level']); ?>">
-                        <?= htmlspecialchars($row['level']); ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-        </div>
-        <div id="courseField" class="form-group">
-            <label for="course">Course:</label>
-            <select id="course" name="courseId">
-                <option value="">Select a course</option>
-                <!-- Courses will be dynamically populated here -->
-            </select>
-        </div>
-        <div id="yearField" class="form-group hidden">
-            <label for="year">Year:</label>
-            <input type="number" id="year" name="year" min="1">
-        </div>
-        <div class="form-group">
-            <label for="gender">Gender:</label>
-            <select id="gender" name="gender" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="birthDate">Birth Date:</label>
-            <input type="date" id="birthDate" name="birthDate" required oninput="checkAge()">
-            <small id="ageWarning" style="color: red; display: none;">User must be at least 16 years old.</small>
-        </div>
-        <div class="form-group">
-            <label for="homeAddress">Home Address:</label>
-            <input type="text" id="homeAddress" name="homeAddress" required>
-        </div>
-        <div class="form-group">
-            <label for="librarian">Librarian/Staff In-Charge:</label>
-            <input type="text" id="librarian" name="librarian" value="<?php echo htmlspecialchars($librarianName); ?>" required>
-        </div>
-
-        <p>If student/staff isn't able to get the Borrower's Card upon registration, please specify reason, else input "N/A" .</p>
-        <div class="form-group">
-            <label for="reason">Reason:</label>
-            <input type="text" id="reason" name="reason" required>
-        </div>
-        <p>Receipt Log Special Instructions</p>
-        <div class="form-group">
-            <label for="specialInstructions">Special Instructions:</label>
-            <input type="text" id="reason" name="specialInstructions">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="reason">Reason:</label>
+                <input type="text" id="reason" name="reason" required>
+            </div>
+            <div class="form-group">
+                <label for="specialInstructions">Special Instructions:</label>
+                <input type="text" id="specialInstructions" name="specialInstructions">
+            </div>
         </div>
         <button type="submit">Submit</button>
     </form>

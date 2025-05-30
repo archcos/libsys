@@ -76,8 +76,16 @@ if (isset($_GET['status'])) {
             margin: 0 auto;
             padding: 20px;
         }
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
         .form-group {
-            margin-bottom: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0;
         }
         .form-control {
             border-radius: 4px;
@@ -102,6 +110,10 @@ if (isset($_GET['status'])) {
         .hidden {
             display: none;
         }
+        .form-group label { font-weight: bold; margin-bottom: 5px; }
+        .form-group input, .form-group select {
+            padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -119,98 +131,94 @@ if (isset($_GET['status'])) {
 
             <form action="process/editing-borrower.php" method="POST">
                 <input type="hidden" name="idNumber" value="<?php echo $borrower['idNumber']; ?>">
-
-                <div class="form-group">
-                    <label for="surName">Surname</label>
-                    <input type="text" class="form-control" id="surName" name="surName" value="<?php echo $borrower['surName']; ?>" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="surName">Surname</label>
+                        <input type="text" class="form-control" id="surName" name="surName" value="<?php echo $borrower['surName']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" value="<?php echo $borrower['firstName']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="middleName">Middle Name</label>
+                        <input type="text" class="form-control" id="middleName" name="middleName" value="<?php echo $borrower['middleName']; ?>">
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="firstName">First Name</label>
-                    <input type="text" class="form-control" id="firstName" name="firstName" value="<?php echo $borrower['firstName']; ?>" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emailAddress">Email Address</label>
+                        <input type="email" class="form-control" id="emailAddress" name="emailAddress" value="<?php echo $borrower['emailAddress']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="borrowerType">Borrower Type</label>
+                        <select class="form-control" id="borrowerType" name="borrowerType" required onchange="toggleFieldsBasedOnType()">
+                            <option value="Student" <?php echo ($borrower['borrowerType'] == 'Student') ? 'selected' : ''; ?>>Student</option>
+                            <option value="Faculty" <?php echo ($borrower['borrowerType'] == 'Faculty') ? 'selected' : ''; ?>>Faculty</option>
+                            <option value="Staff" <?php echo ($borrower['borrowerType'] == 'Staff') ? 'selected' : ''; ?>>Staff</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="libraryId">Library ID</label>
+                        <input type="number" class="form-control" id="libraryId" name="libraryId" value="<?php echo $borrower['libraryId']; ?>" required>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="middleName">Middle Name</label>
-                    <input type="text" class="form-control" id="middleName" name="middleName" value="<?php echo $borrower['middleName']; ?>">
+                <div class="form-row">
+                    <div class="form-group" id="courseField">
+                        <label for="course">Course</label>
+                        <select class="form-control" id="course" name="course">
+                            <option value="">Select Course</option>
+                            <?php foreach ($courses as $course): ?>
+                                <optgroup label="<?php echo htmlspecialchars($course['level']); ?>">
+                                    <option value="<?php echo $course['courseId']; ?>" <?php echo ($borrower['course'] == $course['courseId']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($course['courseName']); ?>
+                                    </option>
+                                </optgroup>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group" id="yearField">
+                        <label for="year">Year</label>
+                        <select class="form-control" id="year" name="year">
+                            <option value="">Select Year</option>
+                            <option value="1" <?php echo ($borrower['year'] == '1') ? 'selected' : ''; ?>>1st Year</option>
+                            <option value="2" <?php echo ($borrower['year'] == '2') ? 'selected' : ''; ?>>2nd Year</option>
+                            <option value="3" <?php echo ($borrower['year'] == '3') ? 'selected' : ''; ?>>3rd Year</option>
+                            <option value="4" <?php echo ($borrower['year'] == '4') ? 'selected' : ''; ?>>4th Year</option>
+                            <option value="5" <?php echo ($borrower['year'] == '5') ? 'selected' : ''; ?>>5th Year</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="positionField">
+                        <label for="position">Position</label>
+                        <input type="text" class="form-control" id="position" name="position" value="<?php echo $borrower['position']; ?>">
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="emailAddress">Email Address</label>
-                    <input type="email" class="form-control" id="emailAddress" name="emailAddress" value="<?php echo $borrower['emailAddress']; ?>" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select class="form-control" id="gender" name="gender" required>
+                            <option value="Male" <?php echo ($borrower['gender'] == 'Male') ? 'selected' : ''; ?>>Male</option>
+                            <option value="Female" <?php echo ($borrower['gender'] == 'Female') ? 'selected' : ''; ?>>Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Birth Date</label>
+                        <input type="date" class="form-control" id="birthDate" name="birthDate" value="<?php echo $borrower['birthDate']; ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="homeAddress">Home Address</label>
+                        <textarea class="form-control" id="homeAddress" name="homeAddress" rows="3" required><?php echo $borrower['homeAddress']; ?></textarea>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="borrowerType">Borrower Type</label>
-                    <select class="form-control" id="borrowerType" name="borrowerType" required onchange="toggleFieldsBasedOnType()">
-                        <option value="Student" <?php echo ($borrower['borrowerType'] == 'Student') ? 'selected' : ''; ?>>Student</option>
-                        <option value="Faculty" <?php echo ($borrower['borrowerType'] == 'Faculty') ? 'selected' : ''; ?>>Faculty</option>
-                        <option value="Staff" <?php echo ($borrower['borrowerType'] == 'Staff') ? 'selected' : ''; ?>>Staff</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <select class="form-control" id="remarks" name="remarks" required>
+                            <option value="1" <?php echo ($borrower['remarks'] == 1) ? 'selected' : ''; ?>>Activated</option>
+                            <option value="0" <?php echo ($borrower['remarks'] == 0) ? 'selected' : ''; ?>>Deactivated</option>
+                        </select>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="libraryId">Library ID</label>
-                    <input type="number" class="form-control" id="libraryId" name="libraryId" value="<?php echo $borrower['libraryId']; ?>" required>
-                </div>
-
-                <div class="form-group" id="courseField">
-                    <label for="course">Course</label>
-                    <select class="form-control" id="course" name="course">
-                        <option value="">Select Course</option>
-                        <?php foreach ($courses as $course): ?>
-                            <optgroup label="<?php echo htmlspecialchars($course['level']); ?>">
-                                <option value="<?php echo $course['courseId']; ?>" <?php echo ($borrower['course'] == $course['courseId']) ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($course['courseName']); ?>
-                                </option>
-                            </optgroup>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <div class="form-group" id="yearField">
-                    <label for="year">Year</label>
-                    <select class="form-control" id="year" name="year">
-                        <option value="">Select Year</option>
-                        <option value="1" <?php echo ($borrower['year'] == '1') ? 'selected' : ''; ?>>1st Year</option>
-                        <option value="2" <?php echo ($borrower['year'] == '2') ? 'selected' : ''; ?>>2nd Year</option>
-                        <option value="3" <?php echo ($borrower['year'] == '3') ? 'selected' : ''; ?>>3rd Year</option>
-                        <option value="4" <?php echo ($borrower['year'] == '4') ? 'selected' : ''; ?>>4th Year</option>
-                        <option value="5" <?php echo ($borrower['year'] == '5') ? 'selected' : ''; ?>>5th Year</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="positionField">
-                    <label for="position">Position</label>
-                    <input type="text" class="form-control" id="position" name="position" value="<?php echo $borrower['position']; ?>">
-                </div>
-
-                <div class="form-group">
-                    <label for="gender">Gender</label>
-                    <select class="form-control" id="gender" name="gender" required>
-                        <option value="Male" <?php echo ($borrower['gender'] == 'Male') ? 'selected' : ''; ?>>Male</option>
-                        <option value="Female" <?php echo ($borrower['gender'] == 'Female') ? 'selected' : ''; ?>>Female</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="birthDate">Birth Date</label>
-                    <input type="date" class="form-control" id="birthDate" name="birthDate" value="<?php echo $borrower['birthDate']; ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="homeAddress">Home Address</label>
-                    <textarea class="form-control" id="homeAddress" name="homeAddress" rows="3" required><?php echo $borrower['homeAddress']; ?></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="remarks">Remarks</label>
-                    <select class="form-control" id="remarks" name="remarks" required>
-                        <option value="1" <?php echo ($borrower['remarks'] == 1) ? 'selected' : ''; ?>>Activated</option>
-                        <option value="0" <?php echo ($borrower['remarks'] == 0) ? 'selected' : ''; ?>>Deactivated</option>
-                    </select>
-                </div>
-
                 <div class="text-center mt-3">
                     <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
