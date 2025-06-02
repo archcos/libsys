@@ -9,7 +9,10 @@ if (!isset($_SESSION['user_id'])) {
 
 include('../process/db-connect.php');
 
-// Fetch return records with borrower details
+$borrowerType = isset($_GET['borrowerType']) ? $_GET['borrowerType'] : '';
+$remarks = isset($_GET['remarks']) ? $_GET['remarks'] : '';
+
+// Base SQL
 $query = "
     SELECT 
         tblborrowers.surName, 
@@ -25,9 +28,31 @@ $query = "
     INNER JOIN 
         tblcourses ON tblborrowers.course = tblcourses.courseId
     WHERE 
-        tblborrowers.receipt = 'No'";
+        tblborrowers.receipt = ?
+";
 
-$result = $conn->query($query);
+// Parameters and types for prepared statement
+$params = ['No'];
+$types = "s";
+
+// Add filters if present
+if (!empty($borrowerType)) {
+    $query .= " AND tblborrowers.borrowerType = ?";
+    $params[] = $borrowerType;
+    $types .= "s";
+}
+
+if (!empty($remarks)) {
+    $query .= " AND tblborrowers.remarks = ?";
+    $params[] = $remarks;
+    $types .= "s";
+}
+
+// Prepare and execute
+$stmt = $conn->prepare($query);
+$stmt->bind_param($types, ...$params);
+$stmt->execute();
+$result = $stmt->get_result();
 
 $records = [];
 while ($row = $result->fetch_assoc()) {
@@ -35,10 +60,8 @@ while ($row = $result->fetch_assoc()) {
     $records[] = $row;
 }
 
-
 $logo = 'ustp.png';
 $photo = 'image.png';
-
 ?>
 
 

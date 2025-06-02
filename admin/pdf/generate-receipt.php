@@ -9,6 +9,10 @@ if (!isset($_SESSION['user_id'])) {
 
 include('../process/db-connect.php');
 
+$borrowerType = isset($_GET['borrowerType']) ? $_GET['borrowerType'] : '';
+$remarks = isset($_GET['remarks']) ? $_GET['remarks'] : '';
+
+
 // Fetch return records with borrower details
 $query = "
     SELECT 
@@ -24,15 +28,42 @@ $query = "
     INNER JOIN 
         tblcourses ON tblborrowers.course = tblcourses.courseId
     WHERE 
-        tblborrowers.receipt = 'Yes'";
+        tblborrowers.receipt = 'Yes'
+";
 
-$result = $conn->query($query);
+// Add filters
+$params = [];
+$types = '';
+
+if (!empty($borrowerType)) {
+    $query .= " AND tblborrowers.borrowerType = ?";
+    $params[] = $borrowerType;
+    $types .= 's';
+}
+
+if (!empty($remarks)) {
+    $query .= " AND tblborrowers.remarks = ?";
+    $params[] = $remarks;
+    $types .= 's';
+}
+
+// Prepare and execute the query
+$stmt = $conn->prepare($query);
+
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+
 
 $records = [];
 while ($row = $result->fetch_assoc()) {
     $row['dateRegistered'] = date("m-d-Y", strtotime($row['dateRegistered']));
     $records[] = $row;
 }
+
 
 
 $logo = 'ustp.png';

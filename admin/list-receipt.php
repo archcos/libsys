@@ -191,10 +191,9 @@ $result = $stmt->get_result();
             // Build URL with filters
             let targetUrl = receiptFilter === "Yes" ? 'pdf/generate-receipt.php' : 'pdf/generate-nonreceipt.php';
             targetUrl += '?';
-            
             if (borrowerType) targetUrl += 'borrowerType=' + encodeURIComponent(borrowerType) + '&';
             if (remarks) targetUrl += 'remarks=' + encodeURIComponent(remarks);
-            
+
             window.location.href = targetUrl;
         });
 
