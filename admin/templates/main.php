@@ -467,17 +467,17 @@
 
                         // Calculate the difference in hours between the expected return date and the current date
                         const timeDiff = currentDate - returnDateObj; // Difference in milliseconds
-                        const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60))*5; // Convert milliseconds to hours
+                        const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60)); // Convert milliseconds to hours
                 
                         // If the difference is positive, we have a penalty, otherwise, no penalty
-                        const timePenalty = hoursDiff > 0 ? hoursDiff : 0;
+                        const timePenalty = hoursDiff > 0 ? hoursDiff * 5 : 0; // Only apply penalty if hours are positive
                 
                         // Display the current date and the calculated time penalty
                         $('#currentDate').text("Current Date: " + currentDate.toISOString().split('T')[0]);
-                        $('#timePenalty').text("Time Penalty: " + (timePenalty > 0 ? "Php " + (timePenalty * penalty) : "No penalty"));
+                        $('#timePenalty').text("Time Penalty: " + (timePenalty > 0 ? "Php " + timePenalty : "No penalty"));
                 
                         // Initialize Total Penalty to just the time penalty
-                        let totalPenalty = timePenalty * penalty; // Assuming the penalty is applied per hour of delay
+                        let totalPenalty = timePenalty; // No need to multiply by penalty again since it's already calculated
                 
                         // Initialize the damage cost to 0
                         $('#damageCost').val(0);  // Default to 0 as damage cost
@@ -486,7 +486,7 @@
                         // Update Total Penalty when damage cost changes
                         $('#damageCost').on('input', function() {
                             const damageCost = parseFloat($('#damageCost').val()) || 0;
-                            totalPenalty = (timePenalty * penalty) + damageCost; // Add damage cost to time penalty
+                            totalPenalty = timePenalty + damageCost; // Add damage cost to time penalty
                             $('#totalPenalty').text("Total Penalty: Php " + totalPenalty.toFixed(2)); // Update the total penalty display
                         });
             
@@ -521,6 +521,15 @@
                                     alert('Error reporting damage. Please try again.');
                                 }
                             });
+                        });
+
+                        // Handle "No Damage" button
+                        $('#noDamageButton').on('click', function() {
+                            // Reset all penalty-related fields
+                            $('#damageSeverity').val('');
+                            $('#damageCost').val(0);
+                            totalPenalty = timePenalty; // Keep only time penalty if any
+                            $('#totalPenalty').text("Total Penalty: Php " + totalPenalty.toFixed(2));
                         });
                     },
                     error: function () {

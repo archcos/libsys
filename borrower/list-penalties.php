@@ -102,6 +102,16 @@ $penaltyResult = $penaltyStmt->get_result();
             </tbody>
         </table>
     </div>
+
+    <script>
+        // Function to refresh the penalties table
+        function refreshPenalties() {
+            location.reload();
+        }
+
+        // Refresh the table every 30 seconds
+        setInterval(refreshPenalties, 30000);
+    </script>
 </body>
 </html>
 

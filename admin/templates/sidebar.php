@@ -1,7 +1,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 <a class="sidebar-brand d-flex bg-primary align-items-center justify-content-center" href="dashboard.php">
     <!-- Replace this with your logo image -->
-    <img src="assets/img/ustplogo.png" alt="Library Logo" style="height: 65px;">
+    <img src="assets/img/ustplogo1.png" alt="Library Logo" style="height: 65px;">
 </a>
 
 

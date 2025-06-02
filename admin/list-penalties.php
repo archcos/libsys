@@ -44,9 +44,9 @@ if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
     $stmt->bind_param("si", $paid, $penaltyId);
 
     if ($stmt->execute()) {
-        echo "success";
+        echo json_encode(['status' => 'success']);
     } else {
-        echo "error";
+        echo json_encode(['status' => 'error']);
     }
 
     $stmt->close();
@@ -125,15 +125,33 @@ if (isset($_POST['penaltyId']) && isset($_POST['paid'])) {
             $('.paidStatus').on('change', function() {
                 var penaltyId = $(this).data('penalty-id');
                 var paid = $(this).val();
+                var $select = $(this);
 
                 // Send the update via AJAX
-                $.post('list-penalties.php', { penaltyId: penaltyId, paid: paid }, function(response) {
-                    if (response == 'success') {
-                        alert('Paid status updated successfully.');
-                    } else {
-                        alert('Error updating paid status. Please try again.');
+                $.ajax({
+                    url: 'list-penalties.php',
+                    type: 'POST',
+                    data: { penaltyId: penaltyId, paid: paid },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            alert('Payment status updated successfully.');
+                            location.reload(); // Reload to show updated status
+                        } else {
+                            alert('Error updating payment status. Please try again.');
+                            $select.val($select.data('previous-value')); // Revert on error
+                        }
+                    },
+                    error: function() {
+                        alert('Error updating payment status. Please try again.');
+                        $select.val($select.data('previous-value')); // Revert on error
                     }
                 });
+            });
+
+            // Store the previous value when the select is focused
+            $('.paidStatus').on('focus', function() {
+                $(this).data('previous-value', $(this).val());
             });
         });
     </script>

@@ -47,11 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'mjaymillanar@gmail.com';
-            $mail->Password = 'glkw yaay tmuq zzmd';
+            $mail->Username = 'ustpbaluballibrary@gmail.com';
+            $mail->Password = 'bpet peow jrzg hnom';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
-            $mail->setFrom('mjaymillanar@gmail.com', 'Library Notification');
+            $mail->setFrom('ustpbaluballibrary@gmail.com', 'Library Notification');
 
             // Set recipient email and message
             $mail->clearAddresses();
