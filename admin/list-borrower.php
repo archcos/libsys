@@ -99,12 +99,12 @@ if ($borrowerType) {
             border: none;
         }
         .remarks-dropdown.activated {
-            background-color: #d4edda !important;
+           
             color: #155724 !important;
             border: 1px solid #c3e6cb !important;
         }
         .remarks-dropdown.deactivated {
-            background-color: #f8d7da !important;
+            
             color: #721c24 !important;
             border: 1px solid #f5c6cb !important;
         }
