@@ -283,16 +283,11 @@
                     </select>
                 </div>
 
-                <!-- Damage Severity (Initially Hidden) -->
-                <div id="damageSeveritySection" style="display: none;">
+                 <!-- Damage Severity (Initially Hidden) -->
+                 <div id="damageSeveritySection" style="display: none;">
                     <div class="form-group">
                         <label for="damageSeverity">Damage Type</label>
-                        <select class="form-control" id="damageSeverity" name="damageSeverity">
-                            <option value="" disabled selected>Select damage type</option>
-                            <option value="Normal">Normal</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Severe">Severe</option>
-                        </select>
+                        <input class="form-control" id="damageSeverity" name="damageSeverity" placeholder="Enter damage" required>
                     </div>
                 </div>
 
