@@ -9,6 +9,14 @@ if (!isset($_SESSION['user_id'])) {
 // Start output buffering
 ob_start();
 
+// Add CSS links
+?>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<!-- Material Design for Bootstrap (MDB) -->
+
+
+<?php
 // Get filter values
 $filter_type = isset($_POST['filter_type']) ? $_POST['filter_type'] : 'daily';
 $start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
